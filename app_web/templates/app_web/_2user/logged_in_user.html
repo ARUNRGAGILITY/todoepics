@@ -1,0 +1,24 @@
+{% extends "../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Welcome{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container">
+    <div class="row">
+        <div class="col col-md-12">
+            <h1>Logged In User</h1>
+{{user.is_authenticated}}____
+Welcome ___{{user.username}}___
+
+<a href="{% url 'logout_page' %}" class="btn btn-xs bg-warning"><b>Logout</b></a>
+        </div>
+    </div>
+</div>
+{% else%}
+  {% include './_2user/guest_user.html' %}
+{% endif %}
+{% endblock content %}
+
+
+

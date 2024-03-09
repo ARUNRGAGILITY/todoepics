@@ -1,5 +1,7 @@
-from pathlib import Path
 import os
+from pathlib import Path
+from datetime import datetime
+current_year = datetime.now().year
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Step1: Clear the top level and other comments as you add steps
@@ -66,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'app_web.context_processors.settings_context_processor.get_site_info',
             ],
         },
     },
@@ -124,5 +127,38 @@ MEDIA_URL = '/media/'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 TIME_ZONE = 'Asia/Kolkata'
+LOGIN_URL = '/login'
 #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 #DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+# Step3: added the context processors in the app_web/context_processors/settings_context_processors.py
+
+
+### Logging
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG' if DEBUG else 'INFO',  # Set level based on DEBUG
+    },
+}
+### End logging
+
+## CUSTOMIZATION
+BUILD_VERSION = 'v0.1'
+BUILD_DESCRIPTION = 'basic_login_v1'
+## TEMPLATE DISPLAY
+SITE_TITLE = "TODOEPICS"
+SITE_NAME = "Project TODOEPICS v1.0"
+CONTACT_EMAIL = "contact@admin.thissite.com"
+## copyright information
+PRIVACY_INFO = "No Privacy Information collected and utilized."
+COPYRIGHT_INFO = f"© {current_year}. {PRIVACY_INFO} All rights reserved."

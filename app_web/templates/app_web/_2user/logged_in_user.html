@@ -6,12 +6,13 @@
 {% if user.is_authenticated %}
 <div class="container">
     <div class="row">
-        <div class="col col-md-12">
-            <h1>Logged In User</h1>
-{{user.is_authenticated}}____
-Welcome ___{{user.username}}___
-
-<a href="{% url 'logout_page' %}" class="btn btn-xs bg-warning"><b>Logout</b></a>
+        <div class="col col-md-9">
+           <h1>Welcome to {{SITE_TITLE}}</h1>
+        </div>
+        <div class="col col-md-3">       
+            <b>{{user.username}}</b>
+            &nbsp;&nbsp;            
+            <a href="{% url 'logout_page' %}" class="btn btn-xs bg-warning">Logout</a>
         </div>
     </div>
 </div>

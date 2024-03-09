@@ -153,8 +153,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'v0.1'
-BUILD_DESCRIPTION = 'basic_login_v1'
+BUILD_VERSION = 'v1.0'
+BUILD_DESCRIPTION = 'basic_authentication_v1 with security auth, user form'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "TODOEPICS"
 SITE_NAME = "Project TODOEPICS v1.0"

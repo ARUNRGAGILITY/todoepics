@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 # Create your views here.
 app_name = "app_web"
 
@@ -13,32 +14,18 @@ def visitor_page(request):
     # process inputs
     user = None
     which_template =  f"{app_name}/app_web_home.html"
-    print(f">>> === >{request.user}< === <<<")
-    if not request.user.is_authenticated:
-        print(f">>> === {request.user} Not authenticated === <<<")
-    else:
-        print(f">>> === {request.user} check user === <<<")
-        which_template = f"{app_name}/_2user/logged_in_user.html"
-    
-    if request.method == 'POST':        
-        login_id = request.POST.get('login_id').lower()
-        password = request.POST.get('password')
-        try:
-            user = User.objects.get(email=login_id)
-            user = authenticate(request, username=user.username, password=password)
-            # process next url
-            if user is not None:
-                login(request, user)
-                next_url = request.GET.get('next')
-                if next_url != None:                
-                    return redirect(next_url)
-                return redirect('user_page')            
-            else:
-                messages.error(request, 'Username OR password does not exit')
-        except:
-            print(f">>>=== ERROR: LoginError: User {login_id} does not exist === <<<")
-            messages.error(request, 'User does not exist 1')
-       
+    if request.method == 'POST': 
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            print(f">>> === form valid === <<<")
+            user = form.get_user()
+            login(request, user)
+            next_url = request.GET.get('next', 'user_page') # Provide a default redirect URL
+            return redirect(next_url)
+        else:
+            print(f">>> === form invalid {form.errors} === <<<")
+            # If you want to display form errors, ensure your template can display them
+            messages.error(request, 'Username or password is incorrect')
     # send outputs (info, template, request)
     context = {
         'page': 'user_page',
@@ -52,7 +39,18 @@ def visitor_page(request):
 def login_page(request):
     # take inputs
     # process inputs
-    
+    if request.method == 'POST': 
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            print(f">>> === form valid === <<<")
+            user = form.get_user()
+            login(request, user)
+            next_url = request.GET.get('next', 'user_page') # Provide a default redirect URL
+            return redirect(next_url)
+        else:
+            print(f">>> === form invalid {form.errors} === <<<")
+            # If you want to display form errors, ensure your template can display them
+            messages.error(request, 'Username or password is incorrect')
     # send outputs (info, template, request)
     context = {
         'page': 'login',
@@ -63,33 +61,30 @@ def login_page(request):
 # Registration Page
 def register(request):
     # take inputs
+    CORRECT_REG_CODE = "1"
     # process inputs
-    if request.method == 'POST':        
-        login_id = request.POST.get('login_id').lower()
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
-        reg_code = request.POST.get('reg_code')
-        # Example reg_code validation
-        expected_reg_code = "1"
-        if reg_code != expected_reg_code:
-            messages.error(request, 'Invalid registration code.')
-            return redirect('register')
-        if password1 and password1 == password2:
-            # Check if user already exists
-            if User.objects.filter(email=login_id).exists():
-                messages.error(request, 'Email is already used.')
-            else:
-                # Assuming your User model has an email field or you're using a username that accepts emails
-                user = User.objects.create_user(username=login_id, email=login_id, password=password1)
-                user.save()
-                print(f">>> === {user.username} === <<<")
-                # Automatically log the user in after registration
-                user = authenticate(request, username=login_id, password=password1)
-                if user is not None:
-                    login(request, user)
-                    return redirect('user_page')
+    if request.method == 'POST':
+        # Retrieve the registration code from the form
+        reg_code = request.POST.get('reg_code', '')
+        
+        # Check if the reg_code is alphanumeric and matches the correct registration code
+        if not reg_code.isalnum() or reg_code != CORRECT_REG_CODE:
+            messages.error(request, "Invalid or incorrect registration code.")
+            # Return to the registration page with the form and error message
+            return redirect("register")
+        
+        # Proceed with the standard registration process if the reg_code is valid
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            # Redirect to a success page after registration
+            return redirect('user_page')
         else:
-            messages.error(request, 'Passwords do not match.')
+            # If the form is not valid, show form error messages
+            for msg in form.error_messages:
+                messages.error(request, f"{msg}: {form.error_messages[msg]}")
+
 
 
     # send outputs (info, template, request)

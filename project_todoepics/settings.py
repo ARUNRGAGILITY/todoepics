@@ -153,8 +153,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'v0.3'
-BUILD_DESCRIPTION = 'fix visitor_page for logged in user'
+BUILD_VERSION = 'v0.4'
+BUILD_DESCRIPTION = 'added profile page and edit profile with role - basic'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "TODOEPICS"
 SITE_NAME = "Project TODOEPICS v1.0"

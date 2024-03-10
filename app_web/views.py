@@ -116,17 +116,21 @@ def logout_page(request):
     logout(request)
     return redirect('/')
 
-# new Update profile
+# edit User profile
 @login_required
-def update_profile(request):
+def edit_profile(request):
+    profile = Profile.objects.get(user=request.user)
+    form = ProfileForm(instance=profile)
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=request.user.profile)
+        form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('some_success_url')
-    else:
-        form = ProfileForm(instance=request.user.profile)
-    return render(request, 'your_app/profile_update.html', {'form': form})
+            # Redirect to the profile page or wherever appropriate
+            return redirect('profile_page')
+
+    template_file = f"{app_name}/_2user/edit_profile.html"
+    return render(request, template_file, {'form': form})
+
 
 # Profile Page
 @login_required
@@ -135,6 +139,7 @@ def profile_page(request):
     # process inputs
     user = request.user
     profile, created = Profile.objects.get_or_create(user=request.user)
+
     # send outputs (info, template, request)
     context = {
         'page': 'profile_page',

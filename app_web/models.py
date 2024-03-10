@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-# Create your models here.
 
 class Role(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -9,12 +8,14 @@ class Role(models.Model):
     def __str__(self):
         return self.name
 
-
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True)
-    bio = models.TextField(blank=True)
-    # Add other fields as needed
+    roles = models.ManyToManyField(Role, blank=True)  # Allow multiple roles
+    bio = models.TextField(blank=True,null=True)
 
     def __str__(self):
         return f'Profile of {self.user.username}'
+    
+    def save(self, *args, **kwargs):
+        # Custom save logic here
+        super(Profile, self).save(*args, **kwargs)  # Ensure this is called

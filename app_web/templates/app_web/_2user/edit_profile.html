@@ -1,0 +1,35 @@
+{% extends "../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Edit User Profile{% endblock title %} 
+
+{% block content %}
+<div class="conatiner-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <h2>{{ user.username }}'s Profile</h2>
+                    </div>
+                    <div class="col col-md-3 text-center">
+                        <a href="{% url 'profile_page' %}">View Profile</a>
+                        &nbsp;&nbsp;
+                        <a href="/">Home</a>
+                    </div>
+                </div>                
+                <div class="row">
+                    <div class="col-md-12">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit">Save changes</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

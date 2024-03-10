@@ -13,7 +13,7 @@
                         <h2>{{ user.username }}'s Profile</h2>
                     </div>
                     <div class="col col-md-3 text-center">
-                        <a href="">Edit Profile</a>
+                        <a href="{% url 'edit_profile' %}">Edit Profile</a>
                         &nbsp;&nbsp;
                         <a href="/">Home</a>
                     </div>
@@ -30,12 +30,16 @@
                     <div class="col col-md-4 text-end"><strong>Bio:</strong></div>
                     <div class="col col-md-6">{{ profile.bio }}</div>
                 </div>
-                {% if profile.role %}
+
                 <div class="row">
-                    <div class="col col-md-4 text-end"><strong>Role:</strong></div>
-                    <div class="col col-md-6">{{ profile.role.name }}</div>
+                    <div class="col col-md-4 text-end"><strong>Role(s):</strong></div>
+                    <div class="col col-md-6">
+                        {% for role in profile.roles.all %}
+                            <p>{{ role.name }}</p>
+                        {% endfor %}
+                    </div>
                 </div>
-                {% endif %}
+
             </div>
         </div>
     </div>

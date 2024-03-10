@@ -13,5 +13,6 @@ urlpatterns = [
     path('user-page/', views.user_page, name="user_page"),
     # logout page
     path('logout_page/', views.logout_page, name="logout_page"),
-    
+    # profile page
+    path('profile_page/', views.profile_page, name="profile_page"),
 ]

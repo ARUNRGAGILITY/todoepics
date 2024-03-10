@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from .models import Profile
+from .forms import ProfileForm  # Assume you have created a ModelForm for Profile
 # Create your views here.
 app_name = "app_web"
 
@@ -14,6 +16,7 @@ def visitor_page(request):
     # process inputs
     user = None
     which_template =  f"{app_name}/app_web_home.html"
+    user = request.user
     if request.method == 'POST': 
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -95,6 +98,7 @@ def register(request):
     return render(request, template_file, context)
 
 # User LoggedIn Page
+@login_required
 def user_page(request):
     # take inputs
     # process inputs
@@ -111,3 +115,31 @@ def logout_page(request):
     print(f">>> === {request.user} === <<<")
     logout(request)
     return redirect('/')
+
+# new Update profile
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('some_success_url')
+    else:
+        form = ProfileForm(instance=request.user.profile)
+    return render(request, 'your_app/profile_update.html', {'form': form})
+
+# Profile Page
+@login_required
+def profile_page(request):
+     # take inputs
+    # process inputs
+    user = request.user
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    # send outputs (info, template, request)
+    context = {
+        'page': 'profile_page',
+        'user': user,
+        'profile': profile,
+    }  
+    template_file = f"{app_name}/_2user/user_profile.html"
+    return render(request, template_file, context)

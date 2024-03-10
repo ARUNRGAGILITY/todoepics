@@ -10,7 +10,9 @@
            <h1>Welcome to {{SITE_TITLE}}</h1>
         </div>
         <div class="col col-md-3">       
-            <b>{{user.username}}</b>
+            <b>
+                <a href="{% url 'profile_page' %}">{{user.username}}</a>
+            </b>
             &nbsp;&nbsp;            
             <a href="{% url 'logout_page' %}" class="btn btn-xs bg-warning">Logout</a>
         </div>

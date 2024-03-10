@@ -3,9 +3,9 @@
 {% load crispy_forms_tags %}
 {% block title %}Welcome{% endblock title %} 
 {% block content %}
-{% if user.is_authenticated %}
-  {% include './_2user/logged_in_user.html' %}
-{% else%}
+{% if not user.is_authenticated %}
   {% include './_2user/guest_user.html' %}
+{% else%}
+  {% include './_2user/logged_in_user.html' %}  
 {% endif %}
 {% endblock content %}

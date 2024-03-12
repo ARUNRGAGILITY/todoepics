@@ -1,8 +1,65 @@
 from django import forms
 from .models import Profile
 from django.contrib.auth.forms import UserCreationForm
-from .models import Role
+from .models import *
 from django.contrib.auth.models import User
+
+class RoleForm(forms.ModelForm):
+    class Meta:
+        model = Role
+        fields = ['name', 'description']
+
+class OpsValueStreamForm(forms.ModelForm):
+    class Meta:
+        model = OpsValueStream
+        fields = ['name', 'description']  
+
+
+class OpsValueStreamForm(forms.ModelForm):
+    trigger = forms.CharField(widget=forms.TextInput(attrs={'size': '50'}))
+    value = forms.CharField(widget=forms.TextInput(attrs={'size': '50'}))
+    name = forms.CharField(widget=forms.TextInput(attrs={'size': '50'}))
+    description = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'cols': 50}), required=False)
+
+
+    class Meta:
+        model = OpsValueStream
+        fields = ['trigger', 'value', 'name', 'description', ]
+
+    
+
+class DevValueStreamForm(forms.ModelForm):
+    name = forms.CharField(widget=forms.TextInput(attrs={'size': '50'}))
+    description = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'cols': 50}), required=False)
+    supported_ops_steps = forms.ModelMultipleChoiceField(
+        queryset=ValueStreamSteps.objects.none(),  # Initial queryset will be dynamically set based on the instance
+        required=False, 
+        widget=forms.CheckboxSelectMultiple
+    )
+
+    class Meta:
+        model = DevValueStream
+        fields = ['name', 'description', 'supported_ops_steps']
+
+    def __init__(self, *args, **kwargs):
+        super(DevValueStreamForm, self).__init__(*args, **kwargs)
+        
+        # Assuming 'instance' is a DevValueStream instance
+        instance = kwargs.get('instance', None)
+        if instance and instance.ops_valuestream:  # Check if this DevValueStream is related to an OpsValueStream
+            # Directly filter ValueStreamSteps based on the ops_valuestream ForeignKey relation
+            print(f">>> === {instance.ops_valuestream} testing form init === <<<")
+            self.fields['supported_ops_steps'].queryset = ValueStreamSteps.objects.filter(
+                opsvaluestream=instance.ops_valuestream,  # Adjust the field name if it's different
+                active=True  # Assuming you want to filter by active steps
+            )
+
+
+        
+class ValueStreamStepsForm(forms.ModelForm):
+    class Meta:
+        model = ValueStreamSteps
+        fields = ['name', 'description', 'value_creation_time', 'delay_time']  
 
 
 class ProfileForm(forms.ModelForm):

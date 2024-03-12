@@ -4,19 +4,48 @@
 {% block title %}Welcome{% endblock title %} 
 {% block content %}
 {% if user.is_authenticated %}
-<div class="container">
+<div class="container-fluid">
+    <!-- header -->
     <div class="row">
-        <div class="col col-md-9">
+        <div class="col col-md-5">
            <h1>Welcome to {{SITE_TITLE}}</h1>
         </div>
-        <div class="col col-md-3">       
+        <div class="col col-md-7 text-end">      
+            &nbsp;&nbsp;  
+            <a href="">Dashboard</a> 
+            &nbsp;&nbsp;  
+            <a href="">Apps</a>
+            &nbsp;&nbsp;  
             <b>
                 <a href="{% url 'profile_page' %}">{{user.username}}</a>
             </b>
             &nbsp;&nbsp;            
-            <a href="{% url 'logout_page' %}" class="btn btn-xs bg-warning">Logout</a>
+            <a href="{% url 'logout_page' %}" class="btn btn-xs mt-1 bg-warning">Logout</a>
         </div>
     </div>
+    <!-- content part1 -->
+    <div class="row">
+        <div class="col col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="4">Apps</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="1">Todo List</td>
+                        <td colspan="1">
+                            <a href="{% url 'valuestream_mgmt' %}">ValueStream Mgmt</a>
+                        </td>
+                        <td colspan="1"></td>
+                        <td colspan="1"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- end content part1 -->
 </div>
 {% else%}
   {% include './_2user/guest_user.html' %}

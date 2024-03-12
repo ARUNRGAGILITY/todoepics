@@ -1,0 +1,78 @@
+{% extends "../../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Roles Mgmt{% endblock title %} 
+
+{% block content %}
+<div class="container-fluid">
+    <!-- header -->
+    <div class="row">
+        <div class="col col-md-5">
+            Header
+        </div>
+        <div class="col col-md-7 text-end">
+            &nbsp;&nbsp;
+            <a href="/">Home</a>
+        </div>
+    </div>
+    <!-- role mgmt header/menu -->
+    <div class="row">
+        <div class="col col-md-12">
+            Menu
+        </div>
+    </div>
+    <!-- Role Mgmt -->
+    <div class="row">
+        <div class="col-md-12">
+           <form action="" method="POST">
+            {% csrf_token %}
+            <input type="text" name="name" id="role_name" size="35" maxlength="60">
+            &nbsp;&nbsp;
+            <input type="text" name="description" id="role_description" size="35" maxlength="60">
+            <input type="submit" name="submit" value="Add" id="submit"/>
+           </form>
+           <br>
+        </div>
+    </div>
+    <!-- Listing and Results -->
+    <div class="row">
+        <div class="col col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th width="2%" align="right">#</th>
+                        <th>Role Name</th>
+                        <th>Role Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in objects %}
+                    <tr>
+                        <td width="2%" align="right">
+
+                        </td>
+                        <td>{{object.name}}</td>
+                        <td width="50%">{{object.description}}</td>
+                        <td>
+                            <a href="">View</a>
+                            &nbsp;&nbsp;
+                            <a href="">Edit</a>
+                            &nbsp;&nbsp;
+                            <a href="">Delete</a>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Footer -->
+    <div class="row">
+        <div class="col col-md-12">
+            Footer
+        </div>
+    </div>
+</div>
+{% endblock %}

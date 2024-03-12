@@ -153,8 +153,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'v0.4'
-BUILD_DESCRIPTION = 'added profile page and edit profile with role - basic'
+BUILD_VERSION = 'v12032024a'
+BUILD_DESCRIPTION = 'valuestream ovs, dvs with basics'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "TODOEPICS"
 SITE_NAME = "Project TODOEPICS v1.0"

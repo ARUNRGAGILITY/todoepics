@@ -17,4 +17,20 @@ urlpatterns = [
     path('profile_page/', views.profile_page, name="profile_page"),
     # edit profile page
     path('edit_profile/', views.edit_profile, name="edit_profile"),
+    # admin page
+    path('admin_page/', views.admin_page, name="admin_page"),
+    
+    ###########################################################
+    # roles page
+    path('roles_mgmt/', views.roles_mgmt, name="roles_mgmt"),
+    ###########################################################
+    # value stream page: ops and dev
+    path('ops_valuestream_mgmt/', views.ops_valuestream_mgmt, name="ops_valuestream_mgmt"),
+    path('dev_valuestream_mgmt/<int:id>/', views.dev_valuestream_mgmt, name="dev_valuestream_mgmt"),
+    path('valuestream_steps/<str:vs>/<int:id>/', views.valuestream_steps, name="valuestream_steps"),
+    path('edit_dev_valuestream/<int:id>/', views.edit_dev_valuestream, name="edit_dev_valuestream"),
+    path('edit_ops_valuestream/<int:id>/', views.edit_ops_valuestream, name="edit_ops_valuestream"),
+    path('valuestream_mgmt/', views.valuestream_mgmt, name="valuestream_mgmt"),
+    path('view_ops_valuestream/<int:id>/', views.view_ops_valuestream, name="view_ops_valuestream"),
+    path('edit_step/<str:vs>/<int:ref_id>/<int:id>/', views.edit_step, name="edit_step"),
 ]

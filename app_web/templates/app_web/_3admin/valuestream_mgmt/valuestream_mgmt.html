@@ -1,0 +1,51 @@
+{% extends "../../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Value Stream Mgmt{% endblock title %} 
+
+{% block content %}
+<div class="container-fluid">
+    <!-- header -->
+    <div class="row">
+        <div class="col col-md-5">
+            Header
+        </div>
+        <div class="col col-md-7 text-end">
+            &nbsp;&nbsp;
+            <a href="/">Home</a>
+        </div>
+    </div>
+    <!-- role mgmt header/menu -->
+    <div class="row">
+        <div class="col col-md-12">
+            Menu
+        </div>
+    </div>
+    <!-- content -->
+    <div class="row">
+        <div class="col col-md-3">
+            <h3>ValueStream Management</h3>
+            <p>In this Value Stream Management approach, you will be able to create Operational Value Stream with Trigger, Value, Name and Description and its operation steps. 
+                Then you will be able to create Developmental ValueStream which supports one or more Operational steps and has its own steps.
+            </p>
+            <a href="{% url 'ops_valuestream_mgmt' %}" class="btn btn-primary">Click Here to create
+                <br>
+                Operational Value Stream</a>
+        </div>
+        <div class="col col-md-5">     
+           
+            <br> 
+            <img src="{% static 'img/safe/safe_valuestream1.png' %}" alt="">
+            
+        </div>
+    </div>
+   
+   
+    <!-- Footer -->
+    <div class="row">
+        <div class="col col-md-12">
+            Footer
+        </div>
+    </div>
+</div>
+{% endblock %}

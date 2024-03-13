@@ -9,7 +9,9 @@
         text-align: left;
     }
 </style>
-
+<a href="{% url 'index_st' %}">Strategic Theme Summary</a> 
+&nbsp;&nbsp;
+<a href="{% url 'cafe_wbs' %}">Strategic Theme WBS</a>
 <h2>Strategic Themes Overview</h2>
 {% for theme in themes %}
     {% if theme.active %}

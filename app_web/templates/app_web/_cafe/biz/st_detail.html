@@ -1,0 +1,16 @@
+{% block content %}
+<article>
+    <h2>{{ theme.name }}</h2>
+    <p>{{ theme.description }}</p>
+    <!-- Display objectives, key results, etc., as needed -->
+</article>
+<nav>
+    {% if prev_theme %}
+        <a href="{% url 'st_detail' prev_theme.id %}">Previous</a>
+    {% endif %}
+    {% if next_theme %}
+        <a href="{% url 'st_detail' next_theme.id %}">Next</a>
+    {% endif %}
+</nav>
+<a href="{% url 'index_st' %}">Back to list</a>
+{% endblock %}

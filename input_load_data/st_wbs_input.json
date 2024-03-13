@@ -1,0 +1,81 @@
+[
+    {
+      "strategic_theme_id": 1,
+      "theme_name": "Strategic Theme1",
+      "theme_description": "Description of Strategic Theme1",
+      "epics": [
+        {
+          "name": "Epic A",
+          "description": "Description for Epic A",
+          "type": "BU",
+          "features": [
+            {
+              "name": "Feature A1",
+              "description": "Description for Feature A1",
+              "type": "BU",
+              "user_stories": [
+                {
+                  "name": "User Story A1.1",
+                  "description": "Description for User Story A1.1",
+                  "tasks": [
+                    {
+                      "name": "Task A1.1.1",
+                      "description": "Description for Task A1.1.1"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "capabilities": [
+            {
+              "name": "Capability A1",
+              "description": "Description for Capability A1",
+              "type": "EN",
+              "spikes": [
+                {
+                  "name": "Spike A1.1",
+                  "description": "Description for Spike A1.1",
+                  "tasks": [
+                    {
+                      "name": "Task A1.1.1",
+                      "description": "Description for Task A1.1.1"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Epic B",
+          "description": "Description for Epic B",
+          "type": "EN",
+          "features": [
+            {
+              "name": "Feature B1",
+              "description": "Description for Feature B1",
+              "type": "BU",
+              "user_stories": [
+                {
+                  "name": "User Story B1.1",
+                  "description": "Description for User Story B1.1",
+                  "tasks": [
+                    {
+                      "name": "Task B1.1.1",
+                      "description": "Description for Task B1.1.1"
+                    },
+                    {
+                      "name": "Task B1.1.2",
+                      "description": "Description for Task B1.1.2"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+  

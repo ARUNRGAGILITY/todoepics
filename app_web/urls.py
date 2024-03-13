@@ -37,4 +37,7 @@ urlpatterns = [
     #############################################################
     # cafe
     path('cafe_start/', views.cafe_start, name="cafe_start"),
+    path('index_st/', views.index_st, name="index_st"),
+    path('st_detail/<int:theme_id>/', views.st_detail, name='st_detail'),
+    path('cafe_wbs/', views.cafe_wbs, name="cafe_wbs"),
 ]

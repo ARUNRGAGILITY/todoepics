@@ -1,0 +1,8 @@
+{% block content %}
+<h2>Strategic Themes</h2>
+<ul>
+    {% for theme in themes %}
+        <li><a href="{% url 'st_detail' theme.id %}">{{ theme.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

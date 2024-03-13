@@ -11,6 +11,28 @@ admin.site.register(StrategicTheme)
 admin.site.register(Objective)
 admin.site.register(KeyResult)
 admin.site.register(QuarterlyMeasure)
+# wbs
+admin.site.register(Epic)
+admin.site.register(Feature)
+admin.site.register(Capability)
+admin.site.register(Spike)
+
+class TaskInline(admin.TabularInline):  # You can also use admin.StackedInline for a different layout
+    model = Task
+    extra = 1  # Specifies the number of blank forms to display by default
+    fk_name = 'parent_story'  # This is n
+    
+@admin.register(UserStory)
+class UserStoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description']  # Customize as needed
+    inlines = [TaskInline]
+
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'parent_story', 'parent_spike',)
+    list_filter = ('parent_story', 'parent_spike', )
+    search_fields = ('name', 'description')
+
+admin.site.register(Task, TaskAdmin)
 ## cafe
 
 

@@ -6,10 +6,13 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings  # Assuming your User model comes from settings.AUTH_USER_MODEL
 from django.contrib.contenttypes.fields import GenericRelation
+from django.utils.translation import gettext_lazy as _
 
 
 ################# SAFe #####################
 class BaseModel1(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
     position = models.PositiveIntegerField(default=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -21,8 +24,6 @@ class BaseModel1(models.Model):
         ordering = ['position']
 
 class StrategicTheme(BaseModel1):
-    name = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -30,7 +31,6 @@ class StrategicTheme(BaseModel1):
 class Objective(BaseModel1):
     theme = models.ForeignKey(StrategicTheme, related_name='objectives', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -53,7 +53,69 @@ class QuarterlyMeasure(BaseModel1):
     def __str__(self):
         return f"{self.key_result.name} - {self.quarter} {self.year}"
 
+# WBS
 
+class TypeChoices(models.TextChoices):
+    ENABLER = 'EN', _('Enabler')
+    BUSINESS = 'BU', _('Business')
+    
+class Epic(BaseModel1):
+    theme = models.ForeignKey(StrategicTheme, related_name='epics', on_delete=models.CASCADE)
+    type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.BUSINESS)
+
+    def __str__(self):
+        return self.name
+    
+# Separate models for Feature and Capability
+class Feature(BaseModel1):
+    epic = models.ForeignKey(Epic, related_name='features', on_delete=models.CASCADE)
+    type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.BUSINESS)
+    
+    def __str__(self):
+        return self.name
+
+class Capability(BaseModel1):
+    epic = models.ForeignKey(Epic, related_name='capabilities', on_delete=models.CASCADE)
+    type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.BUSINESS)
+
+    def __str__(self):
+        return self.name
+    
+# Separate models for User Story and Spike
+class UserStory(BaseModel1):
+    parent_feature = models.ForeignKey(Feature, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
+    parent_capability = models.ForeignKey(Capability, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
+    # Additional fields specific to User Stories
+
+    def save(self, *args, **kwargs):
+        if self.parent_feature and self.parent_capability:
+            raise ValueError("A User Story cannot be associated with both a Feature and a Capability.")
+        super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return self.name
+        
+class Spike(BaseModel1):
+    parent_feature = models.ForeignKey(Feature, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
+    parent_capability = models.ForeignKey(Capability, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
+    # Additional fields specific to Spikes
+    
+    def save(self, *args, **kwargs):
+        if self.parent_feature and self.parent_capability:
+            raise ValueError("A Spike cannot be associated with both a Feature and a Capability.")
+        super().save(*args, **kwargs)
+        
+    def __str__(self):
+        return self.name
+
+class Task(BaseModel1):
+    # Assuming Tasks can belong to both User Stories and Spikes
+    parent_story = models.ForeignKey(UserStory, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
+    parent_spike = models.ForeignKey(Spike, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
+    # Additional fields specific to Tasks
+    
+    def __str__(self):
+        return self.name
 #############################################
 
 

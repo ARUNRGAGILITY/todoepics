@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 import os
 import platform
 from django.contrib.auth.decorators import login_required
@@ -11,6 +11,7 @@ from .forms import *
 from django.http import HttpResponseForbidden
 from functools import wraps
 from django.db.models import *
+from django.http import Http404
 # Create your views here.
 app_name = "app_web"
 
@@ -533,4 +534,46 @@ def cafe_start(request):
     themes = StrategicTheme.objects.prefetch_related('objectives__key_results__quarterly_measures').all()
     context = {'themes': themes, 'quarters': ['Q1', 'Q2', 'Q3', 'Q4']}
     template_file = f"{app_name}/_cafe/biz/strategic_theme.html"
+    return render(request, template_file, context)
+
+# list of all strategic themes
+def index_st(request):
+    themes = StrategicTheme.objects.filter(active=True).all()
+    context = {'themes': themes, 'quarters': ['Q1', 'Q2', 'Q3', 'Q4']}
+    template_file = f"{app_name}/_cafe/biz/index_st.html"
+    return render(request, template_file, context)
+
+# strategic theme detail
+def st_detail(request, theme_id):
+    theme = get_object_or_404(StrategicTheme, pk=theme_id, active=True)
+    try:
+        next_theme = theme.get_next_by_created_at(active=True)
+    except StrategicTheme.DoesNotExist:
+        next_theme = None
+
+    try:
+        prev_theme = theme.get_previous_by_created_at(active=True)
+    except StrategicTheme.DoesNotExist:
+        prev_theme = None
+
+    context = {
+        'theme': theme,
+        'next_theme': next_theme,
+        'prev_theme': prev_theme,
+    }
+    template_file = f"{app_name}/_cafe/biz/st_detail.html"
+    return render(request, template_file, context)
+
+# cafe_wbs
+def cafe_wbs(request):
+    themes = StrategicTheme.objects.prefetch_related(
+        'epics__features',
+        'epics__capabilities',
+        'epics__features__user_stories',
+        'epics__capabilities__spikes',
+        'epics__features__user_stories__tasks',
+        'epics__capabilities__spikes__tasks'
+    ).filter(active=True)
+    context = {'themes': themes, 'quarters': ['Q1', 'Q2', 'Q3', 'Q4']}
+    template_file = f"{app_name}/_cafe/mgmt/cafe_wbs.html"
     return render(request, template_file, context)

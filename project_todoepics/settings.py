@@ -153,8 +153,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vcafe_start_v1.0'
-BUILD_DESCRIPTION = 'Added cafe_start with st, obj, kr, qmeasure'
+BUILD_VERSION = 'vcafe_start_v1.2'
+BUILD_DESCRIPTION = 'cafe wbs'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "TODOEPICS"
 SITE_NAME = "Project TODOEPICS v1.0"

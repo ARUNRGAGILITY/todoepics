@@ -7,6 +7,56 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings  # Assuming your User model comes from settings.AUTH_USER_MODEL
 from django.contrib.contenttypes.fields import GenericRelation
 
+
+################# SAFe #####################
+class BaseModel1(models.Model):
+    position = models.PositiveIntegerField(default=1000)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True, null=True, blank=True)
+    
+
+    class Meta:
+        abstract = True
+        ordering = ['position']
+
+class StrategicTheme(BaseModel1):
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+class Objective(BaseModel1):
+    theme = models.ForeignKey(StrategicTheme, related_name='objectives', on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.title
+
+class KeyResult(BaseModel1):
+    objective = models.ForeignKey(Objective, related_name='key_results', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    target = models.TextField(null=True, blank=True)  # This can be adjusted based on the type of measurement.
+
+    def __str__(self):
+        return self.name
+
+class QuarterlyMeasure(BaseModel1):
+    key_result = models.ForeignKey(KeyResult, related_name='quarterly_measures', on_delete=models.CASCADE)
+    quarter = models.CharField(max_length=2, choices=[('Q1', 'Q1'), ('Q2', 'Q2'), ('Q3', 'Q3'), ('Q4', 'Q4')])
+    year = models.PositiveIntegerField(null=True, blank=True)
+    percentage = models.FloatField(null=True, blank=True)
+    value = models.TextField(null=True, blank=True)  # This can be adjusted to match the type of metric you are measuring.
+
+    def __str__(self):
+        return f"{self.key_result.name} - {self.quarter} {self.year}"
+
+
+#############################################
+
+
 class OVS_Types(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(null=True, blank=True)

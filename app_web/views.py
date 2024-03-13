@@ -526,3 +526,11 @@ def edit_step(request, vs, ref_id, id):
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/edit_step.html"
     return render(request, template_file, context)
+
+
+## CAFE
+def cafe_start(request):
+    themes = StrategicTheme.objects.prefetch_related('objectives__key_results__quarterly_measures').all()
+    context = {'themes': themes, 'quarters': ['Q1', 'Q2', 'Q3', 'Q4']}
+    template_file = f"{app_name}/_cafe/biz/strategic_theme.html"
+    return render(request, template_file, context)

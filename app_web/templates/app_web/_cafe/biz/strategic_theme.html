@@ -1,0 +1,50 @@
+{% block content %}
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+</style>
+
+<h2>Strategic Themes Overview</h2>
+{% for theme in themes %}
+    {% if theme.active %}
+        <h3>Strategic Theme: {{ theme.name }}</h3>
+        <p>{{ theme.description }}</p>
+        {% for objective in theme.objectives.all %}
+            {% if objective.active %}
+                <h4>Objective: {{ objective.title }}</h4>
+                <p>{{ objective.description }}</p>
+                <table>
+                    <tr>
+                        <th>Key Result</th>
+                        {% for quarter in quarters %}
+                            <th>{{ quarter }}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for key_result in objective.key_results.all %}
+                        {% if key_result.active %}
+                            <tr>
+                                <td>{{ key_result.name }}</td>
+                                {% for quarter in quarters %}
+                                    <td>
+                                        {% for measure in key_result.quarterly_measures.all %}
+                                            {% if measure.active and measure.quarter == quarter %}
+                                                {{ measure.percentage }}%
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+{% endblock %}

@@ -33,4 +33,8 @@ urlpatterns = [
     path('valuestream_mgmt/', views.valuestream_mgmt, name="valuestream_mgmt"),
     path('view_ops_valuestream/<int:id>/', views.view_ops_valuestream, name="view_ops_valuestream"),
     path('edit_step/<str:vs>/<int:ref_id>/<int:id>/', views.edit_step, name="edit_step"),
+    
+    #############################################################
+    # cafe
+    path('cafe_start/', views.cafe_start, name="cafe_start"),
 ]

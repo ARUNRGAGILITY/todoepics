@@ -6,19 +6,15 @@
 {% block content %}
 <div class="container-fluid">
     <!-- header -->
-    <div class="row">
-        <div class="col col-md-5">
-            Add Ops Value Stream
-        </div>
-        <div class="col col-md-7 text-end">
-            &nbsp;&nbsp;
-            <a href="/">Home</a>
-        </div>
-    </div>
+    {% include "./vsm_header.html" %} 
+    <!-- role mgmt header/menu -->
+    {% include "./menu_valuestream.html" %} 
     <!-- role mgmt header/menu -->
     <div class="row">
-        <div class="col col-md-12">
-            &nbsp;&nbsp;
+        <div class="col-md-8">
+            Here you add your Operational Value Stream Details: Trigger, Value, Name, and Description
+        </div>
+        <div class="col col-md-4 text-end">
            <a href="{% url 'ops_valuestream_mgmt' %}"> Ops Value Stream: {{object}}</a>            
         </div>
     </div>
@@ -49,9 +45,6 @@
     </div>
 
     <!-- Footer -->
-    <div class="row">
-        <div class="col col-md-12">
-            Footer
-        </div>
-    </div>
+    {% include "./vsm_footer.html" %} 
+
 {% endblock %}

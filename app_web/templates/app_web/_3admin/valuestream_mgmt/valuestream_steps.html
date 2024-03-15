@@ -44,11 +44,10 @@ $( function() {
 <form action="" method="POST">
 {% csrf_token %}
 <div class="container-fluid">   
-    <div class="row">
-        <div class="col col-md-12">
-         
-        </div>
-    </div>
+    <!-- header -->
+    {% include "./vsm_header.html" %} 
+    <!-- role mgmt header/menu -->
+    {% include "./menu_valuestream.html" %} 
     <div class="row pt-2">
         <div class="col col-md-8">    
             <b>Value Stream Steps of </b>
@@ -65,17 +64,22 @@ $( function() {
                     {{parent}} {{vs}} {{ref_id}}
                 </a>
             {% endif %}
-        </div>
-        <div class="col col-md-4 text-end">
+            &nbsp;
+            View this Visually: 
             &nbsp;
             {% if vs == 'ops' %}
-                <a href="{% url 'view_ops_valuestream' parent.id %}">OPS</a>
+                <a href="{% url 'view_ops_valuestream' parent.id %}">OVS Summary</a>
             {% endif %}
             {% if vs == 'dev' %}
-            <a href="{% url 'view_ops_valuestream' parent.ops_valuestream.id %}">OPS</a>
+            <a href="{% url 'view_ops_valuestream' parent.ops_valuestream.id %}">OVS Summary</a>
                 &nbsp;&nbsp;
-                <a href="{% url 'view_dev_valuestream' parent.id %}">DEV</a>
+                <a href="{% url 'view_dev_valuestream' parent.id %}">DVS Summary</a>
             {% endif %}
+            &nbsp;
+            <a href="">Details</a>
+        </div>
+        <div class="col col-md-4 text-end">
+           
             &nbsp;&nbsp;
             <a href="{% url 'add_vsm_steps' vs id %}" class="btn btn-sm btn-primary pb-2">+ Add Value Stream Step</a>
             &nbsp;&nbsp;
@@ -154,4 +158,6 @@ function checkUncheck(checkBox) {
     }
 }
 </script>
+ <!-- Footer -->
+ {% include "./vsm_footer.html" %} 
 {% endblock content %}

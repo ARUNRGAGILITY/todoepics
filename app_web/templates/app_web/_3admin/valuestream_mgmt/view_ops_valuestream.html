@@ -123,7 +123,7 @@
     <div class="row">
         <div class="col col-md-5 text-start">
             <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object}}</a>
-            Value Stream Steps
+            Value Stream has total {{steps_count}} Steps
         </div>
         <div class="col col-md-7 text-end">
             &nbsp;&nbsp;
@@ -146,7 +146,12 @@
            
             <div id="zoomContainer" class="zoom-container text-center">
             
-            <table class="my_table">                 
+            <table class="my_table">     
+                <tr>
+                    <td colspan="{{total_table_cols}}" class="text-center">
+                        Lead Time {{object.total_time}} mins
+                    </td>
+                </tr>            
                 <tr>
                     <td>
                         <div class="leftline"></div>
@@ -169,7 +174,7 @@
                     {% endfor %}
                     <td>
                         <div class="rightline"></div>
-                        <div class="value">
+                        <div class="value">                            
                             <img src="{% static 'img/safe/value_vs.png' %}" alt="">  
                             <div class="postitright">{{object.value}}</div>
                           </div>                       

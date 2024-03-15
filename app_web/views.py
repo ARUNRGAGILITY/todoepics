@@ -483,10 +483,13 @@ def valuestream_mgmt(request):
 def view_ops_valuestream(request, id):
     # take inputs
     # process inputs
+    steps_count = 0
     user = request.user
     profile, created = Profile.objects.get_or_create(user=request.user)   
     object = OpsValueStream.objects.get(active=True, id=id)
     vsm_steps = ValueStreamSteps.objects.filter(active=True, opsvaluestream=object)
+    steps_count = vsm_steps.count()
+    total_table_cols = (steps_count * 2) + 3
     # send outputs (info, template, request)
     context = {
         'page': 'ops_valuestream_mgmt',
@@ -495,6 +498,8 @@ def view_ops_valuestream(request, id):
         'object': object,
         'vs': 'ops',
         'vsm_steps': vsm_steps,
+        'steps_count': steps_count,
+        'total_table_cols': total_table_cols,
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/view_ops_valuestream.html"
     return render(request, template_file, context)
@@ -510,12 +515,16 @@ def view_dev_valuestream(request, id):
     parent = object.ops_valuestream.id
     vsm_steps = ValueStreamSteps.objects.filter(active=True, devvaluestream=object)
     # send outputs (info, template, request)
+    steps_count = vsm_steps.count()
+    total_table_cols = (steps_count * 2) + 3
     context = {
         'page': 'ops_valuestream_mgmt',
         'user': user,
         'profile': profile,
         'parent': parent,
         'object': object,
+        'steps_count': steps_count,
+        'total_table_cols': total_table_cols,
         'vs': 'dev',
         'id':id,
         'vsm_steps': vsm_steps,

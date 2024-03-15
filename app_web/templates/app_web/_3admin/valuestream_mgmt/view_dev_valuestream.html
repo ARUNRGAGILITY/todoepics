@@ -124,13 +124,12 @@
         <div class="col col-md-5 text-start">
             <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object.parent}}</a>
             &nbsp;/&nbsp;
-            <a href="{% url 'dev_valuestream_mgmt' id %}">Dev Value Stream: {{object}}</a>
+            <a href="{% url 'dev_valuestream_mgmt' parent %}">Dev Value Stream:</a>
             Value Stream Steps
         </div>
         <div class="col col-md-7 text-end">
             &nbsp;&nbsp;
-            <a href="{% url 'valuestream_steps' vs object.id %}">Steps</a>
-            
+            <a href="{% url 'valuestream_steps' vs object.id %}">Steps</a>       
             
         </div>
     </div>
@@ -144,11 +143,25 @@
         </div>
     </div>
     <div class="row">
-        <div class="col col-md-12 text-left">
-           
+        <div class="col col-md-12 text-left">           
             <div id="zoomContainer" class="zoom-container text-center">
-            
-            <table class="my_table">                 
+            <table>
+                <tr>
+                    <tr>
+                        <td colspan="{{total_table_cols}}" class="text-center">
+                            Lead Time {{object.total_time}} mins
+                        </td>
+                    </tr>    
+                    <tr>
+                        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </tr>
+            </table>
+            <table class="my_table">                
                 <tr>
                     <td>
                         <div class="leftline"></div>

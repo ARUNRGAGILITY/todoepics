@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block title %}Value Stream Mgmt{% endblock title %} 
-
+{% load custom_tags %}
 {% block content %}
 <style>
     .my_table {
@@ -193,13 +193,15 @@
                     <td>
 
                     </td>
-                    {% for step in vsm_steps %}
-                        <td>                            
-                              {{step.name}}
-                        </td>
+                    <tr>
+                        {% for step in vsm_steps %}
                         <td>
+                            <div class="ops-step" data-id="{{ step.id }}" data-supporting-dev-streams="{{ steps_to_dev_streams|get_item:step.id|join:',' }}">
+                                {{ step.name }}
+                            </div>
                         </td>
-                    {% endfor %}
+                        {% endfor %}
+                    </tr>
                     <td>
                          <div class="value_text">
                             
@@ -250,27 +252,51 @@
         </div>
     </div>
     
-    <!-- experiment -->
+   <!-- Development Value Streams -->
     <div class="dev-value-streams">
         <table class="table" style="font-size: 10px; width: 100%;">
             <tr>
                 {% for dev_stream in dev_value_streams %}
-                    <td style="vertical-align: top;">
-                        <div id="devStream{{ dev_stream.id }}" class="dev-stream">
-                            <b>{{ dev_stream.name }}</b>
-                            <p>{{ dev_stream.description }}</p>
-                            <ul>
-                                {% for step in dev_stream.supported_ops_steps.all %}
-                                    <li id="opsStep{{ step.id }}">{{ step.name }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </td>
+                <td style="vertical-align: top;">
+                    <div id="devStream{{ dev_stream.id }}" class="dev-stream">
+                        <b>{{ dev_stream.name }}</b>
+                    </div>
+                </td>
                 {% endfor %}
             </tr>
         </table>
     </div>
-    
+<!-- SVG Overlay -->
+<svg id="lineDrawingArea" style="position:absolute; top:0; left:0; height:100%; width:100%; z-index:1; pointer-events:none;"></svg>
+
+<!-- JavaScript to Draw Lines -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const svgNamespace = "http://www.w3.org/2000/svg";
+    const lineDrawingArea = document.getElementById('lineDrawingArea');
+
+    document.querySelectorAll('.ops-step').forEach(function(step) {
+        const stepBounds = step.getBoundingClientRect();
+        const supportingDevStreamIds = step.getAttribute('data-supporting-dev-streams').split(',');
+
+        supportingDevStreamIds.forEach(function(devStreamId) {
+            const devStream = document.querySelector(`#devStream${devStreamId.trim()}`);
+            if(devStream) {
+                const devStreamBounds = devStream.getBoundingClientRect();
+                const line = document.createElementNS(svgNamespace, 'line');
+                line.setAttribute('x1', stepBounds.left + stepBounds.width / 2);
+                line.setAttribute('y1', stepBounds.top + stepBounds.height / 2);
+                line.setAttribute('x2', devStreamBounds.left + devStreamBounds.width / 2);
+                line.setAttribute('y2', devStreamBounds.top + devStreamBounds.height / 2);
+                line.setAttribute('stroke', 'black');
+                line.setAttribute('stroke-width', '2');
+                lineDrawingArea.appendChild(line);
+            }
+        });
+    });
+});
+</script>
+
     
     
 
@@ -296,23 +322,42 @@
     });
 
 </script>
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Example of drawing a simple line; for complex arrows, use a library like LeaderLine
-        var devStreams = document.querySelectorAll('.dev-stream');
+        const svgNamespace = "http://www.w3.org/2000/svg";
+        const lineDrawingArea = document.getElementById('lineDrawingArea');
     
-        devStreams.forEach(function(stream) {
-            var relatedSteps = stream.querySelector('.related-ops-steps').innerText.trim().split(',');
-            relatedSteps.forEach(function(stepId) {
-                if(stepId) {
-                    var stepElement = document.getElementById('opsStep' + stepId);
-                    // Here you would create a visual line or arrow. This is where you integrate LeaderLine or a custom solution.
-                    console.log('Draw line from', stream.id, 'to', stepElement.id);
+        // Find each operational step
+        document.querySelectorAll('.ops-step').forEach(function(step) {
+            // Extract the IDs of supporting DevValueStreams
+            const supportingDevStreamIds = step.getAttribute('data-supporting-dev-streams').split(',');
+    
+            // For each supporting DevValueStream ID, find the DevValueStream and draw a line
+            supportingDevStreamIds.forEach(function(devStreamId) {
+                const devStreamElement = document.querySelector(`#devStream${devStreamId.trim()}`);
+                if(devStreamElement) {
+                    // Get bounds for drawing
+                    const stepBounds = step.getBoundingClientRect();
+                    const devStreamBounds = devStreamElement.getBoundingClientRect();
+                    
+                    // Create SVG line element
+                    const line = document.createElementNS(svgNamespace, 'line');
+                    line.setAttribute('x1', devStreamBounds.left + devStreamBounds.width / 2);
+                    line.setAttribute('y1', devStreamBounds.top + devStreamBounds.height / 2);
+                    line.setAttribute('x2', stepBounds.left + stepBounds.width / 2);
+                    line.setAttribute('y2', stepBounds.top + stepBounds.height / 2);
+                    line.setAttribute('stroke', 'black');
+                    line.setAttribute('stroke-width', '2');
+    
+                    // Append the line to the SVG overlay
+                    lineDrawingArea.appendChild(line);
                 }
             });
         });
     });
     </script>
+    
+    
+    
     
 {% endblock %}

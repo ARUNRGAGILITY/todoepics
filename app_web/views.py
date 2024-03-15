@@ -491,15 +491,17 @@ def view_ops_valuestream(request, id):
     vsm_steps = ValueStreamSteps.objects.filter(active=True, opsvaluestream=object)
     steps_count = vsm_steps.count()
     total_table_cols = (steps_count * 2) + 3
-    
-     # Creating a mapping of ops steps to the dev streams that support them
+        
     steps_to_dev_streams = {}
     for dev_stream in dev_value_streams:
         for step in dev_stream.supported_ops_steps.all():
             if step.id not in steps_to_dev_streams:
-                steps_to_dev_streams[step.id] = [dev_stream]
+                steps_to_dev_streams[step.id] = [dev_stream.id]
             else:
-                steps_to_dev_streams[step.id].append(dev_stream)
+                steps_to_dev_streams[step.id].append(dev_stream.id)
+    # Your existing logic to fetch steps and other necessary data
+    vsm_steps = ValueStreamSteps.objects.filter(opsvaluestream=object)  # Adjust as necessary
+
 
     # send outputs (info, template, request)
     context = {
@@ -511,6 +513,7 @@ def view_ops_valuestream(request, id):
         'vsm_steps': vsm_steps,
         'steps_count': steps_count,
         'total_table_cols': total_table_cols,
+        'ops_value_stream': object,
         'dev_value_streams': dev_value_streams,
         'steps_to_dev_streams': steps_to_dev_streams,
     }  

@@ -153,7 +153,7 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'v150324_ovs_view3'
+BUILD_VERSION = 'v150324_ovs_view4'
 BUILD_DESCRIPTION = 'created CAFe type view option for value stream'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "TODOEPICS"

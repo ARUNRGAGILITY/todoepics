@@ -487,9 +487,20 @@ def view_ops_valuestream(request, id):
     user = request.user
     profile, created = Profile.objects.get_or_create(user=request.user)   
     object = OpsValueStream.objects.get(active=True, id=id)
+    dev_value_streams = DevValueStream.objects.filter(ops_valuestream=object).prefetch_related('supported_ops_steps')
     vsm_steps = ValueStreamSteps.objects.filter(active=True, opsvaluestream=object)
     steps_count = vsm_steps.count()
     total_table_cols = (steps_count * 2) + 3
+    
+     # Creating a mapping of ops steps to the dev streams that support them
+    steps_to_dev_streams = {}
+    for dev_stream in dev_value_streams:
+        for step in dev_stream.supported_ops_steps.all():
+            if step.id not in steps_to_dev_streams:
+                steps_to_dev_streams[step.id] = [dev_stream]
+            else:
+                steps_to_dev_streams[step.id].append(dev_stream)
+
     # send outputs (info, template, request)
     context = {
         'page': 'ops_valuestream_mgmt',
@@ -500,6 +511,8 @@ def view_ops_valuestream(request, id):
         'vsm_steps': vsm_steps,
         'steps_count': steps_count,
         'total_table_cols': total_table_cols,
+        'dev_value_streams': dev_value_streams,
+        'steps_to_dev_streams': steps_to_dev_streams,
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/view_ops_valuestream.html"
     return render(request, template_file, context)

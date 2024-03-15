@@ -20,18 +20,22 @@
     .leftline{
          border-left: 2px dashed black;
          height: 30px;
+         margin-top: -30px
     }
     .rightline{
          border-right: 2px dashed black;
          height: 30px;
+         margin-top: -30px;
     }
     .leftlineb{
          border-left: 2px solid black;
          height: 60px;
+         margin-bottom: -30px;
     }
     .rightlineb{
          border-right: 2px solid black;
          height: 60px;
+         margin-bottom: -30px;
     }
 
     .my_table td {
@@ -134,9 +138,9 @@
     </div>
     <div class="row">
         <div class="col col-md-12 text-end">
-            <div class="zoom-controls">
-                <button id="zoomIn">Zoom In</button>
+            <div class="zoom-controls">                
                 <button id="zoomOut">Zoom Out</button>
+                <button id="zoomIn">Zoom In</button>
               </div>
               &nbsp;&nbsp;
         </div>
@@ -225,17 +229,58 @@
                                        
                     </td>
                 </tr>  
+                <!-- experiment -->
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    {% for step in vsm_steps %}
+                        <td> </td>
+                        <td> </td>
+                    {% endfor %}
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="{{total_table_cols}}" class="text-center">
+                        Repeat until value lifetime
+                    </td>
+                </tr>     
                 </table>
             </div>
         </div>
     </div>
     
+    <!-- experiment -->
+    <div class="dev-value-streams">
+        <table class="table" style="font-size: 10px; width: 100%;">
+            <tr>
+                {% for dev_stream in dev_value_streams %}
+                    <td style="vertical-align: top;">
+                        <div id="devStream{{ dev_stream.id }}" class="dev-stream">
+                            <b>{{ dev_stream.name }}</b>
+                            <p>{{ dev_stream.description }}</p>
+                            <ul>
+                                {% for step in dev_stream.supported_ops_steps.all %}
+                                    <li id="opsStep{{ step.id }}">{{ step.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </td>
+                {% endfor %}
+            </tr>
+        </table>
+    </div>
+    
+    
+    
+
+
     <!-- Footer -->
     {% include "../../_1base/footer.html" %} 
 </div>
 <script>
   const zoomContainer = document.getElementById('zoomContainer');
-    let zoomLevel = 0.5; // Set initial zoom level to 0.8 (80% of the original size)
+    let zoomLevel = 0.58; // Set initial zoom level to 0.8 (80% of the original size)
 
     // Apply the initial zoom level when the page loads
     zoomContainer.style.transform = `scale(${zoomLevel})`;
@@ -251,4 +296,23 @@
     });
 
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Example of drawing a simple line; for complex arrows, use a library like LeaderLine
+        var devStreams = document.querySelectorAll('.dev-stream');
+    
+        devStreams.forEach(function(stream) {
+            var relatedSteps = stream.querySelector('.related-ops-steps').innerText.trim().split(',');
+            relatedSteps.forEach(function(stepId) {
+                if(stepId) {
+                    var stepElement = document.getElementById('opsStep' + stepId);
+                    // Here you would create a visual line or arrow. This is where you integrate LeaderLine or a custom solution.
+                    console.log('Draw line from', stream.id, 'to', stepElement.id);
+                }
+            });
+        });
+    });
+    </script>
+    
 {% endblock %}

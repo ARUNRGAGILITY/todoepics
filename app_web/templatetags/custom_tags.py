@@ -43,3 +43,9 @@ def has_admin_roles(context):
         profile = Profile.objects.get(user=user)
         return profile.roles.filter(name__in=["Admin", "SiteAdmin"]).exists()
     return False
+
+
+
+@register.filter(name='get_item')
+def get_item(dictionary, key):
+    return dictionary.get(key)

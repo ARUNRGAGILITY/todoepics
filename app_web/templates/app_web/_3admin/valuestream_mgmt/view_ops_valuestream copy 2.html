@@ -1,7 +1,7 @@
 {% extends "../../_1base/bootstrap_base.html" %} 
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}View Dev Value Stream{% endblock title %} 
+{% block title %}Value Stream Mgmt{% endblock title %} 
 
 {% block content %}
 <style>
@@ -19,23 +19,19 @@
 
     .leftline{
          border-left: 2px dashed black;
-         height: 30px;
-         margin-top: -30px;
+         height: 40px;
     }
     .rightline{
          border-right: 2px dashed black;
-         height: 30px;
-         margin-top: -30px;
+         height: 40px;
     }
     .leftlineb{
          border-left: 2px solid black;
          height: 60px;
-         margin-bottom: -30px;
     }
     .rightlineb{
          border-right: 2px solid black;
          height: 60px;
-         margin-bottom: -30px;
     }
 
     .my_table td {
@@ -126,32 +122,31 @@
     <!-- Listing and Results -->
     <div class="row">
         <div class="col col-md-5 text-start">
-            <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object.parent}}</a>
-            &nbsp;/&nbsp;
-            <a href="{% url 'dev_valuestream_mgmt' parent %}">Dev Value Stream:</a>
-            Value Stream Steps
+            <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object}}</a>
+            Value Stream has total {{steps_count}} Steps
         </div>
         <div class="col col-md-7 text-end">
             &nbsp;&nbsp;
-            <a href="{% url 'valuestream_steps' vs object.id %}">Steps</a>       
+            <a href="{% url 'valuestream_steps' 'ops' object.id %}">Steps</a>
+            
             
         </div>
     </div>
     <div class="row">
         <div class="col col-md-12 text-end">
-            <div class="zoom-controls">                
-                <button id="zoomOut">Zoom Out</button>
+            <div class="zoom-controls">
                 <button id="zoomIn">Zoom In</button>
+                <button id="zoomOut">Zoom Out</button>
               </div>
               &nbsp;&nbsp;
         </div>
     </div>
     <div class="row">
-        <div class="col col-md-12 text-left">           
-            <div id="zoomContainer" class="zoom-container text-center">
+        <div class="col col-md-12 text-left">
            
-            </table>
-            <table class="my_table">      
+            <div id="zoomContainer" class="zoom-container text-center">
+            
+            <table class="my_table">     
                 <tr>
                     <td colspan="{{total_table_cols}}" class="text-center">
                         Lead Time {{object.total_time}} mins
@@ -162,11 +157,7 @@
                         <div class="leftline"></div>
                         <div class="trigger">
                             <img class="moveleft" src="{% static 'img/safe/trigger_vs.png' %}" alt="">
-                            <div class="postitleft">
-                                {% if object.trigger != None %}
-                                {{object.trigger}}
-                                {% endif %}
-                            </div>
+                            <div class="postitleft">{{object.trigger}}</div>
                          </div>                
     
                     </td>
@@ -183,13 +174,9 @@
                     {% endfor %}
                     <td>
                         <div class="rightline"></div>
-                        <div class="value">
+                        <div class="value">                            
                             <img src="{% static 'img/safe/value_vs.png' %}" alt="">  
-                            <div class="postitright">
-                                {% if object.trigger != None %}
-                                {{object.value}}
-                                {% endif %}
-                            </div>
+                            <div class="postitright">{{object.value}}</div>
                           </div>                       
                                                             
                     </td>
@@ -238,16 +225,40 @@
                                        
                     </td>
                 </tr>  
+                <!-- experiment -->
                 <tr>
-                    <td colspan="{{total_table_cols}}" class="text-center">
-                        Repeat until value lifetime
-                    </td>
-                </tr>     
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    {% for step in vsm_steps %}
+                        <td> </td>
+                        <td> </td>
+                    {% endfor %}
+                    <td></td>
+                </tr>
                 </table>
             </div>
         </div>
     </div>
     
+    <!-- experiment -->
+    <div class="dev-value-streams">
+        {% for dev_stream in dev_value_streams %}
+            <div id="devStream{{ dev_stream.id }}" class="dev-stream">
+                <h3>{{ dev_stream.name }}</h3>
+                <p>{{ dev_stream.description }}</p>
+                <ul>
+                    {% for step in dev_stream.supported_ops_steps.all %}
+                        <li id="opsStep{{ step.id }}">{{ step.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+    
+    
+
+
     <!-- Footer -->
     {% include "../../_1base/footer.html" %} 
 </div>
@@ -269,4 +280,23 @@
     });
 
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Example of drawing a simple line; for complex arrows, use a library like LeaderLine
+        var devStreams = document.querySelectorAll('.dev-stream');
+    
+        devStreams.forEach(function(stream) {
+            var relatedSteps = stream.querySelector('.related-ops-steps').innerText.trim().split(',');
+            relatedSteps.forEach(function(stepId) {
+                if(stepId) {
+                    var stepElement = document.getElementById('opsStep' + stepId);
+                    // Here you would create a visual line or arrow. This is where you integrate LeaderLine or a custom solution.
+                    console.log('Draw line from', stream.id, 'to', stepElement.id);
+                }
+            });
+        });
+    });
+    </script>
+    
 {% endblock %}

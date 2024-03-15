@@ -12,6 +12,9 @@ from django.http import HttpResponseForbidden
 from functools import wraps
 from django.db.models import *
 from django.http import Http404
+from django.utils.html import strip_tags
+import json
+from django.http import JsonResponse
 # Create your views here.
 app_name = "app_web"
 
@@ -391,11 +394,9 @@ def edit_dev_valuestream(request, id):
     user = request.user
     profile, created = Profile.objects.get_or_create(user=request.user)
     object = DevValueStream.objects.get(active=True, id=id)
-    print(f">>> === devvs {object} === <<<")
     # processing
     form = DevValueStreamForm(instance=object)
     if request.method == 'POST':
-        print(f">>> === post method === <<<")
         form = DevValueStreamForm(request.POST, instance=object)
         if form.is_valid():
             print(f">>> === form valid === <<<")
@@ -482,12 +483,14 @@ def view_ops_valuestream(request, id):
     user = request.user
     profile, created = Profile.objects.get_or_create(user=request.user)   
     object = OpsValueStream.objects.get(active=True, id=id)
+    vsm_steps = ValueStreamSteps.objects.filter(active=True, opsvaluestream=object)
     # send outputs (info, template, request)
     context = {
         'page': 'ops_valuestream_mgmt',
         'user': user,
         'profile': profile,
         'object': object,
+        'vsm_steps': vsm_steps,
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/view_ops_valuestream.html"
     return render(request, template_file, context)
@@ -576,4 +579,104 @@ def cafe_wbs(request):
     ).filter(active=True)
     context = {'themes': themes, 'quarters': ['Q1', 'Q2', 'Q3', 'Q4']}
     template_file = f"{app_name}/_cafe/mgmt/cafe_wbs.html"
+    return render(request, template_file, context)
+
+
+# delete ovs
+@login_required(login_url='login')
+def delete_ovs(request, id):
+    object = get_object_or_404(OpsValueStream, id=id)
+    context = {'object': object}
+    if request.method == 'POST':
+        OpsValueStream.objects.filter(id=id).update(active=False, deleted=False,  author=request.user)
+        return redirect('ops_valuestream_mgmt')
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/delete_ops_valuestream.html"
+    return render(request, template_file, context)
+
+# add ovs 
+@login_required(login_url='login')
+def add_ovs(request):
+    if request.method == 'POST':
+        form = OpsValueStreamForm(request.POST)
+        if form.is_valid():
+            form.instance.author = request.user
+            vsm = form.save()            
+            return redirect('ops_valuestream_mgmt')
+    else:
+        form = OpsValueStreamForm()
+    
+    context = {'page': 'add_ovs', 'form': form}
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/add_ops_valuestream.html"
+    return render(request, template_file, context)
+
+@login_required(login_url='login')
+def sorted_vsm_steps(request):
+    if request.method == 'POST':
+        ajax_data = request.POST['sorted_list_data']
+        new_data = ajax_data.replace("[",'')
+        new_data = new_data.replace("]",'')
+        sorted_list = new_data.split(",")
+        seq = 1
+        for item in sorted_list:
+            str = item.replace('"','')
+            position = str.split('_')
+            ValueStreamSteps.objects.filter(pk=position[0]).update(position=seq)
+            seq = seq + 1
+        context = {'ajax_data': ajax_data}
+        template_file = f"{app_name}/_3admin/valuestream_mgmt/valuestream_steps.html"
+        return render(request, template_file, context)
+
+
+@login_required(login_url='login')
+def ajaxupdate_valuestream_steps(request):
+    if request.method == 'POST':
+        print("AJAX CHECKBOX METHOD TEST")
+        ajax_data = request.POST['checkbox_data']
+        checkbox_details = ajax_data.split('_')
+        checkbox_id = checkbox_details[0]
+        checkbox_position = checkbox_details[1]
+        checkbox_status = strip_tags(checkbox_details[2])
+        obj = ValueStreamSteps.objects.filter(id=checkbox_id).update(title=checkbox_status)
+
+        response_data = {}
+        response_data['result'] = obj
+
+        return JsonResponse(response_data)
+    context = {'page': 'ajax_vssteps',}
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/valuestream_steps.html"
+    return render(request, template_file, context)
+
+
+# add vsm steps 
+@login_required(login_url='login')
+def add_vsm_steps(request, vs, id):
+    if vs == "ops":
+        parent = OpsValueStream.objects.get(active=True, id=id)        
+    elif vs == "dev":
+        parent = DevValueStream.objects.get(active=True, id=id)
+    else:
+        print(f"Error No Ops/Dev VS identified")
+    print(f">>> === ADD VSM STEPS === <<<")
+    if request.method == 'POST':
+        form = ValueStreamStepsForm(request.POST)
+        if form.is_valid():
+            print(f">>> === form valid === <<<")
+            if vs == "ops":
+                form.instance.opsvaluestream = parent     
+            elif vs == "dev":
+                form.instance.devvaluestream = parent
+            else:
+                print(f"Error No Ops/Dev VS identified")
+            form.instance.author = request.user
+            vsm = form.save()            
+            return redirect('valuestream_steps', vs=vs, id=id)
+        else:
+            print(f">>> === form invalid {form.errors} === <<<")
+    else:
+        form = ValueStreamStepsForm()
+    
+    context = {'page': 'add_vsm_steps', 
+                'parent': parent,
+               'form': form}
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/add_vsm_steps.html"
     return render(request, template_file, context)

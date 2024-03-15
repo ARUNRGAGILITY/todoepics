@@ -1,57 +1,103 @@
 {% block content %}
-<table>
-    <tr>
-        <th>Strategic Theme</th>
-        <th>Epic</th>
-        <th>Feature/Capability</th>
-        <th>User Story/Spike</th>
-        <th>Task</th>
-    </tr>
-    {% for theme in themes %}
-    <tr>
-        <td>{{ theme.name }}</td>
-        <td colspan="4"></td> <!-- Placeholder for Epic names -->
-    </tr>
-    {% for epic in theme.epics.all %}
-        {% for feature in epic.features.all %}
+<table border="1">
+    <thead>
         <tr>
-            <td></td> <!-- Empty cell under Strategic Theme -->
-            <td>{{ epic.name }} (Feature)</td>
-            <td>{{ feature.name }}</td>
-            <td>
+            <th>Strategic Theme</th>
+            <th>Epic</th>
+            <th>Feature/Capability</th>
+            <th>User Story/Spike</th>
+            <th>Task</th> <!-- New column for Tasks -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for theme in themes %}
+        <tr>
+            <td><strong>{{ theme.name }}</strong></td>
+            <td colspan="4">{{ theme.description }}</td>
+        </tr>
+        {% for epic in theme.epics.all %}
+            <tr>
+                <td></td>
+                <td>{{ epic.name }}</td>
+                <td colspan="3">{{epic.description}}</td>
+            </tr>
+            {% for feature in epic.features.all %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>{{ feature.name }} (Feature)</td>
+                    <td colspan="2">{{feature.description}}</td>
+                </tr>
                 {% for user_story in feature.user_stories.all %}
-                {{ user_story.name }}<br>
-                {% endfor %}
-            </td>
-            <td>
-                {% for user_story in feature.user_stories.all %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ user_story.name }}</td>
+                        <td></td> <!-- Placeholder for Task related to User Story -->
+                    </tr>
                     {% for task in user_story.tasks.all %}
-                    {{ task.name }}<br>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td> <!-- Align under User Story -->
+                            <td>{{ task.name }}</td> <!-- Task listed here -->
+                        </tr>
                     {% endfor %}
                 {% endfor %}
-            </td>
-        </tr>
-        {% endfor %}
-        {% for capability in epic.capabilities.all %}
-        <tr>
-            <td></td> <!-- Empty cell under Strategic Theme -->
-            <td>{{ epic.name }} (Capability)</td>
-            <td>{{ capability.name }}</td>
-            <td>
-                {% for spike in capability.spikes.all %}
-                {{ spike.name }}<br>
+            {% endfor %}
+            {% for capability in epic.capabilities.all %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>{{ capability.name }} (Capability)</td>
+                    <td colspan="2"></td>
+                </tr>
+                {% for user_story in capability.user_stories.all %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ user_story.name }}</td>
+                        <td></td> <!-- Placeholder for Task related to User Story -->
+                    </tr>
+                    {% for task in user_story.tasks.all %}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td> <!-- Align under User Story -->
+                            <td>{{ task.name }}</td> <!-- Task listed here -->
+                        </tr>
+                    {% endfor %}
                 {% endfor %}
-            </td>
-            <td>
                 {% for spike in capability.spikes.all %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ spike.name }}</td>
+                        <td></td> <!-- Placeholder for Task related to Spike -->
+                    </tr>
                     {% for task in spike.tasks.all %}
-                    {{ task.name }}<br>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td> <!-- Align under Spike -->
+                            <td>{{ task.name }}</td> <!-- Task listed here -->
+                        </tr>
                     {% endfor %}
                 {% endfor %}
-            </td>
-        </tr>
+            {% endfor %}
+        {% empty %}
+            <tr>
+                <td></td>
+                <td colspan="4">No Epics available</td>
+            </tr>
         {% endfor %}
-    {% endfor %}
-    {% endfor %}
+        {% endfor %}
+    </tbody>
 </table>
 {% endblock %}

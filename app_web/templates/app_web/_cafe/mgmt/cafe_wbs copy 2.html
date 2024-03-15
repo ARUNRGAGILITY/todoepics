@@ -1,0 +1,50 @@
+{% block content %}
+<table border="1" cellspacing="1" cellpadding="1">
+    <thead>
+        <tr>
+            <th>Strategic Theme</th>
+            <th>Epic</th>
+            <th>Feature/Capability</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for theme in themes %}
+        <!-- A row to indicate the start of a new Strategic Theme -->
+        <tr>
+            <td><strong>{{ theme.name }}</strong></td>
+            <td colspan="2"></td>
+        </tr>
+        {% for epic in theme.epics.all %}
+            <!-- First Epic row with the Epic name -->
+            <tr>
+                <td></td> <!-- Strategic Theme cell left blank for Epic rows -->
+                <td>{{ epic.name }}</td>
+                <td></td> <!-- Initial row for Epic doesn't list Features/Capabilities -->
+            </tr>
+            <!-- Subsequent rows for Features -->
+            {% for feature in epic.features.all %}
+            <tr>
+                <td></td> <!-- Keep Strategic Theme cell blank -->
+                <td></td> <!-- Epic cell blank; Features/Capabilities are listed next -->
+                <td>{{ feature.name }} (Feature)</td>
+            </tr>
+            {% endfor %}
+            <!-- Subsequent rows for Capabilities -->
+            {% for capability in epic.capabilities.all %}
+            <tr>
+                <td></td>
+                <td></td> <!-- Maintain alignment under Epic -->
+                <td>{{ capability.name }} (Capability)</td>
+            </tr>
+            {% endfor %}
+        {% empty %}
+            <!-- If no Epics are available, display a message -->
+            <tr>
+                <td></td>
+                <td colspan="2">&nbsp;</td>
+            </tr>
+        {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

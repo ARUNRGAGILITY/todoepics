@@ -59,7 +59,7 @@ class DevValueStreamForm(forms.ModelForm):
 class ValueStreamStepsForm(forms.ModelForm):
     class Meta:
         model = ValueStreamSteps
-        fields = ['name', 'description', 'value_creation_time', 'delay_time']  
+        fields = ['name', 'description', 'owner', 'value_creation_time', 'delay_time']  
 
 
 class ProfileForm(forms.ModelForm):

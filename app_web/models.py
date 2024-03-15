@@ -17,7 +17,7 @@ class BaseModel1(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True, null=True, blank=True)
-    
+    deleted = models.BooleanField(default=True, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -126,6 +126,7 @@ class OVS_Types(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True, null=True, blank=True)
+    deleted = models.BooleanField(default=True, null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='ovstypes')
 
     class Meta:
@@ -141,6 +142,7 @@ class DVS_Types(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True, null=True, blank=True)
+    deleted = models.BooleanField(default=True, null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='dvstypes')
 
     class Meta:
@@ -151,14 +153,16 @@ class DVS_Types(models.Model):
 
 
 class OpsValueStream(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=False)
     description = models.TextField(null=True, blank=True)
     trigger = models.CharField(max_length=255, null=True, blank=True)
     value = models.CharField(max_length=255, null=True, blank=True)
+    owner = models.CharField(max_length=255, null=True, blank=True)
     position = models.PositiveIntegerField(default=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True, null=True, blank=True)
+    deleted = models.BooleanField(default=True, null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='authops')
    
     total_value_creation_time = models.IntegerField(default=0)
@@ -181,7 +185,8 @@ class OpsValueStream(models.Model):
         self.total_delay_time = total_delay_time
         self.total_time = total_time
         # Avoid division by zero
-        self.efficiency = (total_value_creation_time / total_time * 100) if total_time > 0 else 0
+        efficiency = (total_value_creation_time / total_time * 100) if total_time > 0 else 0
+        self.efficiency = round(efficiency, 2)
     class Meta:
         ordering = ['position']
 
@@ -190,13 +195,17 @@ class OpsValueStream(models.Model):
 
 class DevValueStream(models.Model):
     ops_valuestream = models.ForeignKey(OpsValueStream, null=True, blank=True, on_delete=models.SET_NULL, related_name='devvaluestream')
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=False)
     description = models.TextField(null=True, blank=True)
+    trigger = models.CharField(max_length=255, null=True, blank=True)
+    value = models.CharField(max_length=255, null=True, blank=True)
+    owner = models.CharField(max_length=255, null=True, blank=True)
     supported_ops_steps = models.ManyToManyField('ValueStreamSteps', related_name='supporting_dev_streams', blank=True)
     position = models.PositiveIntegerField(default=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True, null=True, blank=True)
+    deleted = models.BooleanField(default=True, null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='authdev')
 
     
@@ -236,12 +245,14 @@ class ValueStreamSteps(models.Model):
 
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(null=True, blank=True)
+    owner = models.CharField(max_length=255, null=True, blank=True)
     value_creation_time = models.IntegerField(default=0)
     delay_time = models.IntegerField(default=0)
     position = models.PositiveIntegerField(default=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True, null=True, blank=True)
+    deleted = models.BooleanField(default=True, null=True, blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='authsteps')
 
     def save(self, *args, **kwargs):
@@ -279,6 +290,7 @@ class Role(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True, null=True, blank=True)
+    deleted = models.BooleanField(default=True, null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='role')
 
     class Meta:
@@ -294,6 +306,7 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True, null=True, blank=True)
+    deleted = models.BooleanField(default=True, null=True, blank=True)
     
     def __str__(self):
         return f'Profile of {self.user.username}'

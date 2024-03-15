@@ -7,7 +7,7 @@ from .models import *
 
 
 ## cafe
-admin.site.register(StrategicTheme)
+
 admin.site.register(Objective)
 admin.site.register(KeyResult)
 admin.site.register(QuarterlyMeasure)
@@ -16,6 +16,14 @@ admin.site.register(Epic)
 admin.site.register(Feature)
 admin.site.register(Capability)
 admin.site.register(Spike)
+
+
+class EpicInline(admin.TabularInline):  # You can also use admin.StackedInline for a different layout
+    model = Epic
+    extra = 1  # Specifies the number of blank forms to display by default
+@admin.register(StrategicTheme)
+class StrategicThemeAdmin(admin.ModelAdmin):
+    inlines = [EpicInline]
 
 class TaskInline(admin.TabularInline):  # You can also use admin.StackedInline for a different layout
     model = Task

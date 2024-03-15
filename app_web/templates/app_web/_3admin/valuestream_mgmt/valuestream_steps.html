@@ -1,24 +1,58 @@
 {% extends "../../_1base/bootstrap_base.html" %} 
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}Value Stream Steps{% endblock title %} 
-
+{% block title %}ValueStream Steps{% endblock title %} 
 {% block content %}
-<div class="container-fluid">
-    <!-- header -->
-    <div class="row">
-        <div class="col col-md-5">
-            Header
-        </div>
-        <div class="col col-md-7 text-end">
-            &nbsp;&nbsp;
-            <a href="/">Home</a>
-        </div>
-    </div>
-    <!-- role mgmt header/menu -->
+<style>
+    #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+    #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+    #sortable li span { position: absolute; margin-left: -1.3em; }
+    </style>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+$( function() {
+  // on load hide the datetime details and show when checkbox selected
+
+  // sorted list  
+  $( "#sortable" ).sortable({
+      stop: function(event, ui) {
+        var serialOrder = $('#sortable').sortable('serialize');
+        var arrayOrder = $('#sortable').sortable('toArray');
+        $.ajax({
+          url: '/sorted_vsm_steps/',
+          type: 'POST',
+          data : {
+            'csrfmiddlewaretoken': "{{ csrf_token }}",
+            'sorted_list_data': JSON.stringify(arrayOrder)
+          },
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+          }
+        });
+         $(this).find('tr').each(function(i){
+            $(this).children('td:nth-child(1)').text(i+1);
+        });
+      }
+  });
+  $( "#sortable" ).sortable();
+  $( "#sortable" ).disableSelection();
+});
+</script>
+
+<form action="" method="POST">
+{% csrf_token %}
+<div class="container-fluid">   
     <div class="row">
         <div class="col col-md-12">
-            
+         
+        </div>
+    </div>
+    <div class="row pt-2">
+        <div class="col col-md-8">    
+            <b>Value Stream Steps of </b>
+            &nbsp;           
             {% if vs == 'ops' %}
                 <a href="{% url 'ops_valuestream_mgmt' %}">{{parent}}</a>
                 &nbsp;
@@ -28,79 +62,86 @@
                 <a href="{% url 'dev_valuestream_mgmt' parent.ops_valuestream.id %}">
                     {{parent.ops_valuestream}}
                     &nbsp;/&nbsp;
-                    {{parent}}
+                    {{parent}} {{vs}} {{ref_id}}
                 </a>
             {% endif %}
         </div>
-    </div>
-    <!-- Role Mgmt -->
-    <div class="row">
-        <div class="col-md-12">
-           <form action="" method="POST">
-            {% csrf_token %}
-            <input type="text" name="name" id="step_name" size="35" maxlength="60">
+        <div class="col col-md-4 text-end">
+            <a href="{% url 'add_vsm_steps' vs id %}" class="btn btn-sm btn-primary pb-2">+ Add Value Stream Step</a>
             &nbsp;&nbsp;
-            <input type="text" name="description" id="step_description" size="35" maxlength="60">
-            &nbsp;&nbsp;
-            <input type="text" name="value_creation_time" id="value_creation_time" size="4" maxlength="5">
-            &nbsp;&nbsp;
-            <input type="text" name="delay_time" id="delay_time" size="4" maxlength="5">
-            <input type="hidden" name="vs" value="{{vs}}" id="vs">
-            <input type="hidden" name="id" value="{{id}}" id="id">
-            <input type="submit" name="submit" value="Add" id="submit"/>
-           </form>
-           <br>
         </div>
     </div>
-    <!-- Listing and Results -->
-    <div class="row">
-        <div class="col col-md-12">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th width="2%" align="right">#</th>
-                        <th>Step Name</th>
-                        <th width="30%">Description</th>
-                        <th>Value Creation Time</th>
-                        <th>Delays Time</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for object in steps %}
-                    <tr>
-                        <td width="2%" align="right">
-                            {{forloop.counter}}
-                        </td>
-                        <td>{{object.name}}</td>
-                        <td width="30%">{{object.description}}</td>
-                        <td>{{object.value_creation_time}}</td>
-                        <td>{{object.delay_time}}</td>
-                        <td>
-                           
-                            <a href="">View</a>
-                            &nbsp;&nbsp;
-                            <a href="{% url 'edit_step' vs id object.id %}">Edit</a>
-                            &nbsp;&nbsp;
-                            <a href="">Delete</a>
+    <div class="row pt-2">
+        <div class="col-md-12">
+            <table  id="outline" class="table table-bordered" >
+                <tr>
+                  
+                    <th width="2%" align="right">#</th>
+                    <th>Step Name</th>
+                    <th width="30%">Description</th>
+                    <th>Value Creation Time (mins)</th>
+                    <th>Delay Time (mins)</th>
+                    <th>Actions</th>
+                </tr>
+                <tbody id="sortable">
+                {% for object in steps %}
+                <tr id="{{object.id}}_{{ forloop.counter }}" class="ui-state-default" style='background-color: white;'>
+                   
+                    <td width="2%" align="right">
+                        {{forloop.counter}}
+                    </td>
+                    <td>{{object.name}}</td>
+                    <td width="30%">{{object.description}}</td>
+                    <td>{{object.value_creation_time}} min(s)</td>
+                    <td>{{object.delay_time}} min(s)</td>
+                    <td>                       
+                        <a href="{% url 'edit_step' vs id object.id %}">View</a>
+                        &nbsp;&nbsp;
+                        <a href="{% url 'edit_step' vs id object.id %}">Edit</a>
+                        &nbsp;&nbsp;
+                        <a href="{% url 'edit_step' vs id object.id %}">Delete</a>
 
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    <tr>
-
-                        <td colspan="3">{{object.total_value_creation_time}} + {{object.total_delay_time}}</td>
-                        <td>= {{total_time}}</td>
-                    </tr>
-                </tbody>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>                
             </table>
         </div>
     </div>
-    <!-- Footer -->
     <div class="row">
         <div class="col col-md-12">
-            Footer
+            <table class="table table-bordered">
+                <tr>
+                    <td>
+                         Total Value Creation Time (mins) + Total Delay Time (mins) = Total Time (mins) <br>
+                         i.e., {{parent.total_value_creation_time}} (mins) +  {{parent.total_delay_time}} (mins) = {{parent.total_time}} (mins)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                         (Total Value Creation Time (mins) / Total Time (mins)) * 100 % = VSM Process Efficency % <br>
+                      i.e., ({{parent.total_value_creation_time}} (mins) / {{parent.total_time}} (mins)) * 100 % = {{parent.efficiency}} %
+                    </td>
+                </tr>
+            </table>           
         </div>
     </div>
 </div>
-{% endblock %}
+</form>
+
+
+<script>
+ $(document).ready(function () {
+      // Prevent checkbox vanishing issue
+      $('input[type="checkbox"]').on('mousedown', function (e) {
+        e.stopPropagation();
+      });
+    });
+function checkUncheck(checkBox) {
+    get = document.getElementsByName('object_box');
+    for(var i=0; i<get.length; i++) {
+        get[i].checked = checkBox.checked;
+    }
+}
+</script>
+{% endblock content %}

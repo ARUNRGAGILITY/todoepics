@@ -153,8 +153,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vcafe_start_v1.2'
-BUILD_DESCRIPTION = 'cafe wbs'
+BUILD_VERSION = 'v150324_ovs_view'
+BUILD_DESCRIPTION = 'created CAFe type view option for value stream'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "TODOEPICS"
 SITE_NAME = "Project TODOEPICS v1.0"

@@ -23,19 +23,9 @@
     </div>
     <!-- Role Mgmt -->
     <div class="row">
-        <div class="col-md-12">
-           <form action="" method="POST">
-            {% csrf_token %}
-            Name: &nbsp;<input type="text" name="name" id="role_name" size="35" maxlength="60">
-            &nbsp;&nbsp;
-            Desc: &nbsp;<input type="text" name="description" id="role_description" size="35" maxlength="60">
-            <br>
-            Trigger: &nbsp;<input type="text" name="trigger" id="trigger" size="35" maxlength="60">
-            &nbsp;&nbsp;
-            Value: &nbsp;<input type="text" name="value" id="value" size="35" maxlength="60">
-            <input type="submit" name="submit" value="Add" id="submit"/>
-           </form>
-           <br>
+        <div class="col col-md-9"></div>
+        <div class="col col-md-3 text-end">
+            <a href="{%url 'add_ovs' %}">Add Operational Value Stream &nbsp;</a>
         </div>
     </div>
     <!-- Listing and Results -->
@@ -75,7 +65,7 @@
                             &nbsp;&nbsp;
                             <a href="{% url 'edit_ops_valuestream' object.id %}">Edit</a>
                             &nbsp;&nbsp;
-                            <a href="">Delete</a>
+                            <a href="{% url 'delete_ovs' object.id %}">Delete</a>
 
                         </td>
                     </tr>

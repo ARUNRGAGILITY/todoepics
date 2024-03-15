@@ -153,8 +153,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'v150324_ovs_view4'
-BUILD_DESCRIPTION = 'created CAFe type view option for value stream'
+BUILD_VERSION = 'v150324_ovs_view5'
+BUILD_DESCRIPTION = 'working map of OVS with DVS'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "TODOEPICS"
 SITE_NAME = "Project TODOEPICS v1.0"

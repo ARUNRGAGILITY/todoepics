@@ -493,12 +493,13 @@ def view_ops_valuestream(request, id):
     total_table_cols = (steps_count * 2) + 3
         
     steps_to_dev_streams = {}
-    for dev_stream in dev_value_streams:
+    for dev_stream in DevValueStream.objects.all().prefetch_related('supported_ops_steps'):
         for step in dev_stream.supported_ops_steps.all():
             if step.id not in steps_to_dev_streams:
                 steps_to_dev_streams[step.id] = [dev_stream.id]
             else:
                 steps_to_dev_streams[step.id].append(dev_stream.id)
+    print(f">>> === CHECKING|||||| {steps_to_dev_streams} ||||| === <<< ")
     # Your existing logic to fetch steps and other necessary data
     vsm_steps = ValueStreamSteps.objects.filter(opsvaluestream=object)  # Adjust as necessary
 

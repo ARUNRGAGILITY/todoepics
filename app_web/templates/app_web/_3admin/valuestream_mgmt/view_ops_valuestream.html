@@ -310,34 +310,65 @@
 
 <!-- SVG Overlay -->
 <svg id="lineDrawingArea" style="position:absolute; top:0; left:0; height:100%; width:100%; z-index:1; pointer-events:none;"></svg>
-
-<!-- JavaScript to Draw Lines -->
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const svgNamespace = "http://www.w3.org/2000/svg";
-    const lineDrawingArea = document.getElementById('lineDrawingArea');
-
-    document.querySelectorAll('.ops-step').forEach(function(step) {
-        const stepBounds = step.getBoundingClientRect();
-        const supportingDevStreamIds = step.getAttribute('data-supporting-dev-streams').split(',');
-
-        supportingDevStreamIds.forEach(function(devStreamId) {
-            const devStream = document.querySelector(`#devStream${devStreamId.trim()}`);
-            if(devStream) {
-                const devStreamBounds = devStream.getBoundingClientRect();
-                const line = document.createElementNS(svgNamespace, 'line');
-                line.setAttribute('x1', stepBounds.left + stepBounds.width / 2);
-                line.setAttribute('y1', stepBounds.top + stepBounds.height / 2);
-                line.setAttribute('x2', devStreamBounds.left + devStreamBounds.width / 2);
-                line.setAttribute('y2', devStreamBounds.top + devStreamBounds.height / 2);
-                line.setAttribute('stroke', 'black');
-                line.setAttribute('stroke-width', '2');
-                lineDrawingArea.appendChild(line);
-            }
+    // Debounce function to limit the rate at which a function is executed
+    function debounce(func, wait, immediate) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    }
+    
+    function drawLines() {
+        const svgNamespace = "http://www.w3.org/2000/svg";
+        const lineDrawingArea = document.getElementById('lineDrawingArea');
+        // Clear existing lines
+        while (lineDrawingArea.firstChild) {
+            lineDrawingArea.removeChild(lineDrawingArea.firstChild);
+        }
+    
+        document.querySelectorAll('.ops-step').forEach(function(step) {
+            const stepBounds = step.getBoundingClientRect();
+            const supportingDevStreamIds = step.getAttribute('data-supporting-dev-streams').split(',');
+    
+            supportingDevStreamIds.forEach(function(devStreamId) {
+                const devStream = document.querySelector(`#devStream${devStreamId.trim()}`);
+                if (devStream) {
+                    const devStreamBounds = devStream.getBoundingClientRect();
+                    const nameElement = devStream.querySelector('b'); // Assuming the name is within <b> tags
+                    const nameBounds = nameElement ? nameElement.getBoundingClientRect() : devStreamBounds;
+                    
+                    const line = document.createElementNS(svgNamespace, 'line');
+                    line.setAttribute('x1', stepBounds.left + stepBounds.width / 2);
+                    line.setAttribute('y1', stepBounds.top + stepBounds.height / 2);
+                    // Use the middle of the nameElement for x2 if available, otherwise default to devStream middle
+                    line.setAttribute('x2', nameBounds.left + nameBounds.width / 2);
+                    line.setAttribute('y2', devStreamBounds.top - 10); // Adjust as needed
+                    line.setAttribute('stroke', 'black');
+                    line.setAttribute('stroke-width', '2');
+                    lineDrawingArea.appendChild(line);
+                }
+            });
         });
-    });
-});
-</script>
+    }
+    
+    // Initial draw
+    document.addEventListener("DOMContentLoaded", drawLines);
+    
+    // Redraw on resize with debounce
+    window.addEventListener('resize', debounce(function() {
+        drawLines();
+    }, 250)); // Adjust the 250ms debounce time as needed
+    </script>
+    
 
     
     

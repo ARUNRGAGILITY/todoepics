@@ -26,6 +26,7 @@
          border-right: 2px dashed black;
          height: 30px;
          margin-top: -30px;
+         margin-right: -8px;
     }
     .leftlineb{
          border-left: 2px solid black;
@@ -36,6 +37,7 @@
          border-right: 2px solid black;
          height: 60px;
          margin-bottom: -30px;
+         margin-right: -8px;
     }
 
     .my_table td {
@@ -125,6 +127,7 @@
     .dev-value-streams li {
         font-size: 10px; /* Adjust font size as needed */
     }
+    
 </style>
 <div class="container-fluid">
     <!-- header -->
@@ -177,12 +180,14 @@
                         <img src="{% static 'img/safe/start_arrow.png' %}" alt="">
                     </td>
                     {% for step in vsm_steps %}
+                        {% if step.active == True %}
                         <td>                            
                             <img src="{% static 'img/safe/step_vs.png' %}" alt="">
                          </td>
                         <td>
                             <img src="{% static 'img/safe/flow_with_delay.png' %}" alt="">
                         </td>
+                        {% endif %}
                     {% endfor %}
                     <td>
                         <div class="rightline"></div>
@@ -202,6 +207,7 @@
 
                     </td>
                     {% for step in vsm_steps %}
+                    {% if step.active == True %}
                         <td>                            
                             <div class="ops-step" data-id="{{ step.id }}" data-supporting-dev-streams="{{ steps_to_dev_streams|get_item:step.id|join:',' }}">
                                 {{ step.name }}
@@ -210,6 +216,7 @@
                         <td>
   
                         </td>
+                        {% endif %}
                     {% endfor %}
                     <td>
                         <div class="rightlineb"></div>
@@ -226,12 +233,14 @@
 
                     </td>
                     {% for step in vsm_steps %}
+                    {% if step.active == True %}
                         <td>                            
    
                          </td>
                         <td>
   
                         </td>
+                        {% endif %}
                     {% endfor %}
                     <td>
                         <div class="rightlineb"></div>
@@ -273,7 +282,9 @@
                     <b>{{ dev_stream.name }}</b>
                     <ul>
                         {% for step in dev_stream.supported_ops_steps.all %}
-                            <li>{{ step.name }}</li>
+                            {% if step.active == True %}
+                                <li>{{ step.name }}</li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
@@ -308,22 +319,17 @@
 
 </script>
 
-<!-- SVG Overlay -->
-<svg id="lineDrawingArea" style="position:absolute; top:0; left:0; height:100%; width:100%; z-index:1; pointer-events:none;"></svg>
 <script>
-    // Debounce function to limit the rate at which a function is executed
     function debounce(func, wait, immediate) {
         var timeout;
         return function() {
             var context = this, args = arguments;
-            var later = function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
                 timeout = null;
                 if (!immediate) func.apply(context, args);
-            };
-            var callNow = immediate && !timeout;
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-            if (callNow) func.apply(context, args);
+            }, wait);
+            if (immediate && !timeout) func.apply(context, args);
         };
     }
     
@@ -343,16 +349,14 @@
                 const devStream = document.querySelector(`#devStream${devStreamId.trim()}`);
                 if (devStream) {
                     const devStreamBounds = devStream.getBoundingClientRect();
-                    const nameElement = devStream.querySelector('b'); // Assuming the name is within <b> tags
-                    const nameBounds = nameElement ? nameElement.getBoundingClientRect() : devStreamBounds;
-                    
+    
                     const line = document.createElementNS(svgNamespace, 'line');
                     line.setAttribute('x1', stepBounds.left + stepBounds.width / 2);
-                    line.setAttribute('y1', stepBounds.top + stepBounds.height / 2);
-                    // Use the middle of the nameElement for x2 if available, otherwise default to devStream middle
-                    line.setAttribute('x2', nameBounds.left + nameBounds.width / 2);
-                    line.setAttribute('y2', devStreamBounds.top - 10); // Adjust as needed
-                    line.setAttribute('stroke', 'black');
+                    line.setAttribute('y1', stepBounds.top + stepBounds.height * 0.95); // Endpoint a bit lower on the Ops side
+                    line.setAttribute('x2', devStreamBounds.left + devStreamBounds.width / 2);
+                    // Move y2 a bit higher than the vertical middle of the DVS
+                    line.setAttribute('y2', devStreamBounds.top + devStreamBounds.height * 0.15); // Starting point a bit up on the DVS side
+                    line.setAttribute('stroke', 'lightgrey');
                     line.setAttribute('stroke-width', '2');
                     lineDrawingArea.appendChild(line);
                 }
@@ -360,16 +364,16 @@
         });
     }
     
-    // Initial draw
+    // Initial drawing
     document.addEventListener("DOMContentLoaded", drawLines);
     
-    // Redraw on resize with debounce
+    // Redraw on window resize with debounce
     window.addEventListener('resize', debounce(function() {
         drawLines();
-    }, 250)); // Adjust the 250ms debounce time as needed
+    }, 250));
     </script>
     
-
+    
     
     
 {% endblock %}

@@ -169,11 +169,12 @@ class OpsValueStream(models.Model):
     total_delay_time = models.IntegerField(default=0)
     total_time = models.IntegerField(default=0)
     efficiency = models.FloatField(default=0.0)
+    rolled_ca = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def update_efficiency(self):
-        steps = self.steps.all()
+        steps = self.steps.filter(active=True, deleted=False)
         self.calculate_efficiency(steps)
-        print(f">>> === {steps} testing update === <<<")
+        print(f">>> === |||||||==> count of steps {steps.count()} testing update === <<<")
         self.save()
 
     def calculate_efficiency(self, steps):
@@ -213,9 +214,10 @@ class DevValueStream(models.Model):
     total_delay_time = models.IntegerField(default=0)
     total_time = models.IntegerField(default=0)
     efficiency = models.FloatField(default=0.0)
+    rolled_ca = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def update_efficiency(self):
-        steps = self.steps.all()
+        steps = self.steps.filter(active=True, deleted=False)
         self.calculate_efficiency(steps)
         print(f">>> === {steps} testing update === <<<")
         self.save()
@@ -243,17 +245,19 @@ class ValueStreamSteps(models.Model):
     opsvaluestream = models.ForeignKey(OpsValueStream, on_delete=models.CASCADE, related_name='steps', null=True, blank=True)
     devvaluestream = models.ForeignKey(DevValueStream, on_delete=models.CASCADE, related_name='steps', null=True, blank=True)
 
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=False)
     description = models.TextField(null=True, blank=True)
     owner = models.CharField(max_length=255, null=True, blank=True)
     value_creation_time = models.IntegerField(default=0)
     delay_time = models.IntegerField(default=0)
+    percentage_accurate = models.DecimalField(max_digits=10, decimal_places=2, default=1, )
     position = models.PositiveIntegerField(default=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True, null=True, blank=True)
     deleted = models.BooleanField(default=True, null=True, blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='authsteps')
+
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

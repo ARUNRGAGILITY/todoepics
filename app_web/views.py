@@ -759,7 +759,7 @@ def delete_step(request, vs, ref_id, id):
             parent = DevValueStream.objects.get(active=True, id=ref_id)
         else:
             print(f"Error No Ops/Dev VS identified")
-        ValueStreamSteps.objects.filter(id=id).update(active=False, deleted=False,  author=request.user)                
+        ValueStreamSteps.objects.filter(id=id).update(active=False, deleted=True,  author=request.user)                
         return redirect('valuestream_steps', vs=vs, id=ref_id)
     template_file = f"{app_name}/_3admin/valuestream_mgmt/delete_step.html"
     return render(request, template_file, context)

@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 # Register your models here.
 from .models import *
+from django.contrib import admin
+from django.apps import apps
 
 
 ## cafe
@@ -17,6 +19,14 @@ admin.site.register(Feature)
 admin.site.register(Capability)
 admin.site.register(Spike)
 
+
+
+class ValueStreamStepsAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'owner', 'active', 'deleted', )
+    # Add any other fields you want to display in the admin list view
+
+# Register the model and ModelAdmin with the admin site
+admin.site.register(ValueStreamSteps, ValueStreamStepsAdmin)
 
 class EpicInline(admin.TabularInline):  # You can also use admin.StackedInline for a different layout
     model = Epic
@@ -48,7 +58,7 @@ admin.site.register(Role)
 admin.site.register(Profile)
 admin.site.register(OpsValueStream)
 admin.site.register(DevValueStream)
-admin.site.register(ValueStreamSteps)
+#admin.site.register(ValueStreamSteps)
 
 class ProfileInline(admin.StackedInline):
     model = Profile

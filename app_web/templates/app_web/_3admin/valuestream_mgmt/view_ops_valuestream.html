@@ -82,7 +82,7 @@
     background-color: yellow; /* Classic post-it note color */
     padding: 5px;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.3); /* Gives a slight shadow for depth */
-    font-size: 8px; /* Approximation: Adjust based on your needs and testing */
+    font-size: 11px; /* Approximation: Adjust based on your needs and testing */
     word-wrap: break-word; /* Ensures text wraps within the container */
     overflow: hidden; /* Keeps the content contained within the div */
     display: flex;
@@ -100,7 +100,7 @@
     background-color: yellow; /* Classic post-it note color */
     padding: 5px;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.3); /* Gives a slight shadow for depth */
-    font-size: 8px; /* Approximation: Adjust based on your needs and testing */
+    font-size: 11px; /* Approximation: Adjust based on your needs and testing */
     word-wrap: break-word; /* Ensures text wraps within the container */
     overflow: hidden; /* Keeps the content contained within the div */
     display: flex;
@@ -109,29 +109,43 @@
     text-align: center;
     z-index: 1;
     }
-
+    .zoom-container {
+        transition: transform 0.3s ease; /* Smooth transition for zoom effect */
+        transform-origin: 20% 20%; /* Ensures zooming is centered */
+            }
 </style>
 <div class="container-fluid">
     <!-- header -->
+    {% include "../../_1base/header.html" %} 
+    <!-- role mgmt header/menu -->
+    {% include "./menu_valuestream.html" %} 
+    <!-- Listing and Results -->
     <div class="row">
-        <div class="col col-md-5">
-            Header
+        <div class="col col-md-5 text-start">
+            <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object}}</a>
+            Value Stream Steps
         </div>
         <div class="col col-md-7 text-end">
             &nbsp;&nbsp;
-            <a href="/">Home</a>
+            <a href="{% url 'valuestream_steps' 'ops' object.id %}">Steps</a>
+            
+            
         </div>
     </div>
-    <!-- role mgmt header/menu -->
     <div class="row">
-        <div class="col col-md-12">
-            Menu
+        <div class="col col-md-12 text-end">
+            <div class="zoom-controls">
+                <button id="zoomIn">Zoom In</button>
+                <button id="zoomOut">Zoom Out</button>
+              </div>
+              &nbsp;&nbsp;
         </div>
-    </div>   
-    <!-- Listing and Results -->
+    </div>
     <div class="row">
-        <div class="col col-md-12">
-            <b>Value Stream Steps</b>
+        <div class="col col-md-12 text-left">
+           
+            <div id="zoomContainer" class="zoom-container text-center">
+            
             <table class="my_table">                 
                 <tr>
                     <td>
@@ -139,7 +153,7 @@
                         <div class="trigger">
                             <img class="moveleft" src="{% static 'img/safe/trigger_vs.png' %}" alt="">
                             <div class="postitleft">{{object.trigger}}</div>
-                         </div>                 
+                         </div>                
     
                     </td>
                     <td>
@@ -187,7 +201,7 @@
                 
                 <tr>
                     <td>
-                        <div class="leftlineb"></div>              
+                        <div class="leftlineb"></div>             
     
                     </td>
                     <td>
@@ -205,17 +219,31 @@
                         <div class="rightlineb"></div>
                                        
                     </td>
-                </tr>          
-                
-            </table>
+                </tr>  
+                </table>
+            </div>
         </div>
     </div>
     
     <!-- Footer -->
-    <div class="row">
-        <div class="col col-md-12">
-            Footer
-        </div>
-    </div>
+    {% include "../../_1base/footer.html" %} 
 </div>
+<script>
+  const zoomContainer = document.getElementById('zoomContainer');
+    let zoomLevel = 0.5; // Set initial zoom level to 0.8 (80% of the original size)
+
+    // Apply the initial zoom level when the page loads
+    zoomContainer.style.transform = `scale(${zoomLevel})`;
+
+    document.getElementById('zoomIn').addEventListener('click', () => {
+    zoomLevel += 0.1; // Increase zoomLevel by 0.1 (10%)
+    zoomContainer.style.transform = `scale(${zoomLevel})`;
+    });
+
+    document.getElementById('zoomOut').addEventListener('click', () => {
+    zoomLevel -= 0.1; // Decrease zoomLevel by 0.1 (10%)
+    zoomContainer.style.transform = `scale(${zoomLevel})`;
+    });
+
+</script>
 {% endblock %}

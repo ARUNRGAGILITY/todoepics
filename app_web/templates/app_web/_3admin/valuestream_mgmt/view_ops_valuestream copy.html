@@ -1,7 +1,7 @@
 {% extends "../../_1base/bootstrap_base.html" %} 
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}View Dev Value Stream{% endblock title %} 
+{% block title %}Value Stream Mgmt{% endblock title %} 
 
 {% block content %}
 <style>
@@ -109,10 +109,7 @@
     text-align: center;
     z-index: 1;
     }
-    .zoom-container {
-        transition: transform 0.3s ease; /* Smooth transition for zoom effect */
-        transform-origin: 20% 20%; /* Ensures zooming is centered */
-            }
+
 </style>
 <div class="container-fluid">
     <!-- header -->
@@ -121,33 +118,8 @@
     {% include "./menu_valuestream.html" %} 
     <!-- Listing and Results -->
     <div class="row">
-        <div class="col col-md-5 text-start">
-            <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object.parent}}</a>
-            &nbsp;/&nbsp;
-            <a href="{% url 'dev_valuestream_mgmt' id %}">Dev Value Stream: {{object}}</a>
-            Value Stream Steps
-        </div>
-        <div class="col col-md-7 text-end">
-            &nbsp;&nbsp;
-            <a href="{% url 'valuestream_steps' vs object.id %}">Steps</a>
-            
-            
-        </div>
-    </div>
-    <div class="row">
-        <div class="col col-md-12 text-end">
-            <div class="zoom-controls">
-                <button id="zoomIn">Zoom In</button>
-                <button id="zoomOut">Zoom Out</button>
-              </div>
-              &nbsp;&nbsp;
-        </div>
-    </div>
-    <div class="row">
-        <div class="col col-md-12 text-left">
-           
-            <div id="zoomContainer" class="zoom-container text-center">
-            
+        <div class="col col-md-12">
+            <b>{{object}}</b> Value Stream Steps
             <table class="my_table">                 
                 <tr>
                     <td>
@@ -203,7 +175,7 @@
                 
                 <tr>
                     <td>
-                        <div class="leftlineb"></div>             
+                        <div class="leftlineb"></div>              
     
                     </td>
                     <td>
@@ -221,31 +193,13 @@
                         <div class="rightlineb"></div>
                                        
                     </td>
-                </tr>  
-                </table>
-            </div>
+                </tr>          
+                
+            </table>
         </div>
     </div>
     
     <!-- Footer -->
     {% include "../../_1base/footer.html" %} 
 </div>
-<script>
-  const zoomContainer = document.getElementById('zoomContainer');
-    let zoomLevel = 0.5; // Set initial zoom level to 0.8 (80% of the original size)
-
-    // Apply the initial zoom level when the page loads
-    zoomContainer.style.transform = `scale(${zoomLevel})`;
-
-    document.getElementById('zoomIn').addEventListener('click', () => {
-    zoomLevel += 0.1; // Increase zoomLevel by 0.1 (10%)
-    zoomContainer.style.transform = `scale(${zoomLevel})`;
-    });
-
-    document.getElementById('zoomOut').addEventListener('click', () => {
-    zoomLevel -= 0.1; // Decrease zoomLevel by 0.1 (10%)
-    zoomContainer.style.transform = `scale(${zoomLevel})`;
-    });
-
-</script>
 {% endblock %}

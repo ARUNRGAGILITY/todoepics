@@ -336,17 +336,19 @@ def valuestream_steps(request, vs, id):
     objects = None
     objects_count = None
     steps = None
+    ovs = None
     if vs == "ops":
         parent = OpsValueStream.objects.get(active=True, id=id)        
     elif vs == "dev":
         parent = DevValueStream.objects.get(active=True, id=id)
+        ovs = parent.ops_valuestream
     else:
         print(f"Error No Ops/Dev VS identified")
     
     print(f">>> === IDENTIFIED vs={vs},id={id},parent={parent},parent.id={parent.id} === <<<")
     if parent:
         print(f">>> === IDENTIFIED2: content_type:{parent} === <<<")
-        steps = parent.steps.all()
+        steps = parent.steps.all().filter(active=True)
         steps_details = [(step.id, step.name) for step in steps]  # Collecting step IDs and names
         print(f">>> === IDENTIFIED3: objects:{objects}, steps={steps} === <<<")
         objects_count = steps.count()   
@@ -374,6 +376,7 @@ def valuestream_steps(request, vs, id):
         'page': 'dev_valuestream_mgmt',
         'user': user,
         'parent': parent,
+        'ovs': ovs,
         'profile': profile,
         'objects': objects,
         'objects_count': objects_count,
@@ -490,9 +493,34 @@ def view_ops_valuestream(request, id):
         'user': user,
         'profile': profile,
         'object': object,
+        'vs': 'ops',
         'vsm_steps': vsm_steps,
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/view_ops_valuestream.html"
+    return render(request, template_file, context)
+#####################################################
+# View Ops ValueStream 
+@login_required
+def view_dev_valuestream(request, id):
+    # take inputs
+    # process inputs
+    user = request.user
+    profile, created = Profile.objects.get_or_create(user=request.user)   
+    object = DevValueStream.objects.get(active=True, id=id)
+    parent = object.ops_valuestream.id
+    vsm_steps = ValueStreamSteps.objects.filter(active=True, devvaluestream=object)
+    # send outputs (info, template, request)
+    context = {
+        'page': 'ops_valuestream_mgmt',
+        'user': user,
+        'profile': profile,
+        'parent': parent,
+        'object': object,
+        'vs': 'dev',
+        'id':id,
+        'vsm_steps': vsm_steps,
+    }  
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/view_dev_valuestream.html"
     return render(request, template_file, context)
 
 #####################################################
@@ -680,3 +708,34 @@ def add_vsm_steps(request, vs, id):
                'form': form}
     template_file = f"{app_name}/_3admin/valuestream_mgmt/add_vsm_steps.html"
     return render(request, template_file, context)
+
+
+# add vsm steps 
+@login_required(login_url='login')
+def delete_step(request, vs, ref_id, id):
+    object = None
+    parent = None
+    if vs == "ops":
+        parent = OpsValueStream.objects.get(active=True, id=ref_id)        
+    elif vs == "dev":
+        parent = DevValueStream.objects.get(active=True, id=ref_id)
+    else:
+        print(f"Error No Ops/Dev VS identified")
+    object = get_object_or_404(ValueStreamSteps, id=id)
+    context = {'object': object,
+               'vs': vs,
+               'ref_id': ref_id,
+               'id':id,}
+    if request.method == 'POST':
+        if vs == "ops":
+            parent = OpsValueStream.objects.get(active=True, id=ref_id)        
+        elif vs == "dev":
+            parent = DevValueStream.objects.get(active=True, id=ref_id)
+        else:
+            print(f"Error No Ops/Dev VS identified")
+        ValueStreamSteps.objects.filter(id=id).update(active=False, deleted=False,  author=request.user)                
+        return redirect('valuestream_steps', vs=vs, id=ref_id)
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/delete_step.html"
+    return render(request, template_file, context)
+        
+        

@@ -67,6 +67,16 @@ $( function() {
             {% endif %}
         </div>
         <div class="col col-md-4 text-end">
+            &nbsp;
+            {% if vs == 'ops' %}
+                <a href="{% url 'view_ops_valuestream' parent.id %}">OPS</a>
+            {% endif %}
+            {% if vs == 'dev' %}
+            <a href="{% url 'view_ops_valuestream' parent.ops_valuestream.id %}">OPS</a>
+                &nbsp;&nbsp;
+                <a href="{% url 'view_dev_valuestream' parent.id %}">DEV</a>
+            {% endif %}
+            &nbsp;&nbsp;
             <a href="{% url 'add_vsm_steps' vs id %}" class="btn btn-sm btn-primary pb-2">+ Add Value Stream Step</a>
             &nbsp;&nbsp;
         </div>
@@ -99,7 +109,7 @@ $( function() {
                         &nbsp;&nbsp;
                         <a href="{% url 'edit_step' vs id object.id %}">Edit</a>
                         &nbsp;&nbsp;
-                        <a href="{% url 'edit_step' vs id object.id %}">Delete</a>
+                        <a href="{% url 'delete_step' vs id object.id %}">Delete</a>
 
                     </td>
                 </tr>

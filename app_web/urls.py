@@ -32,12 +32,14 @@ urlpatterns = [
     path('edit_ops_valuestream/<int:id>/', views.edit_ops_valuestream, name="edit_ops_valuestream"),
     path('valuestream_mgmt/', views.valuestream_mgmt, name="valuestream_mgmt"),
     path('view_ops_valuestream/<int:id>/', views.view_ops_valuestream, name="view_ops_valuestream"),
+    path('view_dev_valuestream/<int:id>/', views.view_dev_valuestream, name="view_dev_valuestream"),
     path('edit_step/<str:vs>/<int:ref_id>/<int:id>/', views.edit_step, name="edit_step"),
     path('delete_ovs/<int:id>/', views.delete_ovs, name="delete_ovs"),
     path('add_ovs/', views.add_ovs, name="add_ovs"),
     path('sorted_vsm_steps/', views.sorted_vsm_steps, name="sorted_vsm_steps"),
     path('ajaxupdate_valuestream_steps/', views.ajaxupdate_valuestream_steps, name="ajaxupdate_valuestream_steps"),
     path('add_vsm_steps/<str:vs>/<int:id>/', views.add_vsm_steps, name="add_vsm_steps"),
+    path('delete_step/<str:vs>/<int:ref_id>/<int:id>/', views.delete_step, name="delete_step"),
     #############################################################
     # cafe
     path('cafe_start/', views.cafe_start, name="cafe_start"),

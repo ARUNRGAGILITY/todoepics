@@ -229,8 +229,8 @@ class DevValueStream(models.Model):
         self.total_delay_time = total_delay_time
         self.total_time = total_time
         # Avoid division by zero
-        self.efficiency = (total_value_creation_time / total_time * 100) if total_time > 0 else 0
-    
+        efficiency = (total_value_creation_time / total_time * 100) if total_time > 0 else 0
+        self.efficiency = round(efficiency,2)
     class Meta:
         ordering = ['position']
 

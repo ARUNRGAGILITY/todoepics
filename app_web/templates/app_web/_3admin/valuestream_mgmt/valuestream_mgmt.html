@@ -6,21 +6,10 @@
 {% block content %}
 <div class="container-fluid">
     <!-- header -->
-    <div class="row">
-        <div class="col col-md-5">
-            Header
-        </div>
-        <div class="col col-md-7 text-end">
-            &nbsp;&nbsp;
-            <a href="/">Home</a>
-        </div>
-    </div>
+    {% include "../../_1base/header.html" %} 
     <!-- role mgmt header/menu -->
-    <div class="row">
-        <div class="col col-md-12">
-            Menu
-        </div>
-    </div>
+    {% include "./menu_valuestream.html" %} 
+    <!-- Listing and Results -->
     <!-- content -->
     <div class="row">
         <div class="col col-md-3">
@@ -41,11 +30,6 @@
     </div>
    
    
-    <!-- Footer -->
-    <div class="row">
-        <div class="col col-md-12">
-            Footer
-        </div>
-    </div>
+    {% include "./vsm_footer.html" %} 
 </div>
 {% endblock %}

@@ -10,7 +10,10 @@
         <div class="col col-md-5">
            <h1>Welcome to {{SITE_TITLE}}</h1>
         </div>
-        <div class="col col-md-7 text-end">      
+        <div class="col col-md-7 text-end">  
+            {% if show_admin_link %}
+            <a href="{% url 'admin_page' %}">Admin Page</a>
+            {% endif %}    
             &nbsp;&nbsp;  
             <a href="">Dashboard</a> 
             &nbsp;&nbsp;  
@@ -33,14 +36,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td colspan="1">Todo List</td>
-                        <td colspan="1">
-                            <a href="{% url 'valuestream_mgmt' %}">ValueStream Mgmt</a>
-                        </td>
-                        <td colspan="1"></td>
-                        <td colspan="1"></td>
-                    </tr>
+                   <tr>
+                    <td colspan="4">
+                        Here you will find the apps for Leaders, Managers, Teams 
+                    </td>
+                   </tr>
                 </tbody>
             </table>
         </div>

@@ -1,0 +1,28 @@
+{% extends "../base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Portfolio Canvas{% endblock title %} 
+
+{% block content %}
+<div class="container-fluid">
+<!-- header -->
+{% include "./header.html" %} 
+<!-- menu -->
+{% include "./menu.html" %} 
+
+
+<!--  BEGIN: Content -->
+<div class="row">
+    <div class="col col-md-12">
+       <h2>This is the Portfolio canvas home page</h2>
+       <h3>Here you will find all the related canvas for this portfolio, divergent, convergent, final ones</h3>
+        <a href="{% url 'show_portfolio_canvas' 1 %}">Show Portfolio Canvas of ID1</a>
+    </div>
+</div>
+<!--  END: Content -->
+
+
+<!-- footer -->
+{% include "./footer.html" %} 
+</div>
+{% endblock %}

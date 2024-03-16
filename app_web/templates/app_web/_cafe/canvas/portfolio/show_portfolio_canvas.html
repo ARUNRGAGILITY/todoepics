@@ -1,0 +1,183 @@
+{% extends "../base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Portfolio Canvas{% endblock title %} 
+
+{% block content %}
+<div class="container-fluid">
+<!-- header -->
+{% include "./header.html" %} 
+<!-- menu -->
+{% include "./menu.html" %} 
+
+
+<!--  BEGIN: Content -->
+<div class="row">
+    <div class="col col-md-12">
+
+        <!-- BEGIN: Canvas -->
+        <div class="container-fluid-width">
+
+            <!-- header row -->
+            <div class="row">
+                <div class="col col-md-4">
+                    <h2>Portfolio Canvas: </h2>
+                </div>
+                <div class="col col-md-3">
+                    <b>Portfolio Name:</b> 
+                </div>
+                <div class="col col-md-3">
+                    <b>Date:</b>                    
+                </div>
+                <div class="col col-md-2">
+                    <b>Version:</b>
+                </div>
+            </div>
+
+            <!-- Value stream specific rows -->
+            <div class="row">
+                <div class="col col-md-12">
+                    <table class="table table-bordered">
+                        <tr colspan="9" class="text-center">
+                           <h3>Value Propositions</h3>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>ValueStreams</b>
+                            </td>
+                            <td>
+                                <b>Solutions</b>
+                            </td>
+                            <td>
+                                <b>Customers</b>
+                            </td>
+                            <td>
+                                <b>Channels</b>
+                            </td>
+                            <td>
+                               <b>Customer Relationships</b>
+                            </td>
+                            <td>
+                                <b>Budget</b>
+                            </td>
+                            <td>
+                                <b>KPIs/Revenue</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                               
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+
+                        <!-- empty row -->
+                        <tr>
+                            <td colspan="9"></td>
+                        </tr>
+
+                        <!-- common for all value streams -->
+                        <tr>
+                            <td colspan="4">
+                                <b>Key Partners</b>
+                            </td>
+                      
+                            <td colspan="3">
+                                <b>Key Activities</b>
+                            </td>
+                       
+                            <td colspan="3">
+                                <b>Key Resources</b>
+                            </td>   
+                        </tr>
+
+                        <!-- last one -->
+                        <tr>
+                            <td colspan="5">
+                                <b>Cost Structure</b>
+                            </td>
+                       
+                            <td colspan="5">
+                                <b>Revenue Streams</b>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- canvas ends here-->
+        </div>
+        <!-- END: Canvas -->
+        
+    </div>
+</div>
+<!--  END: Content -->
+
+
+<!-- footer -->
+{% include "./footer.html" %} 
+</div>
+{% endblock %}

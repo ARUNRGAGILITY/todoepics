@@ -172,10 +172,20 @@ class OpsValueStream(models.Model):
     rolled_ca = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def update_efficiency(self):
-        steps = self.steps.filter(active=True, deleted=False)
+        steps = self.steps.filter(active=True)
         self.calculate_efficiency(steps)
+        self.calculate_rolled_ca(steps)  
         print(f">>> === |||||||==> count of steps {steps.count()} testing update === <<<")
         self.save()
+
+    def calculate_rolled_ca(self, steps):
+        if steps.exists():
+            rolled_ca = 1
+            for step in steps:
+                rolled_ca *= step.percentage_accurate / 100
+            self.rolled_ca = round(rolled_ca * 100, 2)  # Convert back to percentage
+        else:
+            self.rolled_ca = 0  # Reset to 0 if there are no steps
 
     def calculate_efficiency(self, steps):
         total_value_creation_time = sum(step.value_creation_time for step in steps)
@@ -217,10 +227,20 @@ class DevValueStream(models.Model):
     rolled_ca = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def update_efficiency(self):
-        steps = self.steps.filter(active=True, deleted=False)
+        steps = self.steps.filter(active=True)
         self.calculate_efficiency(steps)
+        self.calculate_rolled_ca(steps)  
         print(f">>> === {steps} testing update === <<<")
         self.save()
+        
+    def calculate_rolled_ca(self, steps):
+        if steps.exists():
+            rolled_ca = 1
+            for step in steps:
+                rolled_ca *= step.percentage_accurate / 100
+            self.rolled_ca = round(rolled_ca * 100, 2)  # Convert back to percentage
+        else:
+            self.rolled_ca = 0  # Reset to 0 if there are no steps
 
     def calculate_efficiency(self, steps):
         total_value_creation_time = sum(step.value_creation_time for step in steps)
@@ -263,9 +283,10 @@ class ValueStreamSteps(models.Model):
         super().save(*args, **kwargs)
         # After saving, update efficiency of the related value stream, if any
         if self.opsvaluestream:
-            print(f">>> === SAVE ops === <<<")
+            print(f">>> === ****||||SAVE ops === <<<")
             self.opsvaluestream.update_efficiency()
         elif self.devvaluestream:
+            print(f">>> === SAVE dev === <<<")
             self.devvaluestream.update_efficiency()
         else:
             print(f">>> === NOT SAVING === <<<")

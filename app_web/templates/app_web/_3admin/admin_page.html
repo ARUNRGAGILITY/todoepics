@@ -4,6 +4,8 @@
 {% block title %}Site Admin{% endblock title %} 
 
 {% block content %}
+
+{% if show_admin_link %}
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -12,10 +14,8 @@
                     <div class="col-md-9">
                         <h2>{{ user.username }}'s Admin Panel</h2>
                     </div>
-                    <div class="col col-md-3 text-end">
-                        {% if user.is_superuser or user.is_staff %}
-                            <b>Admin Page</b>
-                        {% endif %}
+                    <div class="col col-md-3 text-end">                       
+                        <b>Admin Page</b>                        
                         &nbsp;&nbsp;
                         <a href="{% url 'edit_profile' %}">Edit Profile</a>
                         &nbsp;&nbsp;
@@ -34,25 +34,9 @@
                                         <a href="{% url 'cafe_start' %}">CAFe</a>
                                     </td>
                                     <td>CAFe Framework</td>
-                                </tr>
-                                <tr>
-                                    <th>Topics</th>
-                                    <th>Management</th>
-                                </tr>
+                                </tr>                               
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>User</td>
-                                    <td>Management</td>
-                                </tr>
-                                <tr>
-                                    <td>Team</td>
-                                    <td>Management</td>
-                                </tr>
-                                <tr>
-                                    <td>Group</td>
-                                    <td>Management</td>
-                                </tr>
                                 <tr>
                                     <td>
                                         <a href="{% url 'roles_mgmt' %}">Roles</a>
@@ -65,6 +49,35 @@
                                     </td>
                                     <td>Management</td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'home_portfolio_canvas' %}">Portfolio Canvas</a>
+                                    </td>
+                                    <td>Management</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'home_devvaluestream_canvas' %}">DevValueStream Canvas</a>
+                                    </td>
+                                    <td>Management</td>
+                                </tr>
+                                <tr>
+                                    <td>Topics</td>
+                                    <td>Management</td>
+                                </tr>
+                                <tr>
+                                    <td>User</td>
+                                    <td>Management</td>
+                                </tr>
+                                <tr>
+                                    <td>Team</td>
+                                    <td>Management</td>
+                                </tr>
+                                <tr>
+                                    <td>Group</td>
+                                    <td>Management</td>
+                                </tr>
+                               
                                 <tr>
                                     <td>Organization</td>
                                     <td>Management</td>
@@ -86,4 +99,8 @@
         </div>
     </div>
 </div>
+{% else %}
+<h3>User/Guest user page</h3>
+{% endif %}
+
 {% endblock %}

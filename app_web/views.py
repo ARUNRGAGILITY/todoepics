@@ -78,7 +78,7 @@ def login_page(request):
     if request.method == 'POST': 
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            print(f">>> === form valid === <<<")
+            print(f">>> === LOGIN PAGE === <<<")
             user = form.get_user()
             login(request, user)
             next_url = request.GET.get('next', 'user_page') # Provide a default redirect URL
@@ -114,7 +114,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            # Redirect to a success page after registration
+            # Redirect to a success page after registration            
             return redirect('user_page')
         else:
             # If the form is not valid, show form error messages
@@ -135,10 +135,12 @@ def register(request):
 def user_page(request):
     # take inputs
     # process inputs
-    
+    user = request.user
+    show_admin_link = user.is_superuser or user.is_staff or Profile.objects.filter(user=user, roles__name__in=["Admin", "SiteAdmin"]).exists()
     # send outputs (info, template, request)
     context = {
         'page': 'user_page',
+        'show_admin_link': show_admin_link,
     }
     template_file = f"{app_name}/_2user/logged_in_user.html"
     return render(request, template_file, context)
@@ -191,12 +193,13 @@ def admin_page(request):
     # process inputs
     user = request.user
     profile, created = Profile.objects.get_or_create(user=request.user)
-
+    show_admin_link = user.is_superuser or user.is_staff or Profile.objects.filter(user=user, roles__name__in=["Admin", "SiteAdmin"]).exists()
     # send outputs (info, template, request)
     context = {
         'page': 'profile_page',
         'user': user,
         'profile': profile,
+        'show_admin_link': show_admin_link,
     }  
     template_file = f"{app_name}/_3admin/admin_page.html"
     return render(request, template_file, context)
@@ -345,12 +348,9 @@ def valuestream_steps(request, vs, id):
     else:
         print(f"Error No Ops/Dev VS identified")
     
-    print(f">>> === IDENTIFIED vs={vs},id={id},parent={parent},parent.id={parent.id} === <<<")
     if parent:
-        print(f">>> === IDENTIFIED2: content_type:{parent} === <<<")
         steps = parent.steps.all().filter(active=True)
         steps_details = [(step.id, step.name) for step in steps]  # Collecting step IDs and names
-        print(f">>> === IDENTIFIED3: objects:{objects}, steps={steps} === <<<")
         objects_count = steps.count()   
     # processing
     form = ValueStreamStepsForm()
@@ -371,11 +371,11 @@ def valuestream_steps(request, vs, id):
         
     
     # send outputs (info, template, request)
-    print(f">>> === CHECKING----> VS={vs},id={id} === <<<")
     context = {
         'page': 'dev_valuestream_mgmt',
         'user': user,
         'parent': parent,
+        'object': parent, 
         'ovs': ovs,
         'profile': profile,
         'objects': objects,
@@ -480,7 +480,7 @@ def valuestream_mgmt(request):
 #####################################################
 # View Ops ValueStream 
 @login_required
-def view_ops_valuestream(request, id):
+def summary_ops_valuestream(request, id):
     # take inputs
     # process inputs
     steps_count = 0
@@ -499,11 +499,8 @@ def view_ops_valuestream(request, id):
                 steps_to_dev_streams[step.id] = [dev_stream.id]
             else:
                 steps_to_dev_streams[step.id].append(dev_stream.id)
-    print(f">>> === CHECKING|||||| {steps_to_dev_streams} ||||| === <<< ")
     # Your existing logic to fetch steps and other necessary data
     vsm_steps = ValueStreamSteps.objects.filter(opsvaluestream=object)  # Adjust as necessary
-
-
     # send outputs (info, template, request)
     context = {
         'page': 'ops_valuestream_mgmt',
@@ -517,6 +514,29 @@ def view_ops_valuestream(request, id):
         'ops_value_stream': object,
         'dev_value_streams': dev_value_streams,
         'steps_to_dev_streams': steps_to_dev_streams,
+    }  
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/summary_ops_valuestream.html"
+    return render(request, template_file, context)
+
+#####################################################
+# View Ops ValueStream 
+@login_required
+def view_ops_valuestream(request, id):
+    # take inputs
+    # process inputs
+    steps_count = 0
+    object = OpsValueStream.objects.get(active=True, id=id)    
+    dev_valuestream_count = object.devvaluestream.filter(active=True).count()
+    vsm_steps = ValueStreamSteps.objects.filter(active=True, opsvaluestream=object)
+    steps_count = vsm_steps.count()
+    # send outputs (info, template, request)
+    context = {
+        'page': 'ops_valuestream_mgmt',
+        'object': object,
+        'dev_valuestream_count': dev_valuestream_count,
+        'vs': 'ops',
+        'vsm_steps': vsm_steps,
+        'steps_count': steps_count,   
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/view_ops_valuestream.html"
     return render(request, template_file, context)
@@ -548,6 +568,37 @@ def view_dev_valuestream(request, id):
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/view_dev_valuestream.html"
     return render(request, template_file, context)
+
+
+#####################################################
+# View Ops ValueStream 
+@login_required
+def summary_dev_valuestream(request, id):
+    # take inputs
+    # process inputs
+    user = request.user
+    profile, created = Profile.objects.get_or_create(user=request.user)   
+    object = DevValueStream.objects.get(active=True, id=id)
+    parent = object.ops_valuestream.id
+    vsm_steps = ValueStreamSteps.objects.filter(active=True, devvaluestream=object)
+    # send outputs (info, template, request)
+    steps_count = vsm_steps.count()
+    total_table_cols = (steps_count * 2) + 3
+    context = {
+        'page': 'ops_valuestream_mgmt',
+        'user': user,
+        'profile': profile,
+        'parent': parent,
+        'object': object,
+        'steps_count': steps_count,
+        'total_table_cols': total_table_cols,
+        'vs': 'dev',
+        'id':id,
+        'vsm_steps': vsm_steps,
+    }  
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/summary_dev_valuestream.html"
+    return render(request, template_file, context)
+
 
 #####################################################
 # edit valuestream steps
@@ -662,6 +713,23 @@ def add_ovs(request):
     context = {'page': 'add_ovs', 'form': form}
     template_file = f"{app_name}/_3admin/valuestream_mgmt/add_ops_valuestream.html"
     return render(request, template_file, context)
+# add ovs 
+@login_required(login_url='login')
+def add_dvs(request, id):
+    ovs = OpsValueStream.objects.get(active=True, id=id)       
+    if request.method == 'POST':
+        form = DevValueStreamForm(request.POST, initial={'ops_valuestream_id': ovs.id})
+        if form.is_valid():
+            form.instance.ops_valuestream = ovs
+            form.instance.author = request.user
+            vsm = form.save()            
+            return redirect('dev_valuestream_mgmt', id=ovs.id)
+    else:
+        form = DevValueStreamForm(initial={'ops_valuestream_id': ovs.id})
+    
+    context = {'page': 'add_dvs', 'ovs': ovs, 'form': form}
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/add_dev_valuestream.html"
+    return render(request, template_file, context)
 
 @login_required(login_url='login')
 def sorted_vsm_steps(request):
@@ -764,4 +832,165 @@ def delete_step(request, vs, ref_id, id):
     template_file = f"{app_name}/_3admin/valuestream_mgmt/delete_step.html"
     return render(request, template_file, context)
         
-        
+
+## visually display the value stream step
+## for ovs
+#####################################################
+# View Ops ValueStream 
+@login_required(login_url='login')
+def show_ovs_step_details(request, id):
+    # take inputs
+    # process inputs
+    steps_count = 0
+    object = OpsValueStream.objects.get(active=True, id=id)
+    vsm_steps = ValueStreamSteps.objects.filter(active=True, deleted=False, opsvaluestream=object)
+    steps_count = vsm_steps.count()
+   
+    # We are going to send the steps 4 columns per row
+    # for displaying like post-it notes
+    columns_per_row = 4
+    rows = [vsm_steps[i:i + columns_per_row] for i in range(0, len(vsm_steps), columns_per_row)]
+
+
+    # send outputs (info, template, request)
+    context = {
+        'page': 'ops_valuestream_mgmt', 
+        'ovs': object,     
+        'vsm_steps': vsm_steps,
+        'steps_count': steps_count,
+        'rows': rows,
+    }  
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/show_ovs_step_details.html"
+    return render(request, template_file, context)
+## visually display the value stream step
+## for dvs
+#####################################################
+# View DVS ValueStream 
+@login_required(login_url='login')
+def show_dvs_step_details(request, ref_id, id):
+    # take inputs
+    # process inputs
+    steps_count = 0
+    ovs = None
+    ovs = OpsValueStream.objects.get(active=True, id=ref_id)
+    object = DevValueStream.objects.get(active=True, id=id)    
+    vsm_steps = ValueStreamSteps.objects.filter(active=True, devvaluestream=object)
+    steps_count = vsm_steps.count()
+   
+    # We are going to send the steps 4 columns per row
+    # for displaying like post-it notes
+    columns_per_row = 4
+    rows = [vsm_steps[i:i + columns_per_row] for i in range(0, len(vsm_steps), columns_per_row)]
+
+
+    # send outputs (info, template, request)
+    context = {
+        'page': 'ops_valuestream_mgmt', 
+        'ovs': ovs,
+        'dvs': object,     
+        'vsm_steps': vsm_steps,
+        'steps_count': steps_count,
+        'rows': rows,
+    }  
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/show_dvs_step_details.html"
+    return render(request, template_file, context)
+
+# 16032024
+"""
+  # Value stream canvas
+    path('home_valuestream/', views.home_valuestream, name="home_valuestream"),
+    
+    # Value stream canvas
+    path('home_devvaluestream_canvas/', views.home_devvaluestream_canvas, name="home_devvaluestream_canvas"),
+    path('list_devvaluestream_canvas/', views.list_devvaluestream_canvas, name="list_devvaluestream_canvas"),
+    # portfolio 
+    path('home_portfolio_canvas/', views.home_portfolio_canvas, name="home_portfolio_canvas"),
+    path('list_portfolio_canvas/', views.list_portfolio_canvas, name="list_portfolio_canvas"),
+"""
+## visually 
+## for dvs
+#####################################################
+#  home portfolio canvas
+@login_required(login_url='login')
+def home_portfolio_canvas(request):
+    # take inputs
+    # process inputs
+    
+    # send outputs (info, template, request)
+    context = {
+        'page': 'home_portfolio_canvas',       
+    }  
+    template_file = f"{app_name}/_cafe/canvas/portfolio/home_portfolio_canvas.html"
+    return render(request, template_file, context)
+    
+#####################################################
+#  list  portfolio canvas
+@login_required(login_url='login')
+def list_portfolio_canvas(request):
+    # take inputs
+    # process inputs
+    
+    # send outputs (info, template, request)
+    context = {
+        'page': 'list_portfolio_canvas',       
+    }  
+    template_file = f"{app_name}/_cafe/canvas/portfolio/list_portfolio_canvas.html"
+    return render(request, template_file, context)
+
+#####################################################
+#  list  portfolio canvas
+@login_required(login_url='login')
+def show_portfolio_canvas(request, id):
+    # take inputs
+    # process inputs
+    
+    # send outputs (info, template, request)
+    context = {
+        'page': 'show_portfolio_canvas',       
+    }  
+    template_file = f"{app_name}/_cafe/canvas/portfolio/show_portfolio_canvas.html"
+    return render(request, template_file, context)
+    
+#####################################################
+#  home devvaluestream canvas
+@login_required(login_url='login')
+def home_devvaluestream_canvas(request):
+    # take inputs
+    # process inputs
+    
+    # send outputs (info, template, request)
+    context = {
+        'page': 'home_devvaluestream_canvas',       
+    }  
+    template_file = f"{app_name}/_cafe/canvas/valuestream/home_devvaluestream_canvas.html"
+    return render(request, template_file, context)
+
+#####################################################
+#  list devvaluestream canvas
+@login_required(login_url='login')
+def list_devvaluestream_canvas(request):
+    # take inputs
+    # process inputs
+    
+    # send outputs (info, template, request)
+    context = {
+        'page': 'list_devvaluestream_canvas',       
+    }  
+    template_file = f"{app_name}/_cafe/canvas/valuestream/list_devvaluestream_canvas.html"
+    return render(request, template_file, context)
+
+
+
+#####################################################
+#   home_valuestream 
+@login_required(login_url='login')
+def home_valuestream(request):
+    # take inputs
+    # process inputs
+    
+    # send outputs (info, template, request)
+    context = {
+        'page': 'home_valuestream',       
+    }  
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/home_valuestream.html"
+    return render(request, template_file, context)

@@ -65,23 +65,29 @@ $( function() {
                 </a>
             {% endif %}
             &nbsp;
-            View this Visually: 
+            <br>
+            View Value Stream Visually: 
             &nbsp;
-            {% if vs == 'ops' %}
-                <a href="{% url 'view_ops_valuestream' parent.id %}">OVS Summary</a>
+            {% if vs == 'ops' %}    
+            <a href="{% url 'summary_ops_valuestream' object.id %}">OVS Summary</a>
+            &nbsp;&nbsp;
+            <a href="{% url 'show_ovs_step_details' parent.id %}">OVS Step Details</a>
             {% endif %}
             {% if vs == 'dev' %}
-            <a href="{% url 'view_ops_valuestream' parent.ops_valuestream.id %}">OVS Summary</a>
-                &nbsp;&nbsp;
-                <a href="{% url 'view_dev_valuestream' parent.id %}">DVS Summary</a>
+            <a href="{% url 'summary_ops_valuestream' ovs.id %}">OVS Summary</a>&nbsp;&nbsp;
+            <a href="{% url 'show_ovs_step_details' ovs.id %}">OVS Step Details</a> &nbsp;&nbsp;           
+            |
+            &nbsp;&nbsp;
+            <a href="{% url 'summary_dev_valuestream' object.id %}">DVS Summary</a>&nbsp;&nbsp;
+            <a href="{% url 'show_dvs_step_details' ovs.id object.id %}">DVS Step Details</a>
             {% endif %}
-            &nbsp;
-            <a href="">Details</a>
+          
+           
         </div>
         <div class="col col-md-4 text-end">
            
             &nbsp;&nbsp;
-            <a href="{% url 'add_vsm_steps' vs id %}" class="btn btn-sm btn-primary pb-2">+ Add Value Stream Step</a>
+            <a href="{% url 'add_vsm_steps' vs id %}" class="btn btn-sm btn-primary pb-2">+ Add Development Value Stream Step</a>
             &nbsp;&nbsp;
         </div>
     </div>

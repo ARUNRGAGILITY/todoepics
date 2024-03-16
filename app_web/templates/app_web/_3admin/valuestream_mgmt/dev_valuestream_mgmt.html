@@ -12,24 +12,14 @@
     <!-- Listing and Results -->
     <!-- role mgmt header/menu -->
     <div class="row">
-        <div class="col col-md-12">
+        <div class="col col-md-5">
            <a href="{% url 'ops_valuestream_mgmt' %}"> Ops Value Stream: {{parent.name}}</a>            
         </div>
-    </div>
-    <!-- Role Mgmt -->
-    <div class="row">
-        <div class="col-md-12">
-           <form action="" method="POST">
-            {% csrf_token %}
-            <input type="text" name="name" id="role_name" size="35" maxlength="60">
-            &nbsp;&nbsp;
-            <input type="text" name="description" id="role_description" size="35" maxlength="60">
-            <input type="hidden" name="parent" id="parent" value="{{parent.id}}">
-            <input type="submit" name="submit" value="Add" id="submit"/>
-           </form>
-           <br>
+        <div class="col col-md-7 text-end">
+            <a href="{% url 'add_dvs' parent.id %}" class="btn btn-success">+ Add Development Value Stream</a>   
         </div>
     </div>
+
     <!-- Listing and Results -->
     <div class="row">
         <div class="col col-md-12">

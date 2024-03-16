@@ -1,379 +1,125 @@
 {% extends "../../_1base/bootstrap_base.html" %} 
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}Value Stream Mgmt{% endblock title %} 
+{% block title %}Ops Value Stream View{% endblock title %} 
 {% load custom_tags %}
 {% block content %}
-<style>
-    .my_table {
-        border-top: 2px dashed black;
-        margin-left: 40px;
-        margin-right: 40px;
-        border-bottom: 2px solid black;
-    }
 
-    .my_table th, .my_table td {
-        text-align: center;
-        vertical-align: middle;     
-    }
-
-    .leftline{
-         border-left: 2px dashed black;
-         height: 30px;
-         margin-top: -30px
-    }
-    .rightline{
-         border-right: 2px dashed black;
-         height: 30px;
-         margin-top: -30px;
-         margin-right: -8px;
-    }
-    .leftlineb{
-         border-left: 2px solid black;
-         height: 60px;
-         margin-bottom: -30px;
-    }
-    .rightlineb{
-         border-right: 2px solid black;
-         height: 60px;
-         margin-bottom: -30px;
-         margin-right: -8px;
-    }
-
-    .my_table td {
-    position: relative; /* Ensures the table cell allows for overflow content */
-    }
-
-    .my_table td img {
-    display: block; /* Ensures the image doesn't have extra space below it */
-    }
-    .trigger {
-        margin-left: -30px; /* Pulls the div (and thus the image inside it) 80px to the left */
-        display: inline-block;
-    }
-    .value {
-        margin-right: -30px;
-        display: inline-block;
-    }
-    .overlay-text-left {
-    position: absolute;
-    top: 100%; /* Centers the text vertically */
-    left: 0%; /* Centers the text horizontally */
-    transform: translate(-50%, -50%); /* Adjusts the positioning to truly center the text */
-    color: black; /* Text color */
-    /* Additional styling for the text */
-    font-size: 10px;
-    white-space: wrap;
-    background-color: orange;
-    }
-    .overlay-text-right {
-    position: absolute;
-    top: 100%; /* Centers the text vertically */
-    right: 0%; /* Centers the text horizontally */
-    transform: translate(-50%, -50%); /* Adjusts the positioning to truly center the text */
-    color: black; /* Text color */
-    /* Additional styling for the text */
-    font-size: 10px;
-    white-space: wrap;
-    background-color: orange;
-    }
-
-
-    .postitleft {
-    position: absolute;
-    top: 100%; /* Adjust as needed */
-    left: -70%; /* Adjust as needed */
-    width: 8vw;
-    height: 8vh;
-    background-color: yellow; /* Classic post-it note color */
-    padding: 5px;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.3); /* Gives a slight shadow for depth */
-    font-size: 11px; /* Approximation: Adjust based on your needs and testing */
-    word-wrap: break-word; /* Ensures text wraps within the container */
-    overflow: hidden; /* Keeps the content contained within the div */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    z-index: 1;
-    }
-    .postitright {
-    position: absolute;
-    top: 100%; /* Adjust as needed */
-    left: 10%; /* Adjust as needed */
-    width: 8vw;
-    height: 8vh;
-    background-color: yellow; /* Classic post-it note color */
-    padding: 5px;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.3); /* Gives a slight shadow for depth */
-    font-size: 11px; /* Approximation: Adjust based on your needs and testing */
-    word-wrap: break-word; /* Ensures text wraps within the container */
-    overflow: hidden; /* Keeps the content contained within the div */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    z-index: 1;
-    }
-    .zoom-container {
-        transition: transform 0.3s ease; /* Smooth transition for zoom effect */
-        transform-origin: 20% 20%; /* Ensures zooming is centered */
-            }
-
-            .dev-value-streams ul {
-        list-style-type: none; /* Remove bullet points */
-        padding: 0;
-    }
-    .dev-value-streams li {
-        font-size: 10px; /* Adjust font size as needed */
-    }
-    
-</style>
 <div class="container-fluid">
-    <!-- header -->
-    {% include "../../_1base/header.html" %} 
-    <!-- role mgmt header/menu -->
-    {% include "./menu_valuestream.html" %} 
-    <!-- Listing and Results -->
-    <div class="row">
-        <div class="col col-md-5 text-start">
-            <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object}}</a>
-            Value Stream has total {{steps_count}} Steps
-        </div>
-        <div class="col col-md-7 text-end">
-            &nbsp;&nbsp;
-            <a href="{% url 'valuestream_steps' 'ops' object.id %}">Steps</a>
-            
-            
-        </div>
+<!-- header -->
+{% include "../../_1base/header.html" %} 
+<!-- role mgmt header/menu -->
+{% include "./menu_valuestream.html" %} 
+<!-- Listing and Results -->
+<div class="row">
+    <div class="col col-md-5 text-start">
+        <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object}}</a>
+        Value Stream has total {{steps_count}} Steps
     </div>
-    <div class="row">
-        <div class="col col-md-12 text-end">
-            <div class="zoom-controls">                
-                <button id="zoomOut">Zoom Out</button>
-                <button id="zoomIn">Zoom In</button>
-              </div>
-              &nbsp;&nbsp;
-        </div>
+    <div class="col col-md-7 text-end">
+        &nbsp;&nbsp;
+        <a href="{% url 'valuestream_steps' 'ops' object.id %}">Steps</a>
     </div>
-    <div class="row">
-        <div class="col col-md-12 text-left">
-           
-            <div id="zoomContainer" class="zoom-container text-center">
-            
-            <table class="my_table">     
-                <tr>
-                    <td colspan="{{total_table_cols}}" class="text-center">
-                        Lead Time {{object.total_time}} mins
-                    </td>
-                </tr>            
-                <tr>
-                    <td>
-                        <div class="leftline"></div>
-                        <div class="trigger">
-                            <img class="moveleft" src="{% static 'img/safe/trigger_vs.png' %}" alt="">
-                            <div class="postitleft">{{object.trigger}}</div>
-                         </div>                
-    
-                    </td>
-                    <td>
-                        <img src="{% static 'img/safe/start_arrow.png' %}" alt="">
-                    </td>
-                    {% for step in vsm_steps %}
-                        {% if step.active == True %}
-                        <td>                            
-                            <img src="{% static 'img/safe/step_vs.png' %}" alt="">
-                         </td>
-                        <td>
-                            <img src="{% static 'img/safe/flow_with_delay.png' %}" alt="">
-                        </td>
-                        {% endif %}
-                    {% endfor %}
-                    <td>
-                        <div class="rightline"></div>
-                        <div class="value">                            
-                            <img src="{% static 'img/safe/value_vs.png' %}" alt="">  
-                            <div class="postitright">{{object.value}}</div>
-                          </div>                       
-                                                            
-                    </td>
-                </tr>          
-                <tr>
-                    <td>
-                        <div class="leftlineb"></div>             
-    
-                    </td>
-                    <td>
+</div>   
+<div class="row">
+    <div class="col col-md-12">
 
-                    </td>
-                    {% for step in vsm_steps %}
-                    {% if step.active == True %}
-                        <td>                            
-                            <div class="ops-step" data-id="{{ step.id }}" data-supporting-dev-streams="{{ steps_to_dev_streams|get_item:step.id|join:',' }}">
-                                {{ step.name }}
-                            </div>
-                         </td>
-                        <td>
-  
-                        </td>
-                        {% endif %}
-                    {% endfor %}
-                    <td>
-                        <div class="rightlineb"></div>
-                                       
-                    </td>
-                </tr>  
-              
+    </div>
+</div>
+<div class="row">
+    <div class="col col-md-12">
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td>
-                        <div class="leftlineb"></div>             
-    
-                    </td>
-                    <td>
-
-                    </td>
-                    {% for step in vsm_steps %}
-                    {% if step.active == True %}
-                        <td>                            
-   
-                         </td>
-                        <td>
-  
-                        </td>
-                        {% endif %}
-                    {% endfor %}
-                    <td>
-                        <div class="rightlineb"></div>
-                                       
-                    </td>
-                </tr>  
-                <!-- experiment -->
+                    <th colspan="2">OVS: {{object}}</th>
+                </tr>
+            </thead>
+            <tbody>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    {% for step in vsm_steps %}
-                        <td> </td>
-                        <td> </td>
-                    {% endfor %}
-                    <td></td>
+                    <td width="10%" class="text-end">
+                        <b>Name</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.name}}
+                    </td>
                 </tr>
                 <tr>
-                    <td colspan="{{total_table_cols}}" class="text-center">
-                        Repeat until value lifetime
+                    <td width="10%" class="text-end">
+                        <b>Description</b>
                     </td>
-                </tr>     
-                </table>
-            </div>
-        </div>
+                    <td class="text-start">
+                        {{object.description}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Trigger</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.trigger}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Value</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.value}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Steps</b>
+                    </td>
+                    <td class="text-start">
+                        Contains {{steps_count}} 
+                        <a href="{% url 'valuestream_steps' 'ops' object.id %}">Steps</a>
+                        from Trigger to Value
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Development Value Streams</b>
+                    </td>
+                    <td>This {{object}} OVS has got {{dev_valuestream_count}}  &nbsp;
+                        <a href="{% url 'dev_valuestream_mgmt' object.id %}">                                
+                            Dev Value Stream(s)</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Total Value Creation Time</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.total_value_creation_time}} min(s)
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Total Delay Time</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.total_delay_time}} min(s)
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Total / Lead Time</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.total_time}} min(s)
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Efficency</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.efficiency}} min(s)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    
-<!-- SVG Overlay -->
-<svg id="lineDrawingArea" style="position:absolute; top:0; left:0; height:100%; width:100%; z-index:1; pointer-events:none;"></svg>
-
-   <!-- Development Value Streams -->
-<!-- Development Value Streams -->
-<div class="dev-value-streams">
-    <table class="table" style="width: 100%;">
-        <tr>
-            {% for dev_stream in dev_value_streams %}
-            <td style="vertical-align: top;">
-                <div id="devStream{{ dev_stream.id }}" class="dev-stream">
-                    <b>{{ dev_stream.name }}</b>
-                    <ul>
-                        {% for step in dev_stream.supported_ops_steps.all %}
-                            {% if step.active == True %}
-                                <li>{{ step.name }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            </td>
-            {% endfor %}
-        </tr>
-    </table>
 </div>
-
-    
-
-
-    <!-- Footer -->
-    {% include "../../_1base/footer.html" %} 
-</div>
-<script>
-  const zoomContainer = document.getElementById('zoomContainer');
-    let zoomLevel = 0.58; // Set initial zoom level to 0.8 (80% of the original size)
-
-    // Apply the initial zoom level when the page loads
-    zoomContainer.style.transform = `scale(${zoomLevel})`;
-
-    document.getElementById('zoomIn').addEventListener('click', () => {
-    zoomLevel += 0.1; // Increase zoomLevel by 0.1 (10%)
-    zoomContainer.style.transform = `scale(${zoomLevel})`;
-    });
-
-    document.getElementById('zoomOut').addEventListener('click', () => {
-    zoomLevel -= 0.1; // Decrease zoomLevel by 0.1 (10%)
-    zoomContainer.style.transform = `scale(${zoomLevel})`;
-    });
-
-</script>
-
-<script>
-    function debounce(func, wait, immediate) {
-        var timeout;
-        return function() {
-            var context = this, args = arguments;
-            clearTimeout(timeout);
-            timeout = setTimeout(function() {
-                timeout = null;
-                if (!immediate) func.apply(context, args);
-            }, wait);
-            if (immediate && !timeout) func.apply(context, args);
-        };
-    }
-    
-    function drawLines() {
-        const svgNamespace = "http://www.w3.org/2000/svg";
-        const lineDrawingArea = document.getElementById('lineDrawingArea');
-        // Clear existing lines
-        while (lineDrawingArea.firstChild) {
-            lineDrawingArea.removeChild(lineDrawingArea.firstChild);
-        }
-    
-        document.querySelectorAll('.ops-step').forEach(function(step) {
-            const stepBounds = step.getBoundingClientRect();
-            const supportingDevStreamIds = step.getAttribute('data-supporting-dev-streams').split(',');
-    
-            supportingDevStreamIds.forEach(function(devStreamId) {
-                const devStream = document.querySelector(`#devStream${devStreamId.trim()}`);
-                if (devStream) {
-                    const devStreamBounds = devStream.getBoundingClientRect();
-    
-                    const line = document.createElementNS(svgNamespace, 'line');
-                    line.setAttribute('x1', stepBounds.left + stepBounds.width / 2);
-                    line.setAttribute('y1', stepBounds.top + stepBounds.height * 0.95); // Endpoint a bit lower on the Ops side
-                    line.setAttribute('x2', devStreamBounds.left + devStreamBounds.width / 2);
-                    // Move y2 a bit higher than the vertical middle of the DVS
-                    line.setAttribute('y2', devStreamBounds.top + devStreamBounds.height * 0.15); // Starting point a bit up on the DVS side
-                    line.setAttribute('stroke', 'lightgrey');
-                    line.setAttribute('stroke-width', '2');
-                    lineDrawingArea.appendChild(line);
-                }
-            });
-        });
-    }
-    
-    // Initial drawing
-    document.addEventListener("DOMContentLoaded", drawLines);
-    
-    // Redraw on window resize with debounce
-    window.addEventListener('resize', debounce(function() {
-        drawLines();
-    }, 250));
-    </script>
-    
-    
-    
-    
 {% endblock %}

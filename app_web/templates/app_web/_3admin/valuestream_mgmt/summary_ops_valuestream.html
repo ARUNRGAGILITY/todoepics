@@ -26,6 +26,7 @@
          border-right: 2px dashed black;
          height: 30px;
          margin-top: -30px;
+         margin-right: -8px;
     }
     .leftlineb{
          border-left: 2px solid black;
@@ -36,6 +37,7 @@
          border-right: 2px solid black;
          height: 60px;
          margin-bottom: -30px;
+         margin-right: -8px;
     }
 
     .my_table td {
@@ -117,6 +119,15 @@
         transition: transform 0.3s ease; /* Smooth transition for zoom effect */
         transform-origin: 20% 20%; /* Ensures zooming is centered */
             }
+
+            .dev-value-streams ul {
+        list-style-type: none; /* Remove bullet points */
+        padding: 0;
+    }
+    .dev-value-streams li {
+        font-size: 10px; /* Adjust font size as needed */
+    }
+    
 </style>
 <div class="container-fluid">
     <!-- header -->
@@ -169,12 +180,14 @@
                         <img src="{% static 'img/safe/start_arrow.png' %}" alt="">
                     </td>
                     {% for step in vsm_steps %}
+                        {% if step.active == True %}
                         <td>                            
                             <img src="{% static 'img/safe/step_vs.png' %}" alt="">
                          </td>
                         <td>
                             <img src="{% static 'img/safe/flow_with_delay.png' %}" alt="">
                         </td>
+                        {% endif %}
                     {% endfor %}
                     <td>
                         <div class="rightline"></div>
@@ -185,33 +198,6 @@
                                                             
                     </td>
                 </tr>          
-                
-                <tr>
-                    <td>
-                        
-                    </td>
-                    <td>
-
-                    </td>
-                    <tr>
-                        {% for step in vsm_steps %}
-                        <td>
-                            {{ step.name }}
-                            <div class="ops-step" data-id="{{ step.id }}" data-supporting-dev-streams="{{ steps_to_dev_streams|get_item:step.id|join:',' }}">
-                                
-                            </div>
-                        </td>
-                        <td></td>
-                        {% endfor %}
-                    </tr>
-                    <td>
-                         <div class="value_text">
-                            
-                         </div>     
-                                                   
-                    </td>
-                </tr>          
-                
                 <tr>
                     <td>
                         <div class="leftlineb"></div>             
@@ -221,12 +207,40 @@
 
                     </td>
                     {% for step in vsm_steps %}
+                    {% if step.active == True %}
+                        <td>                            
+                            <div class="ops-step" data-id="{{ step.id }}" data-supporting-dev-streams="{{ steps_to_dev_streams|get_item:step.id|join:',' }}">
+                                {{ step.name }}
+                            </div>
+                         </td>
+                        <td>
+  
+                        </td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>
+                        <div class="rightlineb"></div>
+                                       
+                    </td>
+                </tr>  
+              
+                <tr>
+                    <td>
+                        <div class="leftlineb"></div>             
+    
+                    </td>
+                    <td>
+
+                    </td>
+                    {% for step in vsm_steps %}
+                    {% if step.active == True %}
                         <td>                            
    
                          </td>
                         <td>
   
                         </td>
+                        {% endif %}
                     {% endfor %}
                     <td>
                         <div class="rightlineb"></div>
@@ -254,14 +268,25 @@
         </div>
     </div>
     
+<!-- SVG Overlay -->
+<svg id="lineDrawingArea" style="position:absolute; top:0; left:0; height:100%; width:100%; z-index:1; pointer-events:none;"></svg>
+
    <!-- Development Value Streams -->
+<!-- Development Value Streams -->
 <div class="dev-value-streams">
-    <table class="table" style="font-size: 10px; width: 50%;">
+    <table class="table" style="width: 100%;">
         <tr>
             {% for dev_stream in dev_value_streams %}
             <td style="vertical-align: top;">
                 <div id="devStream{{ dev_stream.id }}" class="dev-stream">
                     <b>{{ dev_stream.name }}</b>
+                    <ul>
+                        {% for step in dev_stream.supported_ops_steps.all %}
+                            {% if step.active == True %}
+                                <li>{{ step.name }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
                 </div>
             </td>
             {% endfor %}
@@ -269,39 +294,6 @@
     </table>
 </div>
 
-
-<!-- SVG Overlay -->
-<svg id="lineDrawingArea" style="position:absolute; top:0; left:0; height:100%; width:100%; z-index:1; pointer-events:none;"></svg>
-
-<!-- JavaScript to Draw Lines -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const svgNamespace = "http://www.w3.org/2000/svg";
-    const lineDrawingArea = document.getElementById('lineDrawingArea');
-
-    document.querySelectorAll('.ops-step').forEach(function(step) {
-        const stepBounds = step.getBoundingClientRect();
-        const supportingDevStreamIds = step.getAttribute('data-supporting-dev-streams').split(',');
-
-        supportingDevStreamIds.forEach(function(devStreamId) {
-            const devStream = document.querySelector(`#devStream${devStreamId.trim()}`);
-            if(devStream) {
-                const devStreamBounds = devStream.getBoundingClientRect();
-                const line = document.createElementNS(svgNamespace, 'line');
-                line.setAttribute('x1', stepBounds.left + stepBounds.width / 2);
-                line.setAttribute('y1', stepBounds.top + stepBounds.height / 2);
-                line.setAttribute('x2', devStreamBounds.left + devStreamBounds.width / 2);
-                line.setAttribute('y2', devStreamBounds.top + devStreamBounds.height / 2);
-                line.setAttribute('stroke', 'black');
-                line.setAttribute('stroke-width', '2');
-                lineDrawingArea.appendChild(line);
-            }
-        });
-    });
-});
-</script>
-
-    
     
 
 
@@ -326,39 +318,59 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 </script>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    function debounce(func, wait, immediate) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            }, wait);
+            if (immediate && !timeout) func.apply(context, args);
+        };
+    }
+    
+    function drawLines() {
         const svgNamespace = "http://www.w3.org/2000/svg";
         const lineDrawingArea = document.getElementById('lineDrawingArea');
+        // Clear existing lines
+        while (lineDrawingArea.firstChild) {
+            lineDrawingArea.removeChild(lineDrawingArea.firstChild);
+        }
     
-        // Find each operational step
         document.querySelectorAll('.ops-step').forEach(function(step) {
-            // Extract the IDs of supporting DevValueStreams
+            const stepBounds = step.getBoundingClientRect();
             const supportingDevStreamIds = step.getAttribute('data-supporting-dev-streams').split(',');
     
-            // For each supporting DevValueStream ID, find the DevValueStream and draw a line
             supportingDevStreamIds.forEach(function(devStreamId) {
-                const devStreamElement = document.querySelector(`#devStream${devStreamId.trim()}`);
-                if(devStreamElement) {
-                    // Get bounds for drawing
-                    const stepBounds = step.getBoundingClientRect();
-                    const devStreamBounds = devStreamElement.getBoundingClientRect();
-                    
-                    // Create SVG line element
-                    const line = document.createElementNS(svgNamespace, 'line');
-                    line.setAttribute('x1', devStreamBounds.left + devStreamBounds.width / 2);
-                    line.setAttribute('y1', devStreamBounds.top + devStreamBounds.height / 2);
-                    line.setAttribute('x2', stepBounds.left + stepBounds.width / 2);
-                    line.setAttribute('y2', stepBounds.top + stepBounds.height / 2);
-                    line.setAttribute('stroke', 'black');
-                    line.setAttribute('stroke-width', '2');
+                const devStream = document.querySelector(`#devStream${devStreamId.trim()}`);
+                if (devStream) {
+                    const devStreamBounds = devStream.getBoundingClientRect();
     
-                    // Append the line to the SVG overlay
+                    const line = document.createElementNS(svgNamespace, 'line');
+                    line.setAttribute('x1', stepBounds.left + stepBounds.width / 2);
+                    line.setAttribute('y1', stepBounds.top + stepBounds.height * 0.95); // Endpoint a bit lower on the Ops side
+                    line.setAttribute('x2', devStreamBounds.left + devStreamBounds.width / 2);
+                    // Move y2 a bit higher than the vertical middle of the DVS
+                    line.setAttribute('y2', devStreamBounds.top + devStreamBounds.height * 0.15); // Starting point a bit up on the DVS side
+                    line.setAttribute('stroke', 'lightgrey');
+                    line.setAttribute('stroke-width', '2');
                     lineDrawingArea.appendChild(line);
                 }
             });
         });
-    });
+    }
+    
+    // Initial drawing
+    document.addEventListener("DOMContentLoaded", drawLines);
+    
+    // Redraw on window resize with debounce
+    window.addEventListener('resize', debounce(function() {
+        drawLines();
+    }, 250));
     </script>
     
     

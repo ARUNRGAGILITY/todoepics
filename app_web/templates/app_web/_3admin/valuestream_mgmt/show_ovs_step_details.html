@@ -1,0 +1,128 @@
+{% extends "../../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}OVS Step Details{% endblock title %} 
+{% load custom_tags %}
+{% block content %}
+{% include "./vsm_common_css.html" %} 
+<div class="container-fluid">
+<!-- header -->
+{% include "./vsm_header.html" %} 
+<!-- menu -->
+{% include "./vsm_menu.html" %} 
+
+<!-- BEGIN: main content of the page -->
+<h3>OVS: {{ovs}}</h3>
+<font size="-1">
+    Tigger: {{ovs.trigger}} &nbsp; &gt; &nbsp;
+</font>
+{% for step in vsm_steps %}
+    {% if step.active == True %}
+            <font size="-2">
+                {{step.name}} &nbsp; &gt; &nbsp;
+            </font>
+    {% endif %}
+{% endfor %}
+<font size="-1">
+    Value: {{ovs.value}} 
+</font>
+<!-- Experiment -->
+<div class="row">
+    <div class="col col-md-12">
+        <!-- BEGIN: packing -->
+        <div class="container-fluid-width">
+            <div class="row">            
+            <div class="col col-md-8">
+                <!-- card display -->
+                {% for row in rows %}
+                <div class="row">
+                {% for record in row %}   
+                {% if forloop.first or forloop.parentlo.plast %}
+                    {% if forloop.counter0 == 0 %}
+                        {% if not forloop.parentloop.first  %}
+                        {% else %}
+                        <div class="col-md-1 d-flex align-items-center justify-content-center">
+                            
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {% if not forloop.parentloop.first  %}
+                    {% if forloop.counter0 == 0 %}
+                    <div class="col-md-1 d-flex align-items-center justify-content-center">
+                        <img width='100px' height='60px' 
+                        src="{% static 'img/general/right-arrow1.png' %}" class="" alt="" class=""> 
+                    </div>
+                    {% endif %}
+                {% endif %}            
+                <div class="col-md-2 div_box my-4">
+                    {{ record }}
+                    <div class="role_box">
+                        {{record.role}}
+                    </div>
+                    <div class="details_box ">
+                        PT:{{record.value_creation_time}}
+                        <br>
+                        LT:{{record.delay_time}}
+                        <br>
+                        %CA:{{record.percentage_accurate}}
+                    </div>
+                </div>
+                {% if not forloop.last %}
+                    <div class="col-md-1 d-flex align-items-center justify-content-center">
+                        <img width='100px' height='60px' 
+                        src="{% static 'img/general/right-arrow1.png' %}" class="" alt="" class=""> 
+                    </div>
+                {% endif %}                                
+                {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col col-md-4">
+                <!-- summary display -->                
+                <!-- Display of the VSM Summary Info -->
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <td>
+                            <b>{{ovs}} Value Stream Details</b>
+                            <br>
+                            <font size="-1">{{ovs.description}}</font>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Total PT = {{ovs.total_value_creation_time}}</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Total LT = {{ovs.total_time}}</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Activity Ratio = {{ovs.efficiency}} %</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Rolled %C&A = {{ovs.rolled_ca}} %</b>
+                        </td>
+                    </tr>
+                </table>
+                <!-- Summary of display ends -->
+            </div>
+        </div>
+        <!-- row -->
+        </div>
+         <!-- END: packing -->
+    </div>
+</div>
+
+
+<!-- END: main content of the page -->
+
+<!-- footer -->
+{% include "./vsm_footer.html" %} 
+</div>
+{% endblock %}

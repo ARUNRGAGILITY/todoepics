@@ -32,18 +32,34 @@ urlpatterns = [
     path('edit_ops_valuestream/<int:id>/', views.edit_ops_valuestream, name="edit_ops_valuestream"),
     path('valuestream_mgmt/', views.valuestream_mgmt, name="valuestream_mgmt"),
     path('view_ops_valuestream/<int:id>/', views.view_ops_valuestream, name="view_ops_valuestream"),
+    path('summary_ops_valuestream/<int:id>/', views.summary_ops_valuestream, name="summary_ops_valuestream"),
     path('view_dev_valuestream/<int:id>/', views.view_dev_valuestream, name="view_dev_valuestream"),
+    path('summary_dev_valuestream/<int:id>/', views.summary_dev_valuestream, name="summary_dev_valuestream"),
     path('edit_step/<str:vs>/<int:ref_id>/<int:id>/', views.edit_step, name="edit_step"),
     path('delete_ovs/<int:id>/', views.delete_ovs, name="delete_ovs"),
     path('add_ovs/', views.add_ovs, name="add_ovs"),
+    path('add_dvs/<int:id>/', views.add_dvs, name="add_dvs"),
     path('sorted_vsm_steps/', views.sorted_vsm_steps, name="sorted_vsm_steps"),
     path('ajaxupdate_valuestream_steps/', views.ajaxupdate_valuestream_steps, name="ajaxupdate_valuestream_steps"),
     path('add_vsm_steps/<str:vs>/<int:id>/', views.add_vsm_steps, name="add_vsm_steps"),
     path('delete_step/<str:vs>/<int:ref_id>/<int:id>/', views.delete_step, name="delete_step"),
+    path('show_ovs_step_details/<int:id>/', views.show_ovs_step_details, name="show_ovs_step_details"),
+    path('show_dvs_step_details/<int:ref_id>/<int:id>/', views.show_dvs_step_details, name="show_dvs_step_details"),
     #############################################################
     # cafe
     path('cafe_start/', views.cafe_start, name="cafe_start"),
     path('index_st/', views.index_st, name="index_st"),
     path('st_detail/<int:theme_id>/', views.st_detail, name='st_detail'),
     path('cafe_wbs/', views.cafe_wbs, name="cafe_wbs"),
+    
+    # Value stream canvas
+    path('home_valuestream/', views.home_valuestream, name="home_valuestream"),
+    
+    # Value stream canvas
+    path('home_devvaluestream_canvas/', views.home_devvaluestream_canvas, name="home_devvaluestream_canvas"),
+    path('list_devvaluestream_canvas/', views.list_devvaluestream_canvas, name="list_devvaluestream_canvas"),
+    # portfolio 
+    path('home_portfolio_canvas/', views.home_portfolio_canvas, name="home_portfolio_canvas"),
+    path('list_portfolio_canvas/', views.list_portfolio_canvas, name="list_portfolio_canvas"),
+    path('show_portfolio_canvas/<int:id>/', views.show_portfolio_canvas, name="show_portfolio_canvas"),
 ]

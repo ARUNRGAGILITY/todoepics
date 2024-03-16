@@ -17,12 +17,29 @@ class BaseModel1(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True, null=True, blank=True)
-    deleted = models.BooleanField(default=True, null=True, blank=True)
+    deleted = models.BooleanField(default=False, null=True, blank=True)
 
     class Meta:
         abstract = True
         ordering = ['position']
+        
+##################################################################
+# ORGANIZATION
+##################################################################
+class SAFeType(BaseModel1):
+    docs = models.TextField(null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+class Organization(BaseModel1):
+    safe_type = models.ForeignKey(SAFeType, on_delete=models.CASCADE, related_name="organizations")
+
+    def __str__(self):
+        return self.name
+
+##################################################################
+# STRATEGIC THEME
+##################################################################
 class StrategicTheme(BaseModel1):
 
     def __str__(self):
@@ -118,7 +135,9 @@ class Task(BaseModel1):
         return self.name
 #############################################
 
-
+##################################################################
+# VALUESTREAM
+##################################################################
 class OVS_Types(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(null=True, blank=True)
@@ -339,3 +358,8 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         # Custom save logic here
         super(Profile, self).save(*args, **kwargs)  # Ensure this is called
+
+
+##################################################################
+# end of model file
+##################################################################

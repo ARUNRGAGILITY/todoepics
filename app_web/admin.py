@@ -8,6 +8,13 @@ from django.contrib import admin
 from django.apps import apps
 
 
+# organizations
+admin.site.register(SAFeType)
+#admin.site.register(Organization)
+
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'safe_type', 'active', 'deleted', )
+admin.site.register(Organization, OrganizationAdmin)
 ## cafe
 
 admin.site.register(Objective)

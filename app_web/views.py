@@ -843,7 +843,7 @@ def show_ovs_step_details(request, id):
     # process inputs
     steps_count = 0
     object = OpsValueStream.objects.get(active=True, id=id)
-    vsm_steps = ValueStreamSteps.objects.filter(active=True, deleted=False, opsvaluestream=object)
+    vsm_steps = ValueStreamSteps.objects.filter(active=True, opsvaluestream=object)
     steps_count = vsm_steps.count()
    
     # We are going to send the steps 4 columns per row

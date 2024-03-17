@@ -154,7 +154,7 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vat1.0.2'
+BUILD_VERSION = 'vat1.0.2a'
 BUILD_DESCRIPTION = 'agiletia 1.0 fix display issues menus'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"

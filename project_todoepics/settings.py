@@ -154,12 +154,18 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vat1.0.2a'
+BUILD_VERSION = 'vat1.0.2B'
 BUILD_DESCRIPTION = 'agiletia 1.0 fix display issues menus'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
-SITE_NAME = "AgileTIA"
-CONTACT_EMAIL = "contact@admin.thissite.com"
+SITE_NAME = f"{SITE_TITLE}"
+CONTACT_EMAIL = "contact@a{SITE_TITLE}.com"
 ## copyright information
 PRIVACY_INFO = "No Privacy Information collected and utilized."
 COPYRIGHT_INFO = f"© {current_year}. {PRIVACY_INFO} All rights reserved."
+
+SITE_CAPTION = f"{SITE_TITLE} helps organizations and startups to transform and launch a continuous improvement and sustainable journey."
+
+SITE_DESC = f"""
+{SITE_TITLE} helps to transform small, medium and large organizations and enterprizes in a sustainable way.
+"""

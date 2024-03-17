@@ -6,6 +6,8 @@ def get_site_info(request):
     return {
         'SITE_TITLE': settings.SITE_TITLE,
         'SITE_NAME': settings.SITE_NAME,
+        'SITE_CAPTION': settings.SITE_CAPTION,
+        'SITE_DESC': settings.SITE_DESC,
         'CONTACT_EMAIL': settings.CONTACT_EMAIL,
         'BUILD_VERSION': settings.BUILD_VERSION,
         'BUILD_DESCRIPTION': settings.BUILD_DESCRIPTION,

@@ -49,7 +49,7 @@ $( function() {
     <!-- role mgmt header/menu -->
     {% include "./menu_valuestream.html" %} 
     <div class="row pt-2">
-        <div class="col col-md-8">    
+        <div class="col col-md-12 text-end">    
             <b>Value Stream Steps of </b>
             &nbsp;           
             {% if vs == 'ops' %}
@@ -83,8 +83,7 @@ $( function() {
             {% endif %}
           
            
-        </div>
-        <div class="col col-md-4 text-end">
+       
             {% if vs == 'ops' %}  
             &nbsp;&nbsp;
             <a href="{% url 'add_vsm_steps' vs id %}" class="btn btn-sm btn-primary pb-2">+ Add Operational Value Stream Step</a>
@@ -105,8 +104,8 @@ $( function() {
                     <th width="2%" align="right">#</th>
                     <th>Step Name</th>
                     <th width="30%">Description</th>
-                    <th>Value Creation Time (mins)</th>
-                    <th>Delay Time (mins)</th>
+                    <th>Value Creation Time </th>
+                    <th>Delay Time </th>
                     <th>Actions</th>
                 </tr>
                 <tbody id="sortable">
@@ -121,7 +120,7 @@ $( function() {
                     <td>{{object.value_creation_time}} min(s)</td>
                     <td>{{object.delay_time}} min(s)</td>
                     <td>                       
-                        <a href="{% url 'edit_step' vs id object.id %}">View</a>
+                        <a href="{% url 'view_step' vs id object.id %}">View</a>
                         &nbsp;&nbsp;
                         <a href="{% url 'edit_step' vs id object.id %}">Edit</a>
                         &nbsp;&nbsp;
@@ -139,14 +138,14 @@ $( function() {
             <table class="table table-bordered">
                 <tr>
                     <td>
-                         Total Value Creation Time (mins) + Total Delay Time (mins) = Total Time (mins) <br>
-                         i.e., {{parent.total_value_creation_time}} (mins) +  {{parent.total_delay_time}} (mins) = {{parent.total_time}} (mins)
+                         Total Value Creation Time  + Total Delay Time  = Total Time  <br>
+                         i.e., {{parent.total_value_creation_time}}  +  {{parent.total_delay_time}}  = {{parent.total_time}} 
                     </td>
                 </tr>
                 <tr>
                     <td>
-                         (Total Value Creation Time (mins) / Total Time (mins)) * 100 % = VSM Process Efficency % <br>
-                      i.e., ({{parent.total_value_creation_time}} (mins) / {{parent.total_time}} (mins)) * 100 % = {{parent.efficiency}} %
+                         (Total Value Creation Time  / Total Time ) * 100 % = VSM Process Efficency % <br>
+                      i.e., ({{parent.total_value_creation_time}}  / {{parent.total_time}} ) * 100 % = {{parent.efficiency}} %
                     </td>
                 </tr>
             </table>           

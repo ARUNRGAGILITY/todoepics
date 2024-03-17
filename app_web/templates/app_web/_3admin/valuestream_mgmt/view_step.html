@@ -1,0 +1,123 @@
+{% extends "../../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}View VS Step{% endblock title %} 
+{% load custom_tags %}
+{% block content %}
+
+<div class="container-fluid">
+<!-- header -->
+{% include "./vsm_header.html" %} 
+<!-- role mgmt header/menu -->
+{% include "./vsm_menu.html" %} 
+
+<div class="row">
+    <div class="col col-md-12">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <td colspan="2">
+                        {% if vs == 'ops' %}    
+                        OVS: {{ovs}} : Step
+                        {% endif %}
+                        {% if vs == 'dev' %}
+                        OVS: {{ovs}} / 
+                        DVS: {{dvs}} Step
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        
+                        <font size="-1">
+                            Tigger: 
+                            {% if dvs.trigger != None %} {{dvs.trigger}}&nbsp; &gt; &nbsp;{% endif %}
+                        </font>
+                        {% for step in vsm_steps %}
+                            {% if step.active == True %}
+                                    <font size="-2">
+                                        {{step.name}} &nbsp; &gt; &nbsp;
+                                    </font>
+                            {% endif %}
+                        {% endfor %}
+                        <font size="-1">
+                            Value: {% if dvs.trigger != None %} {{dvs.value}}{% endif %}
+                        </font>
+                    </td>
+                </tr>
+               
+            </thead>
+            <tbody>
+                <tr>
+                   <td colspan="2" class="text-end">
+                        {% if vs == 'ops' %}    
+                        OVS: <a href="{% url 'view_ops_valuestream' ovs.id %}">{{ovs}}</a>
+                        {% endif %}
+                        {% if vs == 'dev' %}
+                        OVS: <a href="{% url 'view_ops_valuestream' ovs.id %}">{{ovs}}</a> /
+                        DVS: <a href="{% url 'view_dev_valuestream' dvs.id %}">{{dvs}}</a>
+                        {% endif %}
+                        &nbsp;&nbsp;
+                        <a href="{% url 'valuestream_steps' vs ref_id %}">Steps</a>
+                        &nbsp;&nbsp;
+                        <a href="">Edit</a>
+                        &nbsp;&nbsp;
+                        <a href="">Delete</a>
+                   </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Name</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.name}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Description</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.description}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Owner</b>
+                    </td>
+                    <td class="text-start">
+                       {% if object.owner != None %}
+                       {{object.owner}}
+                       {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Value Creation Time <br> or <br> Process Time</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.value_creation_time}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Delay Time</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.delay_time}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" class="text-end">
+                        <b>Percentage Accurate</b>
+                    </td>
+                    <td class="text-start">
+                        {{object.percentage_accurate}}
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -32,6 +32,7 @@ urlpatterns = [
     path('edit_ops_valuestream/<int:id>/', views.edit_ops_valuestream, name="edit_ops_valuestream"),
     path('valuestream_mgmt/', views.valuestream_mgmt, name="valuestream_mgmt"),
     path('view_ops_valuestream/<int:id>/', views.view_ops_valuestream, name="view_ops_valuestream"),
+    path('view_step/<str:vs>/<int:ref_id>/<int:id>/', views.view_step, name="view_step"),
     path('summary_ops_valuestream/<int:id>/', views.summary_ops_valuestream, name="summary_ops_valuestream"),
     path('view_dev_valuestream/<int:id>/', views.view_dev_valuestream, name="view_dev_valuestream"),
     path('summary_dev_valuestream/<int:id>/', views.summary_dev_valuestream, name="summary_dev_valuestream"),

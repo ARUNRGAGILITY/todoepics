@@ -15,7 +15,7 @@
     <div class="col col-md-5 text-start">
         <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object.ops_valuestream}}</a>
         &nbsp;&nbsp;
-        <a href="{% url 'dev_valuestream_mgmt' object.id %}">Dev Value Stream: {{object}}</a>
+        <a href="{% url 'dev_valuestream_mgmt' parent %}">Dev Value Stream: {{object}}</a>
         Value Stream has total {{steps_count}} Steps
     </div>
     <div class="col col-md-7 text-end">
@@ -85,7 +85,7 @@
                         <b>Total Value Creation Time</b>
                     </td>
                     <td class="text-start">
-                        {{object.total_value_creation_time}} min(s)
+                        {{object.total_value_creation_time}} 
                     </td>
                 </tr>
                 <tr>
@@ -93,7 +93,7 @@
                         <b>Total Delay Time</b>
                     </td>
                     <td class="text-start">
-                        {{object.total_delay_time}} min(s)
+                        {{object.total_delay_time}} 
                     </td>
                 </tr>
                 <tr>
@@ -101,7 +101,7 @@
                         <b>Total / Lead Time</b>
                     </td>
                     <td class="text-start">
-                        {{object.total_time}} min(s)
+                        {{object.total_time}} 
                     </td>
                 </tr>
                 <tr>
@@ -109,7 +109,7 @@
                         <b>Efficency</b>
                     </td>
                     <td class="text-start">
-                        {{object.efficiency}} min(s)
+                        {{object.efficiency}} 
                     </td>
                 </tr>
             </tbody>

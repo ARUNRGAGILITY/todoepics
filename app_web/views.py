@@ -585,7 +585,7 @@ def summary_dev_valuestream(request, id):
     steps_count = vsm_steps.count()
     total_table_cols = (steps_count * 2) + 3
     context = {
-        'page': 'ops_valuestream_mgmt',
+        'page': 'summary_dev_valuestream',
         'user': user,
         'profile': profile,
         'parent': parent,
@@ -626,7 +626,7 @@ def edit_step(request, vs, ref_id, id):
     
     # send outputs (info, template, request)
     context = {
-        'page': 'edit_dev_valuestream',
+        'page': 'edit_step',
         'user': user,
         'profile': profile,
         'object': object,
@@ -636,6 +636,44 @@ def edit_step(request, vs, ref_id, id):
     template_file = f"{app_name}/_3admin/valuestream_mgmt/edit_step.html"
     return render(request, template_file, context)
 
+#####################################################
+# edit valuestream steps
+@login_required
+def view_step(request, vs, ref_id, id):
+    # take inputs
+    # process inputs
+    object = ValueStreamSteps.objects.get(active=True, id=id)
+    # processing
+    ovs = None
+    dvs = None
+    vsm_steps = None
+    if vs == "ops":
+        ovs = OpsValueStream.objects.get(active=True, id=ref_id)   
+        vsm_steps = ValueStreamSteps.objects.filter(active=True, opsvaluestream=ovs)     
+    elif vs == "dev":
+        dvs = DevValueStream.objects.get(active=True, id=ref_id)
+        ovs = dvs.ops_valuestream
+        vsm_steps = ValueStreamSteps.objects.filter(active=True, devvaluestream=dvs)
+    else:
+        print(f"Error No Ops/Dev VS identified")
+    
+    steps_count = vsm_steps.count()
+    
+    # send outputs (info, template, request)
+    context = {
+        'page': 'view_step',
+        'vs': vs,
+        'ref_id': ref_id,
+        'id': id,
+        'ovs': ovs,
+        'dvs': dvs,
+        'object': object,   
+        
+        'vsm_steps': vsm_steps,
+        'steps_count': steps_count,
+    }  
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/view_step.html"
+    return render(request, template_file, context)
 
 ## CAFE
 def cafe_start(request):

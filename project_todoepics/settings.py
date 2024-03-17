@@ -154,8 +154,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vat1.0.1b'
-BUILD_DESCRIPTION = 'agiletia 1.0 fix show ovs'
+BUILD_VERSION = 'vat1.0.1c'
+BUILD_DESCRIPTION = 'agiletia 1.0 fix display issues menus'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "TODOEPICS"
 SITE_NAME = "Project TODOEPICS v1.0"

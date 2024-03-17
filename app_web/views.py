@@ -97,7 +97,7 @@ def login_page(request):
 # Registration Page
 def register(request):
     # take inputs
-    CORRECT_REG_CODE = "1"
+    CORRECT_REG_CODE = "1010abcd"
     # process inputs
     if request.method == 'POST':
         # Retrieve the registration code from the form
@@ -859,6 +859,7 @@ def show_ovs_step_details(request, id):
         'vsm_steps': vsm_steps,
         'steps_count': steps_count,
         'rows': rows,
+        'vs': 'ops',
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/show_ovs_step_details.html"
     return render(request, template_file, context)
@@ -891,6 +892,7 @@ def show_dvs_step_details(request, ref_id, id):
         'vsm_steps': vsm_steps,
         'steps_count': steps_count,
         'rows': rows,
+        'vs': 'dvs',
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/show_dvs_step_details.html"
     return render(request, template_file, context)

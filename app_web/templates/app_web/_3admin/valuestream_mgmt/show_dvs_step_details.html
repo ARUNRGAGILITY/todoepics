@@ -60,7 +60,7 @@
                 <div class="col-md-2 div_box my-4">
                     {{ record }}
                     <div class="role_box">
-                        {{record.role}}
+                        {{record.owner}}
                     </div>
                     <div class="details_box ">
                         PT:{{record.value_creation_time}}
@@ -85,8 +85,9 @@
                 <!-- Display of the VSM Summary Info -->
                 <table class="table table-bordered table-striped">
                     <tr>
-                        <td>
-                            <b>{{dvs}} Development Value Stream Details</b>
+                        <td>                            
+                            Development Value Stream Details of<br>
+                            <b>{{dvs}}</b>
                             <br>
                             <font size="-1">{{dvs.description}}</font>
                         </td>
@@ -124,6 +125,6 @@
 <!-- END: main content of the page -->
 
 <!-- footer -->
-{% include "./vsm_footer.html" %} 
+
 </div>
 {% endblock %}

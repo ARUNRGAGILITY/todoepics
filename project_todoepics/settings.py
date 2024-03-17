@@ -128,6 +128,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 TIME_ZONE = 'Asia/Kolkata'
 LOGIN_URL = '/login'
+
 #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 #DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
@@ -153,8 +154,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'v17032024_vsmovsdvs_1'
-BUILD_DESCRIPTION = 'OVS, DVS demo candidate1.1'
+BUILD_VERSION = 'vat1.0'
+BUILD_DESCRIPTION = 'agiletia 1.0'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "TODOEPICS"
 SITE_NAME = "Project TODOEPICS v1.0"

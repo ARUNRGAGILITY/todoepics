@@ -16,15 +16,34 @@
     <header>
        <div class="container-fluid">
         <div class="row">
-            <div class="col col-md-6"></div>
-            <div class="col col-md-6 text-end">
-                <a href="{% url 'beagile' %}">Be AIAgile</a>
+            <div class="col col-md-6">
+                {% if page == 'organization_transformation' %} <b>Organization Transformation</b>{% else %}<a href="{% url 'organization_transformation' %}">Organization Transformation</a> {% endif %}              
                 &nbsp;&nbsp;|&nbsp;&nbsp;
-                <a href="{% url 'help' %}">Help</a>
+                {% if page == 'transformation_leadership' %} <b>Transformation Leadership</b>{% else %} <a href="{% url 'transformation_leadership' %}">Trasnsformation Leadership</a> {% endif %}    
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% if page == 'transformation_sw_training_services' %} <b> SW &amp; Training Services</b>{% else %}<a href="{% url 'transformation_sw_training_services' %}"> SW &amp; Training Services</a> {% endif %}                        
+                
+            </div>
+            <div class="col col-md-6 text-end">                
+                {% if page == 'beaiagile' %} <b>Be AIAgile</b>{% else %}<a href="{% url 'beaiagile' %}">Be AIAgile</a> {% endif %}              
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% if page == 'help' %} <b>Help</b>{% else %} <a href="{% url 'help' %}">Help</a> {% endif %}    
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% if page == 'welcome' %} <b>Home</b>{% else %}<a href="{% url 'welcome' %}">Home</a> {% endif %}                        
+                
+                
+                
+                {% if user.is_authenticated %}
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                User: <a href="{% url 'profile_page' %}">{{user.username}}</a>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="{% url 'logout_page' %}" class="btn btn-sm btn-primary">Logout</a>
+                {% else %}
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 <a href="{% url 'login' %}">Login</a>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 <a href="{% url 'register' %}">Register</a>
+                {% endif %}
             </div>
         </div>
        </div>

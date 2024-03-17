@@ -68,7 +68,7 @@ urlpatterns = [
     ## main page
     ## website/like/agiletia.com
     path('help/', views.help, name="help"),
-    path('beagile/', views.beagile, name="beagile"),
+    path('beaiagile/', views.beaiagile, name="beaiagile"),
     path('about/', views.about, name="about"),
     path('organization_transformation/', views.organization_transformation, name="organization_transformation"),
     path('transformation_leadership/', views.transformation_leadership, name="transformation_leadership"),

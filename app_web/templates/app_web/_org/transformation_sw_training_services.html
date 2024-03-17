@@ -1,1 +1,47 @@
-<h2>TEST1</h2>
+{% extends "../_1base/modern_welcome_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Organization Transformation{% endblock title %} 
+{% block content %} 
+<!-- BEGIN: PAGE -->
+<div class="container">
+    <div class="row">
+        <div class="col col-md-12">
+            <h2>Transformation Software &amp; Training Services</h2>
+            <p>
+                In the rapidly evolving business landscape, organizations are 
+                increasingly embracing change and adopting agile practices to enhance
+                 agility and responsiveness to market dynamics. However, a significant 
+                 challenge emerges when their enterprise software fails to fully support 
+                 these top-to-bottom and end-to-end agile workflows. Traditional software 
+                 systems, often rigid and siloed, lack the necessary flexibility, schema
+                 adaptability, and deep contextual understanding of the organization's unique 
+                 processes and needs. This inadequacy leads to the emergence of isolated software 
+                 "islands," which, instead of streamlining operations, necessitate manual 
+                 intervention for data management, integration, and workflow orchestration. 
+                 The reliance on exporting data to spreadsheets or resorting to small-scale, 
+                 temporary solutions not only drains human energy but also introduces 
+                 inefficiencies and errors, ultimately hindering the organization's ability 
+                 to innovate and compete.
+                </p><p>
+                Recognizing this critical gap, we, at AgileTIA, position ourselves as 
+                pioneers in the development and customization of transformation (open-source) software. 
+                Our focus is on solving the problem and not liking our solutions and tools, commercializing and 
+                claiming they are no.1 tools.
+                Our solutions are designed to bridge the divide, offering the agility and 
+                customization that modern organizations demand. By understanding the specific 
+                context and needs of each organization, our software transcends the limitations 
+                of traditional enterprise systems, ensuring a seamless, integrated experience 
+                across all functions and levels. Our approach focuses on the orchestration of 
+                existing workflows, apply lean thinking, eliminating delays and silos and 
+                creating a cohesive ecosystem that 
+                supports continuous improvement and agility. With AgileTIA's transformation 
+                software, organizations can move beyond makeshift fixes and disjointed systems, 
+                embracing a future where technology truly enables, rather than impedes, agile 
+                transformation and growth.
+            </p>
+        </div>
+    </div>
+</div>
+<!-- END: PAGE --> 
+{% endblock content %}

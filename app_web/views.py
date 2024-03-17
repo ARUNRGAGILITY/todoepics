@@ -52,7 +52,7 @@ def welcome(request):
     user = request.user   
     # send outputs (info, template, request)
     context = {
-        'page': 'user_page',
+        'page': 'welcome',
         'user': user,
     }       
     template_file = f"{app_name}/welcome.html"
@@ -95,17 +95,17 @@ def about(request):
     template_file = f"{app_name}/_org/about.html"
     return render(request, template_file, context)
 
-def beagile(request):
+def beaiagile(request):
     # take inputs
     # process inputs
     user = None
     user = request.user   
     # send outputs (info, template, request)
     context = {
-        'page': 'beagile',
+        'page': 'beaiagile',
         'user': user,
     }       
-    template_file = f"{app_name}/_org/beagile.html"
+    template_file = f"{app_name}/_org/beaiagile.html"
     return render(request, template_file, context)
 
 def organization_transformation(request):

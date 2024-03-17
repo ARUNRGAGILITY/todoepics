@@ -10,7 +10,20 @@
 {% include "./vsm_header.html" %} 
 <!-- menu -->
 {% include "./vsm_menu.html" %} 
+<div class="row">
+    <div class="col col-md-12 text-end">
+        {% if vs == 'ops' %}
+        <a href="{% url 'ops_valuestream_mgmt' %}">OVS Home</a>
+        <b>OVS</b>
+        <a href="{% url 'view_ops_valuestream' ovs.id %}">{{ovs}}</a>
+        {% endif %}
 
+        {% if vs == 'dev' %}
+        <b>OVS</b> /
+        <b>DVS</b>
+        {% endif %}
+    </div>
+</div>
 <!-- BEGIN: main content of the page -->
 <h3>OVS: {{ovs}}</h3>
 <font size="-1">

@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     # all users will come to this visitor page
-    path('', views.visitor_page, name="visitor_page"),
+    path('', views.welcome, name="welcome"),
     # if login needed login page displayed
     path('login/', views.login_page, name="login"),
     # if registeration needed registration page displayed
@@ -63,4 +63,15 @@ urlpatterns = [
     path('home_portfolio_canvas/', views.home_portfolio_canvas, name="home_portfolio_canvas"),
     path('list_portfolio_canvas/', views.list_portfolio_canvas, name="list_portfolio_canvas"),
     path('show_portfolio_canvas/<int:id>/', views.show_portfolio_canvas, name="show_portfolio_canvas"),
+    
+    
+    ## main page
+    ## website/like/agiletia.com
+    path('help/', views.help, name="help"),
+    path('beagile/', views.beagile, name="beagile"),
+    path('about/', views.about, name="about"),
+    path('organization_transformation/', views.organization_transformation, name="organization_transformation"),
+    path('transformation_leadership/', views.transformation_leadership, name="transformation_leadership"),
+    path('transformation_sw_training_services/', views.transformation_sw_training_services, name="transformation_sw_training_services"),
+    
 ]

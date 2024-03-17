@@ -1,0 +1,74 @@
+{% extends "./_1base/modern_welcome_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Welcome{% endblock title %} 
+{% block content %}
+<style>
+@keyframes blink {
+    50% { border-color: transparent; }
+}
+.typing-effect {
+    display: inline-block;
+    font-family: monospace;
+    white-space: nowrap;
+    border-right: 3px solid;
+    animation: blink 1s step-end infinite;
+}
+</style>
+  
+<!-- BEGIN: PAGE -->
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col col-md-12 text-center">
+                 <!-- Begin: content here -->
+                 <p>
+                    <img src="{% static 'img/logo/agiletia.com.png' %}" alt="">
+                    <br>
+                    <img src="{% static 'img/logo/welcome_agiletia_handwritten.png' %}" alt="">
+                    <br>                   
+                 </p>
+                 <div id="typewriter-container" class="col-md-12 text-center">
+                    <p id="typewriter-text"></p>                    
+                </div>    
+                <br>
+                <a href="" class="btn btn-success btn-sm">Organization Transformation</a> 
+                &nbsp;&nbsp;<b>&gt;</b>&nbsp;           
+                <a href="" class="btn btn-primary btn-sm">Transformation Leadership</a> 
+                &nbsp;&nbsp;<b>&gt;</b>&nbsp;
+                <a href="" class="btn btn-secondary btn-sm">Transformation Software, Training &amp; Services</a> 
+            </div>
+        </div>
+     
+    </div>    
+</div>
+<!-- END: PAGE -->
+<script>
+const text = "Combining Agile practices and AI's approach for Organization Transformation and People's Growth!";
+const typingSpeed = 90; // Speed of typing in milliseconds
+const pauseBeforeRepeat = 10000; // Pause before repeating the text, in milliseconds
+let index = 0;
+
+// Target the specific paragraph for the typewritten text
+const typingElement = document.getElementById('typewriter-text');
+
+function typeText() {
+    if (index < text.length) {
+    typingElement.textContent += text.charAt(index);
+    index++;
+    setTimeout(typeText, typingSpeed);
+    } else {
+    setTimeout(() => {
+        typingElement.textContent = ''; // Clear the text
+        index = 0; // Reset index to start over
+        typeText(); // Start typing again
+    }, pauseBeforeRepeat);
+    }
+}
+
+// Start typing after the document is loaded
+document.addEventListener('DOMContentLoaded', (event) => {
+    typeText();
+});
+</script>  
+{% endblock content %}

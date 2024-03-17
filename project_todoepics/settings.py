@@ -154,11 +154,11 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vat1.0.1c'
+BUILD_VERSION = 'vat1.0.1d'
 BUILD_DESCRIPTION = 'agiletia 1.0 fix display issues menus'
 ## TEMPLATE DISPLAY
-SITE_TITLE = "TODOEPICS"
-SITE_NAME = "Project TODOEPICS v1.0"
+SITE_TITLE = "AgileTIA"
+SITE_NAME = "AgileTIA"
 CONTACT_EMAIL = "contact@admin.thissite.com"
 ## copyright information
 PRIVACY_INFO = "No Privacy Information collected and utilized."

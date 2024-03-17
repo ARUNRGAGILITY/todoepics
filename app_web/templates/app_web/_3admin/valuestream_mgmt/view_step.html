@@ -31,6 +31,7 @@
                         
                         <font size="-1">
                             Tigger: 
+                            {% if ovs.trigger != None %} {{ovs.trigger}}&nbsp; &gt; &nbsp;{% endif %}
                             {% if dvs.trigger != None %} {{dvs.trigger}}&nbsp; &gt; &nbsp;{% endif %}
                         </font>
                         {% for step in vsm_steps %}
@@ -41,7 +42,8 @@
                             {% endif %}
                         {% endfor %}
                         <font size="-1">
-                            Value: {% if dvs.trigger != None %} {{dvs.value}}{% endif %}
+                            Value: {% if ovs.trigger != None %} {{ovs.value}}{% endif %}
+                            {% if dvs.trigger != None %} {{dvs.value}}{% endif %}
                         </font>
                     </td>
                 </tr>
@@ -52,17 +54,24 @@
                    <td colspan="2" class="text-end">
                         {% if vs == 'ops' %}    
                         OVS: <a href="{% url 'view_ops_valuestream' ovs.id %}">{{ovs}}</a>
+                        &nbsp;&nbsp;
+                        <a href="{% url 'valuestream_steps' vs ref_id %}">Steps</a>
+                        &nbsp;&nbsp;
+                        <a href="{% url 'edit_step' vs ref_id object.id %}">Edit</a>
+                        &nbsp;&nbsp;
+                        <a href="{% url 'delete_step' vs ref_id object.id %}">Delete</a>
                         {% endif %}
                         {% if vs == 'dev' %}
                         OVS: <a href="{% url 'view_ops_valuestream' ovs.id %}">{{ovs}}</a> /
                         DVS: <a href="{% url 'view_dev_valuestream' dvs.id %}">{{dvs}}</a>
-                        {% endif %}
                         &nbsp;&nbsp;
                         <a href="{% url 'valuestream_steps' vs ref_id %}">Steps</a>
                         &nbsp;&nbsp;
-                        <a href="">Edit</a>
+                        <a href="{% url 'edit_step' vs ref_id object.id %}">Edit</a>
                         &nbsp;&nbsp;
-                        <a href="">Delete</a>
+                        <a href="{% url 'delete_step' vs ref_id object.id %}">Delete</a>
+                        {% endif %}
+                       
                    </td>
                 </tr>
                 <tr>

@@ -44,6 +44,110 @@ def role_required(*role_names):
     return user_passes_test_with_403(in_roles)
 
 
+
+def welcome(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'page': 'user_page',
+        'user': user,
+    }       
+    template_file = f"{app_name}/welcome.html"
+    return render(request, template_file, context)
+
+"""
+    path('help/', views.help, name="help"),
+    path('beagile/', views.help, name="help"),
+    path('about/', views.about, name="about"),
+    path('organization_transformation/', views.organization_transformation, name="organization_transformation"),
+    path('transformation_leadership/', views.transformation_leadership, name="transformation_leadership"),
+    path('transformation_sw_training_services/', views.transformation_sw_training_services, name="transformation_sw_training_services"),
+    
+
+
+"""
+def help(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'page': 'help',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_org/help.html"
+    return render(request, template_file, context)
+
+def about(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'page': 'about',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_org/about.html"
+    return render(request, template_file, context)
+
+def beagile(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'page': 'beagile',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_org/beagile.html"
+    return render(request, template_file, context)
+
+def organization_transformation(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'page': 'organization_transformation',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_org/organization_transformation.html"
+    return render(request, template_file, context)
+
+def transformation_leadership(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'page': 'transformation_leadership',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_org/transformation_leadership.html"
+    return render(request, template_file, context)
+
+def transformation_sw_training_services(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'page': 'transformation_sw_training_services',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_org/transformation_sw_training_services.html"
+    return render(request, template_file, context)
+
+# this mostly not used / refactor
 def visitor_page(request):
     # take inputs
     # process inputs

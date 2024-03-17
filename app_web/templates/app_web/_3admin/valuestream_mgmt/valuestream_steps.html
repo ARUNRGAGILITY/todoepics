@@ -85,10 +85,16 @@ $( function() {
            
         </div>
         <div class="col col-md-4 text-end">
-           
+            {% if vs == 'ops' %}  
+            &nbsp;&nbsp;
+            <a href="{% url 'add_vsm_steps' vs id %}" class="btn btn-sm btn-primary pb-2">+ Add Operational Value Stream Step</a>
+            &nbsp;&nbsp;
+            {% endif %}
+            {% if vs == 'dev' %}
             &nbsp;&nbsp;
             <a href="{% url 'add_vsm_steps' vs id %}" class="btn btn-sm btn-primary pb-2">+ Add Development Value Stream Step</a>
             &nbsp;&nbsp;
+            {% endif %}
         </div>
     </div>
     <div class="row pt-2">

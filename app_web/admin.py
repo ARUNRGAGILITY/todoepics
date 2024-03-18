@@ -65,7 +65,6 @@ admin.site.register(Task, TaskAdmin)
 
 
 admin.site.register(Role)
-admin.site.register(Profile)
 admin.site.register(OpsValueStream)
 admin.site.register(DevValueStream)
 #admin.site.register(ValueStreamSteps)

@@ -51,6 +51,7 @@ $( function() {
 
     <div class="row">
         <div class="col col md-2">  
+            
             {% if vs == 'ops' %}
             <a href="{% url 'ops_valuestream_mgmt' %}"><img src="{% static 'img/safe/ovs.png' %}" alt=""></a>
                 <a href="{% url 'view_ops_valuestream' parent.id %}">{{parent}}</a>                       

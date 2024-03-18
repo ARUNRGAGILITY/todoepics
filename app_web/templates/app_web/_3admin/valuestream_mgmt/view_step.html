@@ -64,7 +64,9 @@
                         {% for step in vsm_steps %}
                             {% if step.active == True %}
                                     <font size="-2">
-                                        <a href="{% url 'view_step' 'ops' ovs.id step.id %}">{{step.name}}</a> &nbsp; &gt; &nbsp;
+                                        {% if vs == 'ops' %}<a href="{% url 'view_step' 'ops' ovs.id step.id %}">{{step.name}}</a>{% endif %}
+                                        {% if vs == 'dev' %}<a href="{% url 'view_step' 'dev' dvs.id step.id %}">{{step.name}}</a>{% endif %}
+                                         &nbsp; &gt; &nbsp;
                                     </font>
                             {% endif %}
                         {% endfor %}

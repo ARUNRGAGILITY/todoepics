@@ -81,7 +81,9 @@ class ValueStreamStepsForm(forms.ModelForm):
     class Meta:
         model = ValueStreamSteps
         fields = ['name', 'description', 'owner', 'value_creation_time', 'delay_time', 'percentage_accurate']  
-
+        widgets = {
+            'description': forms.Textarea(attrs={'class': 'custom-css-class', 'rows': 4, 'cols': 40}),
+        }
 
 class ProfileForm(forms.ModelForm):
     class Meta:

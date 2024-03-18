@@ -715,7 +715,19 @@ def edit_step(request, vs, ref_id, id):
     user = request.user
     profile, created = Profile.objects.get_or_create(user=request.user)
     object = ValueStreamSteps.objects.get(active=True, id=id)
-    print(f">>> === opsvs {object} === <<<")
+    vsm_steps = None
+    ovs = None
+    dvs = None
+    if vs == "ops":
+        ovs = OpsValueStream.objects.get(active=True, id=ref_id)   
+        vsm_steps = ValueStreamSteps.objects.filter(active=True, opsvaluestream=ovs)     
+    elif vs == "dev":
+        dvs = DevValueStream.objects.get(active=True, id=ref_id)
+        ovs = dvs.ops_valuestream
+        vsm_steps = ValueStreamSteps.objects.filter(active=True, devvaluestream=dvs)
+    else:
+        print(f"Error No Ops/Dev VS identified")
+    steps_count = vsm_steps.count()
     # processing
     form = ValueStreamStepsForm(instance=object)
     if request.method == 'POST':
@@ -735,9 +747,15 @@ def edit_step(request, vs, ref_id, id):
         'page': 'edit_step',
         'user': user,
         'profile': profile,
-        'object': object,
         'form': form,
-       
+        'vs': vs,
+        'ref_id': ref_id,
+        'id': id,
+        'ovs': ovs,
+        'dvs': dvs,
+        'object': object,          
+        'vsm_steps': vsm_steps,
+        'steps_count': steps_count,       
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/edit_step.html"
     return render(request, template_file, context)

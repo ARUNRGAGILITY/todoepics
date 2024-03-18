@@ -11,28 +11,30 @@
 <!-- menu -->
 {% include "./vsm_menu.html" %} 
 <div class="row">
-    <div class="col col-md-12 text-end">
+    <div class="col col-md-4">
+        <h3>OVS: {{ovs}}</h3>
+    </div>
+    <div class="col col-md-8 text-end">
         {% if vs == 'ops' %}
         <a href="{% url 'ops_valuestream_mgmt' %}">OVS Home</a>
+        &nbsp;&nbsp;
         <b>OVS</b>
+        &nbsp;
         <a href="{% url 'view_ops_valuestream' ovs.id %}">{{ovs}}</a>
         {% endif %}
-
-        {% if vs == 'dev' %}
-        <b>OVS</b> /
-        <b>DVS</b>
-        {% endif %}
+        &nbsp;&nbsp;
+        <a href="{% url 'valuestream_steps' 'ops' ovs.id %}">Steps</a>     
     </div>
 </div>
 <!-- BEGIN: main content of the page -->
-<h3>OVS: {{ovs}}</h3>
+
 <font size="-1">
     Tigger: {{ovs.trigger}} &nbsp; &gt; &nbsp;
 </font>
 {% for step in vsm_steps %}
     {% if step.active == True %}
             <font size="-2">
-                {{step.name}} &nbsp; &gt; &nbsp;
+                <a href="{% url 'view_step' 'ops' ovs.id step.id %}">{{step.name}}</a> &nbsp; &gt; &nbsp;
             </font>
     {% endif %}
 {% endfor %}

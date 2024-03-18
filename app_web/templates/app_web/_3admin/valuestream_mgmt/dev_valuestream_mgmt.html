@@ -5,17 +5,23 @@
 
 {% block content %}
 <div class="container-fluid">
-    <!-- header -->
+    <!-- Header -->
     {% include "./vsm_header.html" %} 
-    <!-- role mgmt header/menu -->
+    <!-- Menu -->
     {% include "./menu_valuestream.html" %} 
-    <!-- Listing and Results -->
-    <!-- role mgmt header/menu -->
+    <!-- Topic -->
     <div class="row">
-        <div class="col col-md-5">
-           <a href="{% url 'ops_valuestream_mgmt' %}"> Ops Value Stream: {{parent.name}}</a>            
+        <div class="col col-md-12">
+            <a href="{% url 'view_ops_valuestream' parent.id %}">{{parent.name}}'s</a>
         </div>
-        <div class="col col-md-7 text-end">
+    </div>
+    <!-- Begin: CONTENT -->
+    <div class="row">
+        <div class="col col-md-7">      
+            <img src="{% static 'img/safe/dvs.png' %}" alt="">      
+            Total: {{objects_count}} DVS       
+        </div>
+        <div class="col col-md-5 text-end">
             <a href="{% url 'add_dvs' parent.id %}" class="btn btn-success">+ Add Development Value Stream</a>   
         </div>
     </div>
@@ -23,7 +29,7 @@
     <!-- Listing and Results -->
     <div class="row">
         <div class="col col-md-12">
-            <b>{{parent.name}}'s</b> Development Value Streams (Total: {{objects_count}} DVS)
+           
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -31,7 +37,7 @@
                         <th>
                             {{parent.name}}'s
                             <br>
-                            Development Value Stream Name</th>
+                            Development Value Stream </th>
                         <th>Description</th>
                         <th>Supporting Ops Steps</th>
                         <th>Steps</th>

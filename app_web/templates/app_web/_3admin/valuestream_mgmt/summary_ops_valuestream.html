@@ -131,31 +131,37 @@
 </style>
 <div class="container-fluid">
     <!-- header -->
-    {% include "../../_1base/header.html" %} 
+    {% include "./vsm_header.html" %} 
     <!-- role mgmt header/menu -->
     {% include "./menu_valuestream.html" %} 
     <!-- Listing and Results -->
     <div class="row">
-        <div class="col col-md-5 text-start">
-            <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object}}</a>
-            Value Stream has total {{steps_count}} Steps
-        </div>
-        <div class="col col-md-7 text-end">
-            &nbsp;&nbsp;
-            <a href="{% url 'valuestream_steps' 'ops' object.id %}">Steps</a>
-            
-            
+        <div class="col col-md-12">
+            <!-- all the menus -->
+            <a href="/">Home</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'ops_valuestream_mgmt' %}">List all OVS</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            OVS:<a href="{% url 'view_ops_valuestream' object.id %}"> Consumer Loan</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            Steps: <a href="{% url 'valuestream_steps' 'ops' object.id %}">{{object}}</a> &nbsp;&nbsp;|&nbsp;&nbsp;
+            DVS:<a href="{% url 'dev_valuestream_mgmt' object.id %}"> Consumer Loan's DVS</a>&nbsp;&nbsp;|&nbsp;&nbsp;
         </div>
     </div>
+
+
     <div class="row">
-        <div class="col col-md-12 text-end">
+        <div class="col col-md-5 text-start">
+            Ops Value Stream: <a href="{% url 'ops_valuestream_mgmt' %}">{{object}}</a>
+            has total {{steps_count}} Steps and {{ovs_dvs_count}} DVS.
+        </div>
+        <div class="col col-md-7 text-end">
             <div class="zoom-controls">                
                 <button id="zoomOut">Zoom Out</button>
                 <button id="zoomIn">Zoom In</button>
               </div>
               &nbsp;&nbsp;
+            </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col col-md-12 text-left">
            

@@ -224,7 +224,8 @@ class OpsValueStream(models.Model):
         return self.name
 
 class DevValueStream(models.Model):
-    ops_valuestream = models.ForeignKey(OpsValueStream, null=True, blank=True, on_delete=models.SET_NULL, related_name='devvaluestream')
+    ops_valuestream = models.ForeignKey(OpsValueStream, null=True, blank=True, 
+                                        on_delete=models.SET_NULL, related_name='devvaluestream')
     name = models.CharField(max_length=255, unique=False)
     description = models.TextField(null=True, blank=True)
     trigger = models.CharField(max_length=255, null=True, blank=True)

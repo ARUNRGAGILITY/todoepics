@@ -13,10 +13,8 @@
 <!-- Listing and Results -->
 <div class="row">
     <div class="col col-md-5 text-start">
-        <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object.ops_valuestream}}</a>
-        &nbsp;&nbsp;
-        <a href="{% url 'dev_valuestream_mgmt' parent %}">Dev Value Stream: {{object}}</a>
-        Value Stream has total {{steps_count}} Steps
+        
+       
     </div>
     <div class="col col-md-7 text-end">
         &nbsp;&nbsp;
@@ -25,7 +23,8 @@
 </div>   
 <div class="row">
     <div class="col col-md-12">
-
+        <a href="{% url 'ops_valuestream_mgmt' %}"><img src="{% static 'img/safe/ovs.png' %}" alt=""></a>
+        <a href="{% url 'view_ops_valuestream' object.ops_valuestream.id %}">{{object.ops_valuestream}}</a>
     </div>
 </div>
 <div class="row">
@@ -33,7 +32,8 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th colspan="2">DVS: {{object}}</th>
+                    <th colspan="2">
+                        <img src="{% static 'img/safe/dvs.png' %}" alt=""> {{object}}</th>
                 </tr>
             </thead>
             <tbody>

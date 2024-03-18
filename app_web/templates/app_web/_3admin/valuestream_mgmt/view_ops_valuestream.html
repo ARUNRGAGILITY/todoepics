@@ -7,16 +7,17 @@
 
 <div class="container-fluid">
 <!-- header -->
-{% include "../../_1base/header.html" %} 
+{% include "./vsm_header.html" %} 
 <!-- role mgmt header/menu -->
 {% include "./menu_valuestream.html" %} 
 <!-- Listing and Results -->
 <div class="row">
-    <div class="col col-md-5 text-start">
-        <a href="{% url 'ops_valuestream_mgmt' %}">Ops Value Stream: {{object}}</a>
-        Value Stream has total {{steps_count}} Steps
+    <div class="col col-md-9 text-start">
+        OVS 
+        <a href="{% url 'ops_valuestream_mgmt' %}">{{object}}</a>
+       has total {{steps_count}} Steps and {{dev_valuestream_count}} DVS.
     </div>
-    <div class="col col-md-7 text-end">
+    <div class="col col-md-3 text-end">
         &nbsp;&nbsp;
         <a href="{% url 'valuestream_steps' 'ops' object.id %}">Steps</a>
     </div>
@@ -31,7 +32,9 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th colspan="2">OVS: {{object}}</th>
+                    <th colspan="2">
+                        <a href="{% url 'ops_valuestream_mgmt' %}"><img src="{% static 'img/safe/ovs.png' %}" alt=""></a>
+                        {{object}}</th>
                 </tr>
             </thead>
             <tbody>

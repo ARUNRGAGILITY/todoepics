@@ -5,20 +5,20 @@
 
 {% block content %}
 <div class="container-fluid">
-    <!-- header -->
+    <!-- Header -->
     {% include "./vsm_header.html" %} 
-    <!-- role mgmt header/menu -->
+    <!-- Menu -->
     {% include "./menu_valuestream.html" %} 
-    <!-- role mgmt header/menu -->
+    <!-- Topic -->
     <div class="row">
         <div class="col col-md-12">
             
         </div>
     </div>
-    <!-- Role Mgmt -->
+    <!-- BEGIN: Content -->
     <div class="row">
         <div class="col col-md-9">
-            Here is the list of Operational Value Stream(s) : 
+            <img src="{% static 'img/safe/ovs.png' %}" alt="">Here is the list of Operational Value Stream(s) : 
         </div>
         <div class="col col-md-3 text-end">
             <a href="{%url 'add_ovs' %}" class="btn btn-success">+ Add Operational Value Stream &nbsp;</a>
@@ -31,7 +31,7 @@
                 <thead>
                     <tr>
                         <th width="2%" align="right">#</th>
-                        <th>Value Stream Name</th>
+                        <th>Operational Value Stream</th>
                         <th width="25%">Description</th>
                         <th>Steps</th>
                         <th>Dev Value Stream(s)</th>

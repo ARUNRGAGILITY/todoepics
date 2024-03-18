@@ -48,26 +48,21 @@ $( function() {
     {% include "./vsm_header.html" %} 
     <!-- role mgmt header/menu -->
     {% include "./menu_valuestream.html" %} 
-    <div class="row pt-2">
-        <div class="col col-md-12 text-end">    
-            <b>Value Stream Steps of </b>
-            &nbsp;           
+
+    <div class="row">
+        <div class="col col md-2">  
             {% if vs == 'ops' %}
-                <a href="{% url 'ops_valuestream_mgmt' %}">{{parent}}</a>
-                &nbsp;
-                <b>Operational ValueStream</b>            
+            <a href="{% url 'ops_valuestream_mgmt' %}"><img src="{% static 'img/safe/ovs.png' %}" alt=""></a>
+                <a href="{% url 'view_ops_valuestream' parent.id %}">{{parent}}</a>                       
             {% endif %}
             {% if vs == 'dev' %}
-                <a href="{% url 'dev_valuestream_mgmt' parent.ops_valuestream.id %}">
-                    {{parent.ops_valuestream}}
-                    &nbsp;/&nbsp;
-                    {{parent}} {{vs}} {{ref_id}}
-                </a>
+            <a href="{% url 'view_ops_valuestream' parent.id %}">{{ovs}}</a>  
+            &nbsp;
+            <a href="{% url 'view_dev_valuestream' parent.id %}"><img src="{% static 'img/safe/dvs.png' %}" alt=""></a>
+            {{parent}} (DVS)
             {% endif %}
-            &nbsp;
-            <br>
-            View Value Stream Visually: 
-            &nbsp;
+        </div>
+        <div class="col col md-10 text-end">
             {% if vs == 'ops' %}    
             <a href="{% url 'summary_ops_valuestream' object.id %}">OVS Summary</a>
             &nbsp;&nbsp;
@@ -81,9 +76,7 @@ $( function() {
             <a href="{% url 'summary_dev_valuestream' object.id %}">DVS Summary</a>&nbsp;&nbsp;
             <a href="{% url 'show_dvs_step_details' ovs.id object.id %}">DVS Step Details</a>
             {% endif %}
-          
-           
-       
+            &nbsp;&nbsp;
             {% if vs == 'ops' %}  
             &nbsp;&nbsp;
             <a href="{% url 'add_vsm_steps' vs id %}" class="btn btn-sm btn-primary pb-2">+ Add Operational Value Stream Step</a>
@@ -96,16 +89,24 @@ $( function() {
             {% endif %}
         </div>
     </div>
+
+
     <div class="row pt-2">
         <div class="col-md-12">
             <table  id="outline" class="table table-bordered" >
                 <tr>
                   
                     <th width="2%" align="right">#</th>
-                    <th>Step Name</th>
+                    <th>
+                        {% if vs == 'ops' %}{{parent}}{% endif %}  
+                        {% if vs == 'dev' %}{{object}}{% endif %}
+                        's Steps
+                        &nbsp;  
+                        </th>
                     <th width="30%">Description</th>
                     <th>Value Creation Time </th>
                     <th>Delay Time </th>
+                    <th>% Accurate</th>
                     <th>Actions</th>
                 </tr>
                 <tbody id="sortable">
@@ -117,8 +118,9 @@ $( function() {
                     </td>
                     <td>{{object.name}}</td>
                     <td width="30%">{{object.description}}</td>
-                    <td>{{object.value_creation_time}} min(s)</td>
-                    <td>{{object.delay_time}} min(s)</td>
+                    <td>{{object.value_creation_time}} </td>
+                    <td>{{object.delay_time}} </td>
+                    <td>{{object.percentage_accurate}} </td>
                     <td>                       
                         <a href="{% url 'view_step' vs id object.id %}">View</a>
                         &nbsp;&nbsp;

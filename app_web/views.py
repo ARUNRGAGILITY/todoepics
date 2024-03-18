@@ -593,6 +593,7 @@ def summary_ops_valuestream(request, id):
     object = OpsValueStream.objects.get(active=True, id=id)
     dev_value_streams = DevValueStream.objects.filter(ops_valuestream=object).prefetch_related('supported_ops_steps')
     vsm_steps = ValueStreamSteps.objects.filter(active=True, opsvaluestream=object)
+    ovs_dvs_count = object.devvaluestream.count()
     steps_count = vsm_steps.count()
     total_table_cols = (steps_count * 2) + 3
         
@@ -618,6 +619,7 @@ def summary_ops_valuestream(request, id):
         'ops_value_stream': object,
         'dev_value_streams': dev_value_streams,
         'steps_to_dev_streams': steps_to_dev_streams,
+        'ovs_dvs_count': ovs_dvs_count,
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/summary_ops_valuestream.html"
     return render(request, template_file, context)

@@ -82,6 +82,31 @@ def help(request):
     template_file = f"{app_name}/_org/help.html"
     return render(request, template_file, context)
 
+def cafe(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'page': 'cafe',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_cafe/cafe.html"
+    return render(request, template_file, context)
+def vsm(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'page': 'vsm',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/vsm.html"
+    return render(request, template_file, context)
+
 def about(request):
     # take inputs
     # process inputs
@@ -557,7 +582,7 @@ def edit_ops_valuestream(request, id):
         'object': object,
         'form': form,
     }  
-    template_file = f"{app_name}/_3admin/valuestream_mgmt/edit_dev_valuestream.html"
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/edit_ops_valuestream.html"
     return render(request, template_file, context)
 
 

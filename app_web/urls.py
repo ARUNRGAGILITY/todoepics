@@ -67,6 +67,8 @@ urlpatterns = [
     
     ## main page
     ## website/like/agiletia.com
+    path('vsm/', views.vsm, name="vsm"),
+    path('cafe/', views.cafe, name="cafe"),
     path('help/', views.help, name="help"),
     path('beaiagile/', views.beaiagile, name="beaiagile"),
     path('about/', views.about, name="about"),

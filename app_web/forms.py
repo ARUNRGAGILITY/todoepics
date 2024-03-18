@@ -25,6 +25,12 @@ class OpsValueStreamForm(forms.ModelForm):
     class Meta:
         model = OpsValueStream
         fields = ['trigger', 'value', 'name', 'description', ]
+        widgets = {
+            'trigger': forms.TextInput(attrs={'size': '50',}),
+            'value': forms.TextInput(attrs={'size': '50',}),
+            'name': forms.TextInput(attrs={'size': '50',}),
+            'description': forms.Textarea(attrs={'class': 'custom-css-class', 'rows': 4, 'cols': 40}),
+        }
 
     
 
@@ -41,6 +47,14 @@ class DevValueStreamForm(forms.ModelForm):
     class Meta:
         model = DevValueStream
         fields = ['trigger', 'value','name', 'description', 'supported_ops_steps']
+        widgets = {
+            'trigger': forms.TextInput(attrs={'size': '50',}),
+            'value': forms.TextInput(attrs={'size': '50',}),
+            'name': forms.TextInput(attrs={'size': '50',}),
+            'description': forms.Textarea(attrs={'class': 'custom-css-class', 'rows': 4, 'cols': 40}),
+        }
+        
+    
 
     # def __init__(self, *args, **kwargs):
     #     super(DevValueStreamForm, self).__init__(*args, **kwargs)

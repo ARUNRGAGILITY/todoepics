@@ -1,0 +1,30 @@
+{% extends "../../_1base/modern_welcome_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}CAFE{% endblock title %} 
+{% block content %} 
+<!-- BEGIN: PAGE -->
+<div class="container-fluid">
+    <div class="row nogutters">
+        <div class="col col-md-12">
+            <h2>VSM: Value Stream Management</h2>            
+        </div>
+    </div>
+    <div class="row nogutters">
+        <div class="col col-md-6">
+               <p>Here we can Manage Value Streams:</p>
+               <p>There are usually two types of Value Streams that we can categroize</p>
+               <ul>
+                <li>Operational Value Streams</li>
+                <li>Development Value Streams</li>
+               </ul>
+        </div>
+        <div class="col col-md-6">
+               <a href="{% url 'ops_valuestream_mgmt' %}" class="btn btn-success">Create and Manage Operational Value Streams</a>
+               <br> <br>
+               <!-- <a href="{% url 'dev_valuestream_mgmt' 1 %}" class="btn btn-primary">Create and Manage Development Value Streams</a> -->
+        </div>
+    </div>
+</div>
+<!-- END: PAGE --> 
+{% endblock content %}

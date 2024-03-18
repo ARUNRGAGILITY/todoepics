@@ -57,10 +57,10 @@ $( function() {
                 <a href="{% url 'view_ops_valuestream' parent.id %}">{{parent}}</a>                       
             {% endif %}
             {% if vs == 'dev' %}
-            <a href="{% url 'view_ops_valuestream' parent.id %}">{{ovs}}</a>  
+            <a href="{% url 'view_ops_valuestream' ovs.id %}">{{ovs}}</a>  
             &nbsp;
-            <a href="{% url 'view_dev_valuestream' parent.id %}"><img src="{% static 'img/safe/dvs.png' %}" alt=""></a>
-            {{parent}} (DVS)
+            <a href="{% url 'dev_valuestream_mgmt' ovs.id %}"><img src="{% static 'img/safe/dvs.png' %}" alt=""></a>
+            <a href="{% url 'view_dev_valuestream' parent.id %}">{{parent}} (DVS)</a>        
             {% endif %}
         </div>
         <div class="col col md-10 text-end">
@@ -96,6 +96,12 @@ $( function() {
         <div class="col-md-12">
             <table  id="outline" class="table table-bordered" >
                 <tr>
+                    <td colspan="7"><b>Trigger:</b>
+                    {% if vs == 'ops' %}{{parent.trigger}}{% endif %}  
+                    {% if vs == 'dev' %}{{object.trigger}}{% endif %}
+                    </td>
+                </tr>
+                <tr>
                   
                     <th width="2%" align="right">#</th>
                     <th>
@@ -111,6 +117,7 @@ $( function() {
                     <th>Actions</th>
                 </tr>
                 <tbody id="sortable">
+                   
                 {% for object in steps %}
                 <tr id="{{object.id}}_{{ forloop.counter }}" class="ui-state-default" style='background-color: white;'>
                    
@@ -131,7 +138,14 @@ $( function() {
 
                     </td>
                 </tr>
+              
                 {% endfor %}
+                <tr>
+                    <td colspan="7"><b>Value:</b>
+                    {% if vs == 'ops' %}{{parent.value}}{% endif %}  
+                    {% if vs == 'dev' %}{{object.value}}{% endif %}
+                    </td>
+                </tr>
                 </tbody>                
             </table>
         </div>

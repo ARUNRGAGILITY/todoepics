@@ -7,7 +7,7 @@
 
 <div class="container-fluid">
 <!-- header -->
-{% include "../../_1base/header.html" %} 
+{% include "./vsm_header.html" %} 
 <!-- role mgmt header/menu -->
 {% include "./menu_valuestream.html" %} 
 <!-- Listing and Results -->
@@ -33,13 +33,20 @@
             <thead>
                 <tr>
                     <th colspan="2">
-                        <img src="{% static 'img/safe/dvs.png' %}" alt=""> {{object}}</th>
+                        <a href="{% url 'dev_valuestream_mgmt' object.ops_valuestream.id %}">
+                            <img src="{% static 'img/safe/dvs.png' %}" alt=""> {{object}}
+                        </a>
+                        &nbsp;&nbsp;
+                        <a href="{% url 'edit_dev_valuestream' object.id %}">
+                            Edit
+                        </a>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td width="10%" class="text-end">
-                        <b>Name</b>
+                        <b>Development Value Stream</b>
                     </td>
                     <td class="text-start">
                         {{object.name}}

@@ -34,25 +34,65 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <form method="post">
+                        {% csrf_token %}
                     <tr>
                         <td>
-                            <form method="post">
-                                {% csrf_token %}
-                                {{ form.as_p }}
-                                <button type="submit">Save</button>
-                            </form>
-                            
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td width="15%">
+                                        <b>
+                                            Trigger:
+                                        </b>
+                                    </td>
+                                    <td>
+                                        {{form.trigger}}
+                                    </td>
+                                </tr>
+                                <td width="15%">
+                                    <b>
+                                        Value:
+                                    </b>
+                                </td>
+                                <td>
+                                        {{form.value}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="15%">
+                                    <b>
+                                        Name:
+                                    </b>
+                                </td>
+                                <td>
+                                    {{form.name}}
+                                </td>
+                            </tr>   
+                            <tr>
+                                <td width="15%">
+                                    <b>
+                                        Description:
+                                    </b>
+                                </td>
+                                <td>
+                                    {{form.description}}
+                                </td>
+                            </tr>
+                           
+                            </table>
                         </td>
                     </tr>
+                    <tr>
+                        <td class="text-center">
+                           <button type="submit">Save</button>
+                        </td>
+                    </tr>
+                </form>
                 </tbody>
             </table>
         </div>
     </div>
     <!-- Footer -->
-    <div class="row">
-        <div class="col col-md-12">
-            Footer
-        </div>
-    </div>
+    {% include "./vsm_footer.html" %} 
 </div>
 {% endblock %}

@@ -57,10 +57,10 @@ $( function() {
                 <a href="{% url 'view_ops_valuestream' parent.id %}">{{parent}}</a>                       
             {% endif %}
             {% if vs == 'dev' %}
-            <a href="{% url 'view_ops_valuestream' ovs.id %}">{{ovs}}</a>  
+            DVS: <a href="{% url 'view_dev_valuestream' parent.id %}">{{parent}}</a>              
             &nbsp;
             <a href="{% url 'dev_valuestream_mgmt' ovs.id %}"><img src="{% static 'img/safe/dvs.png' %}" alt=""></a>
-            <a href="{% url 'view_dev_valuestream' parent.id %}">{{parent}} (DVS)</a>        
+            OVS: <a href="{% url 'view_ops_valuestream' ovs.id %}">{{ovs}}</a> 
             {% endif %}
         </div>
         <div class="col col md-10 text-end">

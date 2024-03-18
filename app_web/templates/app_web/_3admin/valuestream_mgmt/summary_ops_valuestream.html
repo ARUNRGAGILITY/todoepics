@@ -277,10 +277,10 @@
 <!-- SVG Overlay -->
 <svg id="lineDrawingArea" style="position:absolute; top:0; left:0; height:100%; width:100%; z-index:1; pointer-events:none;"></svg>
 
-   <!-- Development Value Streams -->
+ 
 <!-- Development Value Streams -->
 <div class="dev-value-streams">
-    <table class="table" style="width: 100%;">
+    <table class="table text-center" style="width: 100%;" >
         <tr>
             {% for dev_stream in dev_value_streams %}
             <td style="vertical-align: top;">
@@ -300,11 +300,9 @@
     </table>
 </div>
 
-    
-
 
     <!-- Footer -->
-    {% include "../../_1base/footer.html" %} 
+    {% include "./vsm_footer.html" %} 
 </div>
 <script>
   const zoomContainer = document.getElementById('zoomContainer');
@@ -340,36 +338,43 @@
     }
     
     function drawLines() {
-        const svgNamespace = "http://www.w3.org/2000/svg";
-        const lineDrawingArea = document.getElementById('lineDrawingArea');
-        // Clear existing lines
-        while (lineDrawingArea.firstChild) {
-            lineDrawingArea.removeChild(lineDrawingArea.firstChild);
-        }
-    
-        document.querySelectorAll('.ops-step').forEach(function(step) {
-            const stepBounds = step.getBoundingClientRect();
-            const supportingDevStreamIds = step.getAttribute('data-supporting-dev-streams').split(',');
-    
-            supportingDevStreamIds.forEach(function(devStreamId) {
-                const devStream = document.querySelector(`#devStream${devStreamId.trim()}`);
-                if (devStream) {
-                    const devStreamBounds = devStream.getBoundingClientRect();
-    
-                    const line = document.createElementNS(svgNamespace, 'line');
-                    line.setAttribute('x1', stepBounds.left + stepBounds.width / 2);
-                    line.setAttribute('y1', stepBounds.top + stepBounds.height * 0.95); // Endpoint a bit lower on the Ops side
-                    line.setAttribute('x2', devStreamBounds.left + devStreamBounds.width / 2);
-                    // Move y2 a bit higher than the vertical middle of the DVS
-                    line.setAttribute('y2', devStreamBounds.top + devStreamBounds.height * 0.15); // Starting point a bit up on the DVS side
-                    line.setAttribute('stroke', 'lightgrey');
-                    line.setAttribute('stroke-width', '2');
-                    lineDrawingArea.appendChild(line);
-                }
-            });
-        });
+    const svgNamespace = "http://www.w3.org/2000/svg";
+    const lineDrawingArea = document.getElementById('lineDrawingArea');
+    // Clear existing lines
+    while (lineDrawingArea.firstChild) {
+        lineDrawingArea.removeChild(lineDrawingArea.firstChild);
     }
+
+    // Count active development value streams
+    const activeDevStreams = document.querySelectorAll('.dev-stream').length;
+    const devStreamsContainer = document.querySelector('.dev-value-streams .table').getBoundingClientRect();
+
+    document.querySelectorAll('.ops-step').forEach(function(step) {
+        const stepBounds = step.getBoundingClientRect();
+        const supportingDevStreamIds = step.getAttribute('data-supporting-dev-streams').split(',');
     
+        supportingDevStreamIds.forEach(function(devStreamId) {
+            const devStream = document.querySelector(`#devStream${devStreamId.trim()}`);
+            if (devStream) {
+                const devStreamBounds = devStream.getBoundingClientRect();
+                const devStreamWidth = devStreamsContainer.width / activeDevStreams; // Calculate width per stream
+    
+                const line = document.createElementNS(svgNamespace, 'line');
+                line.setAttribute('x1', stepBounds.left + stepBounds.width / 2);
+                line.setAttribute('y1', stepBounds.top + stepBounds.height * 0.95); // Endpoint a bit lower on the Ops side
+                // Adjust x2 to consider the calculated width per stream and position within the container
+                line.setAttribute('x2', devStreamsContainer.left + (devStreamBounds.left - devStreamsContainer.left) + devStreamWidth / 2);
+                line.setAttribute('y2', devStreamBounds.top + devStreamBounds.height * 0.15); // Starting point a bit up on the DVS side
+                line.setAttribute('stroke', 'lightgrey');
+                line.setAttribute('stroke-width', '2');
+                lineDrawingArea.appendChild(line);
+            }
+        });
+    });
+}
+
+// Ensure the rest of your script remains unchanged
+
     // Initial drawing
     document.addEventListener("DOMContentLoaded", drawLines);
     

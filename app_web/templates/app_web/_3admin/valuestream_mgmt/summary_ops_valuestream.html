@@ -140,9 +140,9 @@
             <!-- all the menus -->
             <a href="/">Home</a>&nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="{% url 'ops_valuestream_mgmt' %}">List all OVS</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-            OVS:<a href="{% url 'view_ops_valuestream' object.id %}"> Consumer Loan</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            OVS:<a href="{% url 'view_ops_valuestream' object.id %}"> {{ovs}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
             Steps: <a href="{% url 'valuestream_steps' 'ops' object.id %}">{{object}}</a> &nbsp;&nbsp;|&nbsp;&nbsp;
-            DVS:<a href="{% url 'dev_valuestream_mgmt' object.id %}"> Consumer Loan's DVS</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            DVS:<a href="{% url 'dev_valuestream_mgmt' object.id %}"> {{object}}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
         </div>
     </div>
 

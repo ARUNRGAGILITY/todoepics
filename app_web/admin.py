@@ -26,7 +26,10 @@ admin.site.register(Feature)
 admin.site.register(Capability)
 admin.site.register(Spike)
 
+class ProfileAdmin(admin.ModelAdmin):
+    filter_horizontal = ('organizations',) # Enables a user-friendly widget for managing many-to-many relationships
 
+admin.site.register(Profile, ProfileAdmin)
 
 class ValueStreamStepsAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'owner', 'active', 'deleted', )

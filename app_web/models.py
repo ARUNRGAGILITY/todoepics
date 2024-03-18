@@ -346,6 +346,7 @@ class Role(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    organizations = models.ManyToManyField(Organization, related_name="members")
     roles = models.ManyToManyField(Role, blank=True)  # Allow multiple roles
     bio = models.TextField(blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)

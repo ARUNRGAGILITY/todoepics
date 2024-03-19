@@ -67,7 +67,7 @@ urlpatterns = [
     
     ## main page
     ## website/like/agiletia.com
-    path('devops_ovs_transformation_canvas/<int:id>/', views.devops_ovs_transformation_canvas, name="devops_ovs_transformation_canvas"),
+    
     path('vsm/', views.vsm, name="vsm"),
     path('cafe/', views.cafe, name="cafe"),
     path('help/', views.help, name="help"),
@@ -77,4 +77,9 @@ urlpatterns = [
     path('transformation_leadership/', views.transformation_leadership, name="transformation_leadership"),
     path('transformation_sw_training_services/', views.transformation_sw_training_services, name="transformation_sw_training_services"),
     
+    # # transformation canvas for ops and dev
+    # path('ops/add/', add_ops_transformation_canvas, name='add_ops_canvas'),
+    # path('ops/', list_ops_transformation_canvas, name='ops_canvas_list'),
+    # path('ops/update/<int:id>/', update_ops_transformation_canvas, name='update_ops_canvas'),
+    # path('ops/delete/<int:id>/', delete_ops_transformation_canvas, name='delete_ops_canvas'),
 ]

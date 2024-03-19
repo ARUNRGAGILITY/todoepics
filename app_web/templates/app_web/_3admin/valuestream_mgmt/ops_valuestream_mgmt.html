@@ -32,8 +32,10 @@
                     <tr>
                         <th width="2%" align="right">#</th>
                         <th>Operational Value Stream</th>
-                        <th width="25%">Description</th>
+                        <th width="15%">Description</th>
                         <th>Steps</th>
+                        <th>Summary</th>
+                        <th>Details</th>
                         <th>Dev Value Stream(s)</th>
                         <th>Actions</th>
                     </tr>
@@ -45,11 +47,17 @@
                             {{forloop.counter}}
                         </td>
                         <td>{{object.name}}</td>
-                        <td width="25%">{{object.description}}</td>
+                        <td width="15%">{{object.description}}</td>
                         <td>
                             {{ object.steps_count }}
                             &nbsp;&nbsp;
                             <a href="{% url 'valuestream_steps' 'ops' object.id %}">Steps</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'summary_ops_valuestream' object.id %}">Summary</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'show_ovs_step_details'  object.id %}">Details</a>
                         </td>
                         <td>{{object.dev_valuestream_count}} &nbsp;
                             <a href="{% url 'dev_valuestream_mgmt' object.id %}">                                

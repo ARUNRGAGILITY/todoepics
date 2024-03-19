@@ -83,6 +83,11 @@
             <div class="col col-md-4">
                 <!-- summary display -->                
                 <!-- Display of the VSM Summary Info -->
+                <a href="{% url 'ops_valuestream_mgmt' %}">OVS</a>
+                &nbsp;
+                <a href="{% url 'dev_valuestream_mgmt' ovs.id %}">DVS</a>
+                &nbsp;&nbsp;
+                <a href="{% url 'summary_dev_valuestream' dvs.id %}">DVS Summary</a>
                 <table class="table table-bordered table-striped">
                     <tr>
                         <td>                            

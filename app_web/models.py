@@ -22,7 +22,8 @@ class BaseModel1(models.Model):
     class Meta:
         abstract = True
         ordering = ['position']
-        
+
+
 ##################################################################
 # ORGANIZATION
 ##################################################################
@@ -133,7 +134,7 @@ class Task(BaseModel1):
     
     def __str__(self):
         return self.name
-#############################################
+
 
 ##################################################################
 # VALUESTREAM
@@ -279,8 +280,24 @@ class DevValueStream(models.Model):
     def __str__(self):
         return self.name
 
+##################################################################
+# TRASNFORMATION CANVAS
+##################################################################
+class OpsTransformationCanvas(BaseModel1):
+    ops_value_stream = models.ForeignKey(OpsValueStream, on_delete=models.CASCADE, related_name='ops_transformation_canvases')
+    docs = models.TextField(null=True, blank=True)
 
-# chotinikara bhavagathi ammae
+    def __str__(self):
+        return f"Ops Transformation Canvas for {self.ops_value_stream.name}"
+
+class DevTransformationCanvas(BaseModel1):
+    dev_value_stream = models.ForeignKey(DevValueStream, on_delete=models.CASCADE, related_name='dev_transformation_canvases')
+    docs = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Dev Transformation Canvas for {self.dev_value_stream.name}"
+
+# c b a
 class ValueStreamSteps(models.Model):
     opsvaluestream = models.ForeignKey(OpsValueStream, on_delete=models.CASCADE, related_name='steps', null=True, blank=True)
     devvaluestream = models.ForeignKey(DevValueStream, on_delete=models.CASCADE, related_name='steps', null=True, blank=True)

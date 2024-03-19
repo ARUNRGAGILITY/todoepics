@@ -41,6 +41,8 @@
                         <th>Description</th>
                         <th>Supporting Ops Steps</th>
                         <th>Steps</th>
+                        <th>Summary</th>
+                        <th>Details</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -50,8 +52,8 @@
                         <td width="2%" align="right">
                             {{forloop.counter}}
                         </td>
-                        <td>{{object.name}}</td>
-                        <td width="30%">{{object.description}}</td>
+                        <td width="20%">{{object.name}}</td>
+                        <td width="10%">{{object.description}}</td>
                         <td>
                             <ul>
                                 {% for step in object.supported_ops_steps.all %}
@@ -61,8 +63,16 @@
                                 {% endfor %}
                             </ul>
                         </td>
+                        <td> {{object.steps.count}}&nbsp;
+                            <a href="{% url 'valuestream_steps' 'dev' object.id %}">                               
+                                Steps
+                            </a>
+                        </td>
                         <td>
-                            <a href="{% url 'valuestream_steps' 'dev' object.id %}">Steps</a>
+                            <a href="{% url 'summary_dev_valuestream' object.id %}">Summary</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'show_dvs_step_details'  parent.id object.id %}">Details</a>
                         </td>
                         <td>                           
                             <a href="{% url 'view_dev_valuestream' object.id %}">View</a>

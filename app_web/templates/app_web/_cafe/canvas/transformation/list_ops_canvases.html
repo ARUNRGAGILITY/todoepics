@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Ops Transformation Canvases</h2>
+  <a href="{% url 'add_ops_canvas' %}">Add new canvas</a>
+  <ul>
+    {% for canvas in canvases %}
+      <li>
+        {{ canvas.ops_value_stream.name }}: {{ canvas.docs }}
+        <a href="{% url 'update_ops_canvas' canvas.id %}">Edit</a>
+        <a href="{% url 'delete_ops_canvas' canvas.id %}">Delete</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

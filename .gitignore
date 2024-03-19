@@ -5,6 +5,7 @@ __pycache__/
 _docs/
 # C extensions
 *.so
+db.sqlite3
 db.sqlite3*
 db.sqlite3.*
 # Distribution / packaging

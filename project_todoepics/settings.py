@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -154,8 +155,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vR1.0.6a'
-BUILD_DESCRIPTION = 'AGILETIA Release1.0.0 vsm fixes'
+BUILD_VERSION = 'vR1.0.7'
+BUILD_DESCRIPTION = 'fixed gitignore for db.sqlite'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 SITE_NAME = f"{SITE_TITLE}"

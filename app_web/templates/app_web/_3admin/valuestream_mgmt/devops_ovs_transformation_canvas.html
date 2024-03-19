@@ -1,0 +1,154 @@
+{% extends "../../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}OVS: DevOps Transformation Canvas{% endblock title %} 
+
+{% block content %}
+
+<style>
+    .box {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Creates 4 columns */
+         gap: 10px; /* Spacing between grid items */
+    }
+    .one, .two, .three, .four, .five, .six, .seven, .eight, .nine {
+        border: 1px solid black;
+
+    }
+    .boxbody {
+        text-align: start;
+        padding-left: 5px;
+    }
+    .boxtitle {
+        background-color: blue;
+        color: white;
+    }
+    .boxcanvastitle {grid-column: 3;}
+    .one { grid-column: span 1; grid-row: span 2; } /* Takes up 2 columns and 2 rows */
+    .two { grid-column: span 1; } /* Takes up 2 columns */
+    .three { grid-column: span 1; grid-row: span 3; } /* Takes up 1 column and 3 rows */
+    .four { grid-column: span 1; } /* Takes up 1 column */
+    .five { grid-column: span 1; } /* Takes up 1 column */
+    .six { grid-column: span 1; } /* Takes up all 4 columns */
+    .seven { grid-column: span 2; grid-row: span 2;} /* Takes up 1 column */
+    .eight { grid-column: span 1; } /* Takes up 2 columns */
+    .nine { grid-column: span 1; } /* Takes up 1 column */
+
+    .three, .eight, .nine {
+        min-width: 600px;
+    }
+    .one, .two, .four, .five, .six {
+        min-width: 300px;
+    }
+    .seven {
+        min-width: 650px;
+    }
+</style>
+    
+<div class="container-fluid">
+    <!-- header -->
+    {% include "./vsm_header.html" %} 
+    <!-- role mgmt header/menu -->
+    {% include "./menu_valuestream.html" %} 
+    <!-- role mgmt header/menu -->
+    <div class="row">
+        <div class="col-md-8">
+          
+        </div>
+        <div class="col col-md-4 text-end">
+           <a href="{% url 'ops_valuestream_mgmt' %}"> Ops Value Stream: {{object}}</a>            
+        </div>
+    </div>
+   
+    <!-- BEGIN: TRANSFORMATION CANVAS -->
+    <div class="boxcanvastitle mb-2">
+        <div class="titlefull">
+            <div class="boxtitle text-center">
+                <b>OVS: DevOps Transformation Canvas</b>
+            </div>
+        </div>
+    </div>
+    
+    <div class="box">
+        <div class="one" data-title="Section 1">
+            <div class="boxtitle text-center">
+                <b>Value Stream</b>
+            </div>
+            <div class="boxbody text-start">
+                Consumer Robotics Controller
+            </div>
+        </div>
+        <div class="two" data-title="Section 2">
+            <div class="boxtitle text-center">
+                <b>Trigger</b>
+                
+            </div>
+            <div class="boxbody text-start">
+                Idea from Business Owners
+            </div>
+        </div>
+        <div class="three" data-title="Section 3">
+            <div class="boxtitle text-center">
+                <b>Future State</b>
+            </div>
+            <div class="boxbody text-start"></div>
+        </div>
+        <div class="four" data-title="Section 1">
+            <div class="boxtitle text-center">
+                <b>First Step</b>
+            </div>
+            <div class="boxbody text-start">
+                Feature Definition
+            </div>
+        </div>
+      
+        <div class="five" data-title="Section 1">
+            <div class="boxtitle text-center">
+                <b>Demand Rate</b>
+            </div>
+            <div class="boxbody text-start">
+                20 per Month
+            </div>
+        </div>
+        <div class="six" data-title="Section 1">
+            <div class="boxtitle text-center">
+                <b>Last Step</b>
+            </div>
+            <div class="boxbody text-start">
+                Release to Production
+            </div>
+        </div>
+        <div class="seven" data-title="Section 1">
+            <div class="boxtitle text-center">
+                <b>Current State</b>
+            </div>
+            <div class="boxbody text-start">
+                
+            </div>
+        </div>
+        <div class="eight" data-title="Section 1">
+            <div class="boxtitle text-center">
+                <b>Boundaries and Limitations</b>
+            </div>
+            <div class="boxbody text-start">
+                <ol>
+                    <li>Architect for Stability</li>
+                    <li>Lean Startup</li>
+                </ol>
+            </div>
+        </div>
+        <div class="nine" data-title="Section 1">
+            <div class="boxtitle text-center">
+                <b>Improvement Items</b>
+            </div>
+            <div class="boxbody text-start">
+                <ol>
+                    <li>Feature Toggles</li>
+                    <li>Lean Startup</li>
+                    <li>Blue/Green Deployment</li>
+                </ol>
+            </div>
+    </div>
+    
+</div>
+{% endblock %}

@@ -1183,3 +1183,18 @@ def home_valuestream(request):
     }  
     template_file = f"{app_name}/_3admin/valuestream_mgmt/home_valuestream.html"
     return render(request, template_file, context)
+
+#####################################################
+#   devops_ovs_transformation_canvas 
+@login_required(login_url='login')
+def devops_ovs_transformation_canvas(request, id):
+    # take inputs
+    # process inputs
+    
+    # send outputs (info, template, request)
+    context = {
+        'page': 'devops_ovs_transformation_canvas',       
+    }  
+    template_file = f"{app_name}/_3admin/valuestream_mgmt/devops_ovs_transformation_canvas.html"
+    return render(request, template_file, context)
+

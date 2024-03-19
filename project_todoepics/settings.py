@@ -155,8 +155,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vR1.0.7'
-BUILD_DESCRIPTION = 'fixed gitignore for db.sqlite'
+BUILD_VERSION = 'vR1.0.7a'
+BUILD_DESCRIPTION = 'fix dbsqlite'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 SITE_NAME = f"{SITE_TITLE}"

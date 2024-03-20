@@ -217,9 +217,18 @@ def ajax_update_dtc_field(request):
     object_id = request.POST.get('object_id')
     print(f">>> === AJAX UPDATE DTC FIELD === <<<")
     Model = apps.get_model('app_web', model_name)  # Update 'your_app_name'
-    obj = Model.objects.get(id=idx)
-    setattr(obj, field_name, value)
-    print(f">>> === obj: {obj}, model: {model_name}, field_name: {field_name}, value: {value}, id: {idx} object_id={object_id}, === <<<")
+    obj = None
+    dvs_id = None
+    if model_name == "ValueStreamSteps":
+        dvs_id = request.POST.get('dev_id')
+        dvs = get_object_or_404(DevValueStream, id=dvs_id, active=True)
+        
+        update_fields = {"name": value}
+        obj = ValueStreamSteps.objects.filter(id=idx, devvaluestream=dvs).update(**update_fields)
+    else:
+        obj = Model.objects.get(id=idx)
+        setattr(obj, field_name, value)
+    print(f">>> === dev_id: {dvs_id}, obj: {obj}, model: {model_name}, field_name: {field_name}, value: {value}, id: {idx} object_id={object_id}, === <<<")
     obj.save()
 
     return JsonResponse({'success': True})

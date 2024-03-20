@@ -48,8 +48,11 @@
         width: 100%; /* or an explicit width */
         min-height: 100px; /* Gives enough space for typing */
         border: 1px solid #ccc; /* Visually indicate the editable area */
+        
     }
-
+    .spl_textarea {
+        white-space: pre-wrap;
+    }
     .editable-div:empty:before {
         content: attr(data-placeholder);
         display: block; /* Makes it take up space */
@@ -200,10 +203,10 @@
         <div class="boxtitle text-center">
             <b>First Step</b>
         </div>
-        <div class="boxbody text-start" contenteditable="true">
+        <div class="boxbody text-start">
             <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
-            class="first_step" contenteditable="true" data-model="ValueStreamSteps" 
-            data-field="first_step"  data-id="{{first_step_id}}">
+            class="first_step" data-model="ValueStreamSteps" 
+            data-field="first_step"  data-id="{{first_step_id}}"  data-dev-id="{{id}}">
                 {% if first_step != None %}{{first_step}}
                 {% endif %}
             </div>
@@ -216,7 +219,7 @@
         </div>
         <div class="boxbody text-start" >
             <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
-            class="demand_rate"  data-model="ValueStreamSteps" 
+            class="demand_rate"  data-model="DevTransformationCanvas" 
             data-field="demand_rate"  data-id="{{canvas.id}}">
                 {% if canvas.demand_rate != None %}{{canvas.demand_rate}}
                 {% endif %}
@@ -231,7 +234,7 @@
         <div class="boxbody text-start" >
             <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
             class="last_step" contenteditable="true" data-model="ValueStreamSteps" 
-            data-field="last_step" data-id="{{last_step_id}}">
+            data-field="last_step" data-id="{{last_step_id}}" data-dev-id="{{id}}">
                 {% if last_step != None %}{{last_step}}
                 {% endif %}
             </div>
@@ -293,24 +296,18 @@
         <div class="boxtitle text-center">
             <b>Boundaries and Constraints</b>
         </div>
-        <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
+        <div  class="editable-div spl_textarea" contenteditable="true" data-placeholder="Enter text here..." 
         class="boundaries_and_constraints" contenteditable="true" data-model="DevTransformationCanvas" 
-        data-field="boundaries_and_constraints"  data-id="{{canvas.id}}">
-            {% if canvas.boundaries_and_constraints != None %}{{canvas.boundaries_and_constraints}}
-            {% endif %}
-        </div>
+        data-field="boundaries_and_constraints"  data-id="{{canvas.id}}">{% if canvas.boundaries_and_constraints != None %}{{canvas.boundaries_and_constraints}}{% endif %}</div>
     </div>
     <div class="nine" data-title="Section 1">
         <div class="boxtitle text-center">
             <b>Improvement Items</b>
         </div>
         <div class="boxbody text-start">            
-            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
+            <div  class="editable-div spl_textarea" contenteditable="true" data-placeholder="Enter text here..." 
             class="canvas_improvement_items"  data-model="DevTransformationCanvas" 
-            data-field="improvement_items" data-id="{{canvas.id}}">
-                {% if canvas.improvement_items != None %}{{canvas.improvement_items}}
-                {% endif %}
-            </div>
+            data-field="improvement_items" data-id="{{canvas.id}}">{% if canvas.improvement_items != None %}{{canvas.improvement_items}}{% endif %}</div>
         </div>
     </div>
   
@@ -332,7 +329,9 @@
     var $element = $(this);
     var model = $element.data('model');
     var field = $element.data('field');
-    var value = $element.text().trim();
+    var dev_id = $element.data('dev-id');
+    //var value = $element.text().trim();
+    var value = $element.html();
     var id = $element.data('id');
 
     // Assuming you have a way to get the object's ID you're editing
@@ -347,6 +346,7 @@
             'field': field,
             'value': value,
             'id': id,
+            'dev_id': dev_id,
             'object_id': objectId,
             csrfmiddlewaretoken: '{{ csrf_token }}',
         },

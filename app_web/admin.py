@@ -7,6 +7,14 @@ from .models import *
 from django.contrib import admin
 from django.apps import apps
 
+# canvas
+class OpsTransformationCanvasAdmin(admin.ModelAdmin):
+    list_display = ('opsvaluestream', 'name', 'description', 'active', 'deleted') 
+admin.site.register(OpsTransformationCanvas, OpsTransformationCanvasAdmin)
+class DevTransformationCanvasAdmin(admin.ModelAdmin):
+    list_display = ('devvaluestream', 'name', 'description', 'active', 'deleted') 
+admin.site.register(DevTransformationCanvas, DevTransformationCanvasAdmin)
+
 
 # organizations
 admin.site.register(SAFeType)

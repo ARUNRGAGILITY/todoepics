@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from .views_ext import canvas_views
 
 urlpatterns = [
     # all users will come to this visitor page
@@ -77,9 +78,17 @@ urlpatterns = [
     path('transformation_leadership/', views.transformation_leadership, name="transformation_leadership"),
     path('transformation_sw_training_services/', views.transformation_sw_training_services, name="transformation_sw_training_services"),
     
-    # # transformation canvas for ops and dev
-    # path('ops/add/', add_ops_transformation_canvas, name='add_ops_canvas'),
-    # path('ops/', list_ops_transformation_canvas, name='ops_canvas_list'),
-    # path('ops/update/<int:id>/', update_ops_transformation_canvas, name='update_ops_canvas'),
-    # path('ops/delete/<int:id>/', delete_ops_transformation_canvas, name='delete_ops_canvas'),
+    # transformation canvas for ops and dev
+    path('ops_trx_add_canvas/<int:id>/', canvas_views.ops_trx_add_canvas, name='ops_trx_add_canvas'),
+    path('ops_trx_list_canvas/<int:id>/', canvas_views.ops_trx_list_canvas, name='ops_trx_list_canvas'),
+    path('ops_trx_view_canvas/<int:canvas_id>/', canvas_views.ops_trx_view_canvas, name='ops_trx_view_canvas'),
+    path('ops_trx_edit_canvas/<int:canvas_id>/', canvas_views.ops_trx_edit_canvas, name='ops_trx_edit_canvas'),
+    path('ops_trx_delete_canvas/<int:canvas_id>/', canvas_views.ops_trx_delete_canvas, name='ops_trx_delete_canvas'),
+    
+    path('dev_trx_add_canvas/<int:id>/', canvas_views.dev_trx_add_canvas, name='dev_trx_add_canvas'),
+    path('dev_trx_list_canvas/<int:id>/', canvas_views.dev_trx_list_canvas, name='dev_trx_list_canvas'),
+    path('dev_trx_view_canvas/<int:canvas_id>/', canvas_views.dev_trx_view_canvas, name='dev_trx_view_canvas'),
+    path('dev_trx_edit_canvas/<int:canvas_id>/', canvas_views.dev_trx_edit_canvas, name='dev_trx_edit_canvas'),
+    path('dev_trx_delete_canvas/<int:canvas_id>/', canvas_views.dev_trx_delete_canvas, name='dev_trx_delete_canvas'),
 ]
+

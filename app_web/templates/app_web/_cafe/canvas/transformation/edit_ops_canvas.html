@@ -1,7 +1,7 @@
 {% extends './base.html' %}
 
 {% block content %}
-  <h2>Add Ops Transformation Canvas</h2>
+  <h2>Edit Ops Transformation Canvas</h2>
   <form method="post">
     {% csrf_token %}
     <table class="table table-bordered">
@@ -27,7 +27,7 @@
       </tr>
     </table>
     <input type="hidden" name="opsvaluestream" value="{{id}}">
-    <button type="submit">Save</button>
+    <button type="submit">Edit</button>
   </form>
   <a href="{% url 'ops_trx_list_canvas' id %}">Back to list</a>
 {% endblock %}

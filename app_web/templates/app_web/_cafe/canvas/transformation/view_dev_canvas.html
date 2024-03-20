@@ -1,0 +1,341 @@
+{% extends "../../../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}View DVS Transformation Canvases{% endblock title %} 
+{% load custom_tags %}
+
+{% block content %}
+<style>
+    .box {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Creates 4 columns */
+         gap: 10px; /* Spacing between grid items */
+    }
+    .one, .two, .three, .four, .five, .six, .seven, .eight, .nine {
+        border: 1px solid black;
+
+    }
+    .boxbody {
+        text-align: start;
+        padding-left: 5px;
+    }
+    .boxtitle {
+        background-color: blue;
+        color: white;
+    }
+    .boxcanvastitle {grid-column: 3;}
+    .one { grid-column: span 1; grid-row: span 2; } /* Takes up 2 columns and 2 rows */
+    .two { grid-column: span 1; } /* Takes up 2 columns */
+    .three { grid-column: span 1; grid-row: span 3; } /* Takes up 1 column and 3 rows */
+    .four { grid-column: span 1; } /* Takes up 1 column */
+    .five { grid-column: span 1; } /* Takes up 1 column */
+    .six { grid-column: span 1; } /* Takes up all 4 columns */
+    .seven { grid-column: span 2; grid-row: span 2;} /* Takes up 1 column */
+    .eight { grid-column: span 1; } /* Takes up 2 columns */
+    .nine { grid-column: span 1; } /* Takes up 1 column */
+
+    .three, .eight, .nine {
+        min-width: 600px;
+    }
+    .one, .two, .four, .five, .six {
+        min-width: 300px;
+    }
+    .seven {
+        min-width: 650px;
+    }
+    .editable-div {
+        display: inline-block; /* or block */
+        width: 100%; /* or an explicit width */
+        min-height: 100px; /* Gives enough space for typing */
+        border: 1px solid #ccc; /* Visually indicate the editable area */
+    }
+
+    .editable-div:empty:before {
+        content: attr(data-placeholder);
+        display: block; /* Makes it take up space */
+        color: #aaa;
+    }
+    .star {
+  position: absolute;
+  top: -30%; /* Adjust these values to move the star */
+  left: -30%; /* Adjust these values to move the star */
+  width: 50px;
+  height: 50px;
+  background-color: yellow;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.rowcolor {
+    background-color: darksalmon;
+}
+</style>
+<div class="container-fluid">
+{% include "./css_vsm_steps.html" %} 
+{% include "../canvas_menu.html" %} 
+{% include "../canvas_header.html" %} 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col col-md-4">
+            
+        </div>
+        <div class="col col-md-4"></div>
+        <div class="col col-md-4 text-end">
+            <a href="{% url 'show_dvs_step_details' canvas.devvaluestream.ops_valuestream.id id %}">
+                {{canvas.devvaluestream}} Step Details
+            </a>
+            <a href="{% url 'dev_trx_list_canvas' canvas.devvaluestream.id %}">
+                {{canvas.devvaluestream}} DVS Transformation Canvas List
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+
+ <!-- BEGIN: TRANSFORMATION CANVAS -->
+ <form method="post">
+{% csrf_token %}
+{{ form.non_field_errors }}
+ <div class="row">
+    <div class="col col-md-8">
+        Author: {{canvas.author}} <br>
+        Created Date: {{formatted_created_at}} <br>
+        Updated Date: {{formatted_updated_at}}
+    </div>
+    <div class="col col-md-4 text-end">
+        <input type="submit" name="submit" value="Save">
+    </div>
+ </div>
+ <div class="boxcanvastitle mb-2">
+    <div class="titlefull">
+        <div class="boxtitle text-center">
+            <b>{{canvas.devvaluestream}}:: {{canvas.name}}</b>  Transformation Canvas
+        </div>
+    </div>
+</div>
+
+<div class="box">
+    <div class="one" data-title="Section 1">
+        <div class="boxtitle text-center">
+            <b>Value Stream</b>
+        </div>
+        <div class="boxbody text-start">
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="devvaluestream" contenteditable="true">
+                {% if canvas.devvaluestream != None %}{{canvas.devvaluestream}}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="two" data-title="Section 2">
+        <div class="boxtitle text-center">
+            <b>Trigger</b>
+            
+        </div>
+        <div class="boxbody text-start">
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="devvaluestream.trigger" contenteditable="true">
+                {% if canvas.devvaluestream.trigger != None %}{{canvas.devvaluestream.trigger}}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="three" data-title="Section 3">
+        <div class="boxtitle text-center">
+            <b>Future State</b>
+        </div>
+        <div class="boxbody text-start">
+           <div class="step_details">
+            {% for row in rows %}
+            <div class="row rowcolor">
+            {% for record in row %}   
+            {% if forloop.first or forloop.parentlo.plast %}
+                {% if forloop.counter0 == 0 %}
+                    {% if not forloop.parentloop.first  %}
+                    {% else %}
+                    <div class="col-md-1 d-flex align-items-center justify-content-center">
+                        
+                    </div>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            {% if not forloop.parentloop.first  %}
+                {% if forloop.counter0 == 0 %}
+                <div class="col-md-1 d-flex align-items-center justify-content-center">
+                    <img width='100px' height='60px' 
+                    src="{% static 'img/general/right-arrow1.png' %}" class="" alt="" class=""> 
+                </div>
+                {% endif %}
+            {% endif %}            
+            
+            <div class="col-md-2 div_box my-4">
+                <div class="star"></div>
+                {{ record }}
+                <div class="role_box">
+                    {{record.owner}}
+                </div>
+                <div class="details_box ">
+                    PT:{{record.value_creation_time}}
+                    <br>
+                    LT:{{record.delay_time}}
+                    <br>
+                    %CA:{{record.percentage_accurate}}
+                </div>
+            </div>
+            {% if not forloop.last %}
+                <div class="col-md-1 d-flex align-items-center justify-content-center">
+                    <img width='100px' height='60px' 
+                    src="{% static 'img/general/right-arrow1.png' %}" class="" alt="" class=""> 
+                </div>
+            {% endif %}                                
+            {% endfor %}
+            </div>
+            {% endfor %}
+           </div>
+        </div>
+    </div>
+    <div class="four" data-title="Section 1">
+        <div class="boxtitle text-center">
+            <b>First Step</b>
+        </div>
+        <div class="boxbody text-start" contenteditable="true">
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="first_step" contenteditable="true">
+                {% if first_step != None %}{{first_step}}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+  
+    <div class="five" data-title="Section 1">
+        <div class="boxtitle text-center">
+            <b>Demand Rate</b>
+        </div>
+        <div class="boxbody text-start" contenteditable="true">
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="demand_rate" contenteditable="true">
+                {% if canvas.demand_rate != None %}{{canvas.demand_rate}}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="six" data-title="Section 1">
+        <div class="boxtitle text-center">
+            <b>Last Step</b>
+        </div>
+        <div class="boxbody text-start" contenteditable="true">
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="last_step" contenteditable="true">
+                {% if last_step != None %}{{last_step}}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="seven" data-title="Section 1">
+        <div class="boxtitle text-center">
+            <b>Current State</b>
+        </div>
+        <div class="boxbody text-start">
+            <div class="step_details">
+                {% for row in rows %}
+                <div class="row">
+                {% for record in row %}   
+                {% if forloop.first or forloop.parentlo.plast %}
+                    {% if forloop.counter0 == 0 %}
+                        {% if not forloop.parentloop.first  %}
+                        {% else %}
+                        <div class="col-md-1 d-flex align-items-center justify-content-center">
+                            
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {% if not forloop.parentloop.first  %}
+                    {% if forloop.counter0 == 0 %}
+                    <div class="col-md-1 d-flex align-items-center justify-content-center">
+                        <img width='100px' height='60px' 
+                        src="{% static 'img/general/right-arrow1.png' %}" class="" alt="" class=""> 
+                    </div>
+                    {% endif %}
+                {% endif %}            
+                <div class="col-md-2 div_box my-4">
+                    {{ record }}
+                    <div class="role_box">
+                        {{record.owner}}
+                    </div>
+                    <div class="details_box ">
+                        PT:{{record.value_creation_time}}
+                        <br>
+                        LT:{{record.delay_time}}
+                        <br>
+                        %CA:{{record.percentage_accurate}}
+                    </div>
+                </div>
+                {% if not forloop.last %}
+                    <div class="col-md-1 d-flex align-items-center justify-content-center">
+                        <img width='100px' height='60px' 
+                        src="{% static 'img/general/right-arrow1.png' %}" class="" alt="" class=""> 
+                    </div>
+                {% endif %}                                
+                {% endfor %}
+                </div>
+                {% endfor %}
+               </div>
+        </div>
+    </div>
+    <div class="eight" data-title="Section 1">
+        <div class="boxtitle text-center">
+            <b>Boundaries and Constraints</b>
+        </div>
+        <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="boundaries_and_constraints" contenteditable="true">
+            {% if canvas.boundaries_and_constraints != None %}{{canvas.boundaries_and_constraints}}
+            {% endif %}
+        </div>
+    </div>
+    <div class="nine" data-title="Section 1">
+        <div class="boxtitle text-center">
+            <b>Improvement Items</b>
+        </div>
+        <div class="boxbody text-start">            
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="canavs_improvement_items" contenteditable="true">
+                {% if canvas.improvement_items != None %}{{canvas.improvement_items}}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+  
+    </div>
+</form>
+</div>
+<div class="row">
+    <div class="col col-md-12">
+        <br><br><br><br>
+    </div>
+</div>
+{% include "../canvas_footer.html" %} 
+
+<script>
+ 
+    $('.title_text').on('blur', function () {
+        updateTodo($(this));
+    });
+    function updateTodo($element) {
+        var $tr = $element.closest('tr');
+        var object_id = $tr.attr('id').split('_')[0];  // Extract todo_id from the ID
+        var title = $tr.find('[name="title"]').text().trim();   
+        var done = $tr.find('.done_checkbox').prop('checked');  // Convert checkbox value to boolean
+
+        $.ajax({
+              type: 'POST',
+              url: '{% url "ops_valuestream_mgmt" %}',
+              data: {
+                  object_id: object_id,
+                  title: title,
+                  done: done,
+                  csrfmiddlewaretoken: '{{ csrf_token }}'
+              },
+              success: function(response) {
+                  if (response.success) {
+                      $('#saved').fadeIn().delay(1000).fadeOut();
+                  }
+              }
+          });
+    }
+    
+</script>
+{% endblock content %}

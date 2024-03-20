@@ -9,7 +9,7 @@
 {% include "../canvas_menu.html" %} 
 <div class="row">
   <div class="col col-md-12 text-end">
-    <a href="{% url 'show_ovs_step_details' id %}">OVS Step Details</a>
+    <a href="{% url 'show_dvs_step_details' devvaluestream.ops_valuestream.id id %}">DVS Step Details</a>
   </div>
 </div>
 <div class="row">
@@ -18,12 +18,12 @@
         <table class="table table-bordered">
           <tr>
             <td colspan="1" class="text-start">
-              <h2>{{opsvaluestream}} OVS Transformation Canvases</h2>
+              <h2>{{devaluestream}} DVS Transformation Canvases</h2>
               Here you create an opportunity for continuous improvement
             </td>
             <td colspan="1" class="text-end">
-              <a href="{% url 'ops_trx_add_canvas' id %}" class="btn btn-sm btn-success">
-                + Add OVS Transformation Canvas
+              <a href="{% url 'dev_trx_add_canvas' id %}" class="btn btn-sm btn-success">
+                + Add DVS Transformation Canvas
               </a>
             </td>
           </tr>
@@ -47,11 +47,11 @@
                 {{ canvas.name }}
               </td>
               <td>
-                <a href="{% url 'ops_trx_view_canvas' canvas.id %}">View</a>
+                <a href="{% url 'dev_trx_view_canvas' canvas.id %}">View</a>
                 &nbsp;&nbsp;
-                <a href="{% url 'ops_trx_edit_canvas' canvas.id %}">Edit</a>
+                <a href="{% url 'dev_trx_edit_canvas' canvas.id %}">Edit</a>
                 &nbsp;&nbsp;
-                <a href="{% url 'ops_trx_delete_canvas' canvas.id %}">Delete</a>
+                <a href="{% url 'dev_trx_delete_canvas' canvas.id %}">Delete</a>
               </td>
             </tr>
             {% endfor %}
@@ -61,3 +61,4 @@
 </div>
 {% include "../canvas_footer.html" %} 
 {% endblock content %}
+

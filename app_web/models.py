@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings  # Assuming your User model comes from settings.AUTH_USER_MODEL
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils.translation import gettext_lazy as _
-
+from django.db.models import JSONField 
 
 ################# SAFe #####################
 class BaseModel1(models.Model):
@@ -284,18 +284,45 @@ class DevValueStream(models.Model):
 # TRASNFORMATION CANVAS
 ##################################################################
 class OpsTransformationCanvas(BaseModel1):
-    ops_value_stream = models.ForeignKey(OpsValueStream, on_delete=models.CASCADE, related_name='ops_transformation_canvases')
+    opsvaluestream = models.ForeignKey(OpsValueStream, on_delete=models.CASCADE, related_name='ops_transformation_canvases')
     docs = models.TextField(null=True, blank=True)
-
+    demand_rate = models.CharField(max_length=255, null=True, blank=True)
+    boundaries_and_constraints = models.TextField(null=True, blank=True)
+    improvement_items = models.TextField(null=True, blank=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, 
+                               null=True, blank=True, related_name='authopscanvas')
     def __str__(self):
-        return f"Ops Transformation Canvas for {self.ops_value_stream.name}"
+        return f"Ops Transformation Canvas for {self.opsvaluestream.name}"
 
 class DevTransformationCanvas(BaseModel1):
-    dev_value_stream = models.ForeignKey(DevValueStream, on_delete=models.CASCADE, related_name='dev_transformation_canvases')
+    devvaluestream = models.ForeignKey(DevValueStream, on_delete=models.CASCADE, related_name='dev_transformation_canvases')
     docs = models.TextField(null=True, blank=True)
+    demand_rate = models.CharField(max_length=255, null=True, blank=True)
+    boundaries_and_constraints = models.TextField(null=True, blank=True)
+    improvement_items = models.TextField(null=True, blank=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, 
+                               null=True, blank=True, related_name='authdevcanvas')
+    marked_steps_with_star = models.TextField(null=True, blank=True)
+    marked_rows_with_tag = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"Dev Transformation Canvas for {self.dev_value_stream.name}"
+        return f"Dev Transformation Canvas for {self.devvaluestream.name}"
+
+class CurrentStateDTC(BaseModel1):
+    dtc = models.ForeignKey(DevTransformationCanvas, on_delete=models.CASCADE, 
+                            related_name='current_state_dtc')
+    snapshot = JSONField(default=dict)
+    def __str__(self):
+        return f"CurrentState of DTC"
+
+class FutureStateDTC(BaseModel1):
+    dtc = models.ForeignKey(DevTransformationCanvas, on_delete=models.CASCADE, 
+                            related_name='future_state_dtc')
+    snapshot = JSONField(default=dict)
+    def __str__(self):
+        return f"FutureState of DTC"
+
+
 
 # c b a
 class ValueStreamSteps(models.Model):

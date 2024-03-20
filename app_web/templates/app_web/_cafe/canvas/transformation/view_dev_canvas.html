@@ -120,7 +120,9 @@
             <b>Value Stream</b>
         </div>
         <div class="boxbody text-start">
-            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="devvaluestream" contenteditable="true">
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
+            class="devvaluestream" contenteditable="true" 
+            data-model="DevValueStream" data-field="name"  data-id="{{id}}">
                 {% if canvas.devvaluestream != None %}{{canvas.devvaluestream}}
                 {% endif %}
             </div>
@@ -132,7 +134,9 @@
             
         </div>
         <div class="boxbody text-start">
-            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="devvaluestream.trigger" contenteditable="true">
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
+            class="devvaluestream.trigger" contenteditable="true" data-model="DevValueStream" 
+            data-field="trigger"  data-id="{{id}}">
                 {% if canvas.devvaluestream.trigger != None %}{{canvas.devvaluestream.trigger}}
                 {% endif %}
             </div>
@@ -197,7 +201,9 @@
             <b>First Step</b>
         </div>
         <div class="boxbody text-start" contenteditable="true">
-            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="first_step" contenteditable="true">
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
+            class="first_step" contenteditable="true" data-model="ValueStreamSteps" 
+            data-field="first_step"  data-id="{{first_step_id}}">
                 {% if first_step != None %}{{first_step}}
                 {% endif %}
             </div>
@@ -208,19 +214,24 @@
         <div class="boxtitle text-center">
             <b>Demand Rate</b>
         </div>
-        <div class="boxbody text-start" contenteditable="true">
-            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="demand_rate" contenteditable="true">
+        <div class="boxbody text-start" >
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
+            class="demand_rate"  data-model="ValueStreamSteps" 
+            data-field="demand_rate"  data-id="{{canvas.id}}">
                 {% if canvas.demand_rate != None %}{{canvas.demand_rate}}
                 {% endif %}
             </div>
+            
         </div>
     </div>
     <div class="six" data-title="Section 1">
         <div class="boxtitle text-center">
             <b>Last Step</b>
         </div>
-        <div class="boxbody text-start" contenteditable="true">
-            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="last_step" contenteditable="true">
+        <div class="boxbody text-start" >
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
+            class="last_step" contenteditable="true" data-model="ValueStreamSteps" 
+            data-field="last_step" data-id="{{last_step_id}}">
                 {% if last_step != None %}{{last_step}}
                 {% endif %}
             </div>
@@ -282,7 +293,9 @@
         <div class="boxtitle text-center">
             <b>Boundaries and Constraints</b>
         </div>
-        <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="boundaries_and_constraints" contenteditable="true">
+        <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
+        class="boundaries_and_constraints" contenteditable="true" data-model="DevTransformationCanvas" 
+        data-field="boundaries_and_constraints"  data-id="{{canvas.id}}">
             {% if canvas.boundaries_and_constraints != None %}{{canvas.boundaries_and_constraints}}
             {% endif %}
         </div>
@@ -292,7 +305,9 @@
             <b>Improvement Items</b>
         </div>
         <div class="boxbody text-start">            
-            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." class="canavs_improvement_items" contenteditable="true">
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
+            class="canvas_improvement_items"  data-model="DevTransformationCanvas" 
+            data-field="improvement_items" data-id="{{canvas.id}}">
                 {% if canvas.improvement_items != None %}{{canvas.improvement_items}}
                 {% endif %}
             </div>
@@ -311,31 +326,40 @@
 
 <script>
  
-    $('.title_text').on('blur', function () {
-        updateTodo($(this));
-    });
-    function updateTodo($element) {
-        var $tr = $element.closest('tr');
-        var object_id = $tr.attr('id').split('_')[0];  // Extract todo_id from the ID
-        var title = $tr.find('[name="title"]').text().trim();   
-        var done = $tr.find('.done_checkbox').prop('checked');  // Convert checkbox value to boolean
+  
 
-        $.ajax({
-              type: 'POST',
-              url: '{% url "ops_valuestream_mgmt" %}',
-              data: {
-                  object_id: object_id,
-                  title: title,
-                  done: done,
-                  csrfmiddlewaretoken: '{{ csrf_token }}'
-              },
-              success: function(response) {
-                  if (response.success) {
-                      $('#saved').fadeIn().delay(1000).fadeOut();
-                  }
-              }
-          });
-    }
-    
+    $('.editable-div').on('blur', function () {
+    var $element = $(this);
+    var model = $element.data('model');
+    var field = $element.data('field');
+    var value = $element.text().trim();
+    var id = $element.data('id');
+
+    // Assuming you have a way to get the object's ID you're editing
+    // This could be another data attribute, or part of the session, etc.
+    var objectId = '{{id}}' /* you need to determine this based on your app's logic */;
+
+    $.ajax({
+        type: 'POST',
+        url: '{% url "ajax_update_dtc_field" %}',  // Update with the URL of your view
+        data: {
+            'model': model,
+            'field': field,
+            'value': value,
+            'id': id,
+            'object_id': objectId,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        success: function(response) {
+            // Handle success
+            console.log('Update successful');
+        },
+        error: function(response) {
+            // Handle error
+            console.log('Update failed');
+        }
+    });
+});
+
 </script>
 {% endblock content %}

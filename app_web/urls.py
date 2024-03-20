@@ -85,6 +85,7 @@ urlpatterns = [
     path('ops_trx_edit_canvas/<int:canvas_id>/', canvas_views.ops_trx_edit_canvas, name='ops_trx_edit_canvas'),
     path('ops_trx_delete_canvas/<int:canvas_id>/', canvas_views.ops_trx_delete_canvas, name='ops_trx_delete_canvas'),
     
+    path('ajax_update_dtc_field/', canvas_views.ajax_update_dtc_field, name='ajax_update_dtc_field'),
     path('dev_trx_add_canvas/<int:id>/', canvas_views.dev_trx_add_canvas, name='dev_trx_add_canvas'),
     path('dev_trx_list_canvas/<int:id>/', canvas_views.dev_trx_list_canvas, name='dev_trx_list_canvas'),
     path('dev_trx_view_canvas/<int:canvas_id>/', canvas_views.dev_trx_view_canvas, name='dev_trx_view_canvas'),

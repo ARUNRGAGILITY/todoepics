@@ -155,8 +155,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vR1.0.7d1'
-BUILD_DESCRIPTION = 'this a temporary state of the devops transformation canvas'
+BUILD_VERSION = 'vR1.0.7d2'
+BUILD_DESCRIPTION = 'this a temporary state of the devops transformation canvas update canvas working 70'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 SITE_NAME = f"{SITE_TITLE}"

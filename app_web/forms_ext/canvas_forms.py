@@ -27,3 +27,12 @@ class DevTransformationCanvasForm(forms.ModelForm):
             'improvement_items': forms.Textarea(attrs={'cols': 50, 'rows': 5}),
         }
         
+class EditDevTransformationCanvasForm(forms.ModelForm):
+    class Meta:
+        model = DevTransformationCanvas
+        fields = ['name', 'description', 'devvaluestream' ,]
+        widgets = {
+            'name': forms.TextInput(attrs={'size': '50',}),
+            'description': forms.Textarea(attrs={ 'rows': 4, 'cols': 40}),
+        }
+        

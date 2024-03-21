@@ -34,15 +34,25 @@
             </div>
         </div>
         <div class="row">
-            <div class="col col-md-4 text-end">
-                <a href="{% url 'organization_transformation' %}" class="btn btn-success btn-sm">Organization Transformation</a> 
-            </div>
-            <div class="col col-md-4 text-center">
-                <a href="{% url 'transformation_leadership' %}" class="btn btn-primary btn-sm">Transformation Leadership</a> 
-            </div>
-            <div class="col col-md-4 text-start">
-                <a href="{% url 'transformation_sw_training_services' %}" class="btn btn-secondary btn-sm">Transformation Software, Training &amp; Services</a> 
-            </div>
+            <div class="col col-md-1"></div>
+            <div class="col col-md-10 text-center">
+                <table class="table">
+                    <tr>
+                        <td width="33%" class="text-end">
+                            <a href="{% url 'organization_transformation' %}" class="btn btn-success btn-sm">Organization Transformation</a> 
+                            &nbsp;&gt;
+                        </td>
+                        <td width="33%" class="text-center">
+                            <a href="{% url 'transformation_leadership' %}" class="btn btn-primary btn-sm">Transformation Leadership</a> 
+                            &nbsp;&gt;
+                        </td>
+                        <td width="33%">
+                            <a href="{% url 'transformation_sw_training_services' %}" class="btn btn-secondary btn-sm">Transformation Software, Training &amp; Services</a> 
+                        </td>
+                    </tr>
+                </table>
+            </div>           
+            <div class="col col-md-1"></div>
         </div>     
     </div>    
 </div>

@@ -7,6 +7,39 @@ from django.views.decorators.http import require_POST
 from django.apps import apps
 
 
+def parse_marked_data(data_str):
+    """
+    Parses strings of the form '1,2,3' or '1='tag1'/2='tag2'' into a Python dictionary.
+    """
+    if '=' in data_str:
+        # For marked_rows_with_tag
+        return dict(item.split('=') for item in data_str.split('/'))
+    else:
+        # For marked_steps_with_star
+        return [int(item) for item in data_str.split(',') if item.isdigit()]
+
+
+def parse_marked_rows_to_list(data_str):
+    """Parse the marked_rows_with_tag string into a list of (row, tag) for easier use in templates."""
+    row_tags = []
+    if data_str:
+        for part in data_str.split('/'):
+            key, value = part.split('=')
+            row_tags.append((int(key), value.strip("'")))
+    return row_tags
+# # Example usage in your view before passing to the template
+# dev_transformation_canvas = DevTransformationCanvas.objects.get(id=some_id)
+# marked_steps_with_star = parse_marked_data(dev_transformation_canvas.marked_steps_with_star)
+# marked_rows_with_tag = parse_marked_data(dev_transformation_canvas.marked_rows_with_tag)
+
+# # Add these to your context
+# context = {
+#     'marked_steps_with_star': marked_steps_with_star,
+#     'marked_rows_with_tag': marked_rows_with_tag,
+#     # Include other context variables as needed
+# }
+
+
 def create_current_state_snapshot(dtc_id, dvs_id):
     # Fetch the specific DevValueStream and its ValueStreamSteps
     devvaluestream = get_object_or_404(DevValueStream, id=dvs_id, active=True)
@@ -71,6 +104,7 @@ def ops_trx_list_canvas(request, id):
     }
     template_file = f"{app_name}/_cafe/canvas/transformation/list_ops_canvases.html"
     return render(request, template_file, context)
+
 @login_required(login_url='login')
 def ops_trx_view_canvas(request, canvas_id):
     canvas = get_object_or_404(OpsTransformationCanvas, id=canvas_id)
@@ -89,6 +123,7 @@ def ops_trx_view_canvas(request, canvas_id):
                'formatted_updated_at': formatted_updated_at}
     template_file = f"{app_name}/_cafe/canvas/transformation/view_ops_canvas.html"
     return render(request, template_file, context)
+
 @login_required(login_url='login')
 def ops_trx_edit_canvas(request, canvas_id):
     canvas = get_object_or_404(OpsTransformationCanvas, id=canvas_id)
@@ -153,8 +188,51 @@ def dev_trx_list_canvas(request, id):
     }
     template_file = f"{app_name}/_cafe/canvas/transformation/list_dev_canvases.html"
     return render(request, template_file, context)
+
 @login_required(login_url='login')
 def dev_trx_view_canvas(request, canvas_id):
+    canvas = get_object_or_404(DevTransformationCanvas, id=canvas_id)
+    id = canvas.devvaluestream.id
+    steps = canvas.devvaluestream.steps.filter(active=True).order_by('position')
+    first_step = steps.first()
+    last_step = steps.last()
+    #print(f">>> === |||| first_step {first_step.id} {first_step}  last_step {last_step.id} {last_step} |||| === <<<")
+    formatted_created_at = canvas.created_at.strftime("%d/%m/%Y %H:%M:%S")
+    formatted_updated_at = canvas.updated_at.strftime("%d/%m/%Y %H:%M:%S")    
+    steps_count = steps.count()   
+    # We are going to send the steps 4 columns per row
+    # for displaying like post-it notes
+    columns_per_row = 4
+    rows = [steps[i:i + columns_per_row] for i in range(0, len(steps), columns_per_row)]
+    #print(f">>> === |||| MARKED STARS {canvas.marked_steps_with_star} |||| === <<<")
+    marked_steps_with_star = parse_marked_data(canvas.marked_steps_with_star)
+    marked_rows_with_tag = parse_marked_data(canvas.marked_rows_with_tag)
+    marked_rows_with_tag_to_list = parse_marked_rows_to_list(canvas.marked_rows_with_tag)
+    # Zip the rows with their corresponding tags
+    # Example of combining rows with their corresponding tags
+    rows_with_tags = [(row, next((tag for index, tag in marked_rows_with_tag_to_list if index == row_index + 1), '')) for row_index, row in enumerate(rows)]
+
+    # marked_steps_with_star = ""
+    # marked_rows_with_tag = ""
+    context = {'canvas': canvas, 'id':id,
+               'first_step': first_step, 
+               'last_step':last_step, 
+               'first_step_id': first_step.id, 
+               'last_step_id': last_step.id,      
+               'formatted_created_at': formatted_created_at,
+               'formatted_updated_at': formatted_updated_at, 
+               'rows': rows,
+               'rows_with_tags': rows_with_tags,
+               'marked_steps_with_star':marked_steps_with_star,
+               'marked_rows_with_tag':marked_rows_with_tag,
+               'marked_rows_with_tag_to_list':marked_rows_with_tag_to_list,}
+    template_file = f"{app_name}/_cafe/canvas/transformation/view_dev_canvas.html"
+    return render(request, template_file, context)
+
+@login_required(login_url='login')
+def dev_trx_view_agree_on_canvas(request, canvas_id):
+    marked_steps_with_star = None
+    marked_rows_with_tag = None
     canvas = get_object_or_404(DevTransformationCanvas, id=canvas_id)
     id = canvas.devvaluestream.id
     steps = canvas.devvaluestream.steps.filter(active=True).order_by('position')
@@ -167,27 +245,64 @@ def dev_trx_view_canvas(request, canvas_id):
     # We are going to send the steps 4 columns per row
     # for displaying like post-it notes
     columns_per_row = 4
-    rows = [steps[i:i + columns_per_row] for i in range(0, len(steps), columns_per_row)]
+    rows = [steps[i:i + columns_per_row] for i in range(0, len(steps), columns_per_row)]    
+    marked_steps_with_star = parse_marked_data(canvas.marked_steps_with_star)
+    marked_rows_with_tag = parse_marked_data(canvas.marked_rows_with_tag)
+    marked_rows_with_tag_to_list = parse_marked_rows_to_list(canvas.marked_rows_with_tag)
+    print(f">>> === |||| MARKED STARS {marked_rows_with_tag_to_list} |||| === <<<")
+    ## post method to save the star and row tags
+    if request.method == 'POST':
+        # Process form submission
+        records_selected = []
+        row_tags = {}
+        
+        for key, value in request.POST.items():
+            if key.startswith('record_'):
+                # Extract the record ID and mark as selected
+                record_id = key.split('_')[1]
+                records_selected.append(record_id)
+            elif key.startswith('row_') and key.endswith('_tag'):
+                # Extract the row number and associated tag
+                row_number = key.split('_')[1]
+                row_tags[row_number] = value
+                print(f">>> === |||| {row_tags}==> {value} |||| === <<<")
+        canvas = get_object_or_404(DevTransformationCanvas, id=canvas_id)
+        marked_steps_with_star = ','.join(records_selected)
+        marked_rows_with_tag = '/'.join([f"{key}='{value}'" for key, value in row_tags.items()])
+        canvas.marked_steps_with_star = marked_steps_with_star
+        canvas.marked_rows_with_tag = marked_rows_with_tag
+        canvas.active = True
+        canvas.save()
+        print(f">>> === |||| records_selected: {records_selected} rowtags: {row_tags} , {canvas.marked_steps_with_star} |||| === <<<")
+        
+        marked_steps_with_star = parse_marked_data(canvas.marked_steps_with_star)
+        marked_rows_with_tag = parse_marked_data(canvas.marked_rows_with_tag)
+        marked_rows_with_tag_to_list = parse_marked_rows_to_list(canvas.marked_rows_with_tag)
+        return redirect('dev_trx_view_canvas', canvas_id=canvas_id)
     context = {'canvas': canvas, 'id':id,
                'first_step': first_step, 
                'last_step':last_step, 
                'first_step_id': first_step.id, 
                'last_step_id': last_step.id,      
                'formatted_created_at': formatted_created_at,
-               'formatted_updated_at': formatted_updated_at, 'rows': rows}
-    template_file = f"{app_name}/_cafe/canvas/transformation/view_dev_canvas.html"
+               'formatted_updated_at': formatted_updated_at, 'rows': rows,
+               'marked_steps_with_star':marked_steps_with_star,
+               'marked_rows_with_tag':marked_rows_with_tag,
+               'marked_rows_with_tag_to_list':marked_rows_with_tag_to_list,}
+    template_file = f"{app_name}/_cafe/canvas/transformation/view_agree_on_dev_canvas.html"
     return render(request, template_file, context)
+
 @login_required(login_url='login')
 def dev_trx_edit_canvas(request, canvas_id):
     canvas = get_object_or_404(DevTransformationCanvas, id=canvas_id)
     id = canvas.devvaluestream.id
     if request.method == 'POST':
-        form = DevTransformationCanvasForm(request.POST, instance=canvas)
+        form = EditDevTransformationCanvasForm(request.POST, instance=canvas)
         if form.is_valid():
             form.save()
             return redirect('dev_trx_list_canvas', id=id)
     else:
-        form = DevTransformationCanvasForm(instance=canvas)
+        form = EditDevTransformationCanvasForm(instance=canvas)
 
     context = {'form': form, 'id':id,}
     template_file = f"{app_name}/_cafe/canvas/transformation/edit_dev_canvas.html"

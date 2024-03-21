@@ -12,7 +12,7 @@ class OpsTransformationCanvasAdmin(admin.ModelAdmin):
     list_display = ('opsvaluestream', 'name', 'description', 'active', 'deleted') 
 admin.site.register(OpsTransformationCanvas, OpsTransformationCanvasAdmin)
 class DevTransformationCanvasAdmin(admin.ModelAdmin):
-    list_display = ('devvaluestream', 'name', 'description', 'active', 'deleted') 
+    list_display = ('devvaluestream', 'name', 'description', 'marked_steps_with_star', 'marked_rows_with_tag', 'active', 'deleted') 
 admin.site.register(DevTransformationCanvas, DevTransformationCanvasAdmin)
 
 

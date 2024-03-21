@@ -11,6 +11,8 @@ def parse_marked_data(data_str):
     """
     Parses strings of the form '1,2,3' or '1='tag1'/2='tag2'' into a Python dictionary.
     """
+    if data_str is None:
+        return {}
     if '=' in data_str:
         # For marked_rows_with_tag
         return dict(item.split('=') for item in data_str.split('/'))
@@ -196,6 +198,18 @@ def dev_trx_view_canvas(request, canvas_id):
     steps = canvas.devvaluestream.steps.filter(active=True).order_by('position')
     first_step = steps.first()
     last_step = steps.last()
+    # Check if first_step or last_step is not None before accessing id
+    if first_step:
+        first_step_id = first_step.id
+    else:
+        # Handle the case where there is no first step
+        first_step_id = None  # Or set a default value or take another action
+
+    if last_step:
+        last_step_id = last_step.id
+    else:
+        # Handle the case where there is no last step
+        last_step_id = None 
     #print(f">>> === |||| first_step {first_step.id} {first_step}  last_step {last_step.id} {last_step} |||| === <<<")
     formatted_created_at = canvas.created_at.strftime("%d/%m/%Y %H:%M:%S")
     formatted_updated_at = canvas.updated_at.strftime("%d/%m/%Y %H:%M:%S")    
@@ -217,8 +231,8 @@ def dev_trx_view_canvas(request, canvas_id):
     context = {'canvas': canvas, 'id':id,
                'first_step': first_step, 
                'last_step':last_step, 
-               'first_step_id': first_step.id, 
-               'last_step_id': last_step.id,      
+               'first_step_id': first_step_id, 
+               'last_step_id': last_step_id,      
                'formatted_created_at': formatted_created_at,
                'formatted_updated_at': formatted_updated_at, 
                'rows': rows,
@@ -238,7 +252,7 @@ def dev_trx_view_agree_on_canvas(request, canvas_id):
     steps = canvas.devvaluestream.steps.filter(active=True).order_by('position')
     first_step = steps.first()
     last_step = steps.last()
-    print(f">>> === |||| first_step {first_step.id} {first_step}  last_step {last_step.id} {last_step} |||| === <<<")
+    #print(f">>> === |||| first_step {first_step.id} {first_step}  last_step {last_step.id} {last_step} |||| === <<<")
     formatted_created_at = canvas.created_at.strftime("%d/%m/%Y %H:%M:%S")
     formatted_updated_at = canvas.updated_at.strftime("%d/%m/%Y %H:%M:%S")    
     steps_count = steps.count()   
@@ -249,7 +263,7 @@ def dev_trx_view_agree_on_canvas(request, canvas_id):
     marked_steps_with_star = parse_marked_data(canvas.marked_steps_with_star)
     marked_rows_with_tag = parse_marked_data(canvas.marked_rows_with_tag)
     marked_rows_with_tag_to_list = parse_marked_rows_to_list(canvas.marked_rows_with_tag)
-    print(f">>> === |||| MARKED STARS {marked_rows_with_tag_to_list} |||| === <<<")
+    rows_with_tags = [(row, next((tag for index, tag in marked_rows_with_tag_to_list if index == row_index + 1), '')) for row_index, row in enumerate(rows)]
     ## post method to save the star and row tags
     if request.method == 'POST':
         # Process form submission
@@ -265,7 +279,7 @@ def dev_trx_view_agree_on_canvas(request, canvas_id):
                 # Extract the row number and associated tag
                 row_number = key.split('_')[1]
                 row_tags[row_number] = value
-                print(f">>> === |||| {row_tags}==> {value} |||| === <<<")
+                #print(f">>> === |||| {row_tags}==> {value} |||| === <<<")
         canvas = get_object_or_404(DevTransformationCanvas, id=canvas_id)
         marked_steps_with_star = ','.join(records_selected)
         marked_rows_with_tag = '/'.join([f"{key}='{value}'" for key, value in row_tags.items()])
@@ -273,7 +287,7 @@ def dev_trx_view_agree_on_canvas(request, canvas_id):
         canvas.marked_rows_with_tag = marked_rows_with_tag
         canvas.active = True
         canvas.save()
-        print(f">>> === |||| records_selected: {records_selected} rowtags: {row_tags} , {canvas.marked_steps_with_star} |||| === <<<")
+        #print(f">>> === |||| records_selected: {records_selected} rowtags: {row_tags} , {canvas.marked_steps_with_star} |||| === <<<")
         
         marked_steps_with_star = parse_marked_data(canvas.marked_steps_with_star)
         marked_rows_with_tag = parse_marked_data(canvas.marked_rows_with_tag)
@@ -286,6 +300,7 @@ def dev_trx_view_agree_on_canvas(request, canvas_id):
                'last_step_id': last_step.id,      
                'formatted_created_at': formatted_created_at,
                'formatted_updated_at': formatted_updated_at, 'rows': rows,
+               'rows_with_tags': rows_with_tags,
                'marked_steps_with_star':marked_steps_with_star,
                'marked_rows_with_tag':marked_rows_with_tag,
                'marked_rows_with_tag_to_list':marked_rows_with_tag_to_list,}

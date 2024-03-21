@@ -189,8 +189,8 @@
                     
                         </td>
                         <td>
-                           {% for _, tag_value in marked_rows_with_tag_to_list %}    
-                                Row {{forloop.counter}}: <input type="text" name="row_{{ forloop.counter }}_tag" value="{{ tag_value }}" size="35">
+                           {% for row, tag in rows_with_tags %}    
+                                Row {{forloop.counter}}: <input type="text" name="row_{{ forloop.counter }}_tag" value="{{ tag }}" size="35">
                                 <br>
                             {% endfor %}
                         </td>

@@ -211,38 +211,7 @@
              {% endif %}
             {% endfor %}
 
-            <!-- print the efficicency of the future state -->
-             <!-- print the snapshot efficiency -->
-             <table class="table table-bordered table-striped">
-                <tr>
-                    <td>                            
-                        Development Value Stream Details of<br>
-                        <b>{{canvas.devvaluestream.name}}</b>
-                        <br>
-                        <font size="-1">{{canvas.devvaluestream.name}}</font>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Total PT = {{canvas.devvaluestream.total_value_creation_time}}</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Total LT = {{canvas.devvaluestream.total_time}}</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Activity Ratio = {{canvas.devvaluestream.efficiency}} %</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Rolled %C&A = {{canvas.devvaluestream.rolled_ca}} %</b>
-                    </td>
-                </tr>
-            </table>
+          
            </div>
           
         </div>
@@ -328,37 +297,7 @@
                 </div>
                 {% endfor %}
 
-                <!-- print the snapshot efficiency -->
-                <table class="table table-bordered table-striped">
-                    <tr>
-                        <td>                            
-                            Development Value Stream Details of<br>
-                            <b>{{dev_value_stream_data.fields.name}}</b>
-                            <br>
-                            <font size="-1">{{dev_value_stream_data.fields.name}}</font>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Total PT = {{dev_value_stream_data.fields.total_value_creation_time}}</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Total LT = {{dev_value_stream_data.fields.total_time}}</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Activity Ratio = {{dev_value_stream_data.fields.efficiency}} %</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Rolled %C&A = {{dev_value_stream_data.fields.rolled_ca}} %</b>
-                        </td>
-                    </tr>
-                </table>
+              
                </div>
         </div>
         <!-- STEP DETAILS-->
@@ -387,7 +326,8 @@
 </div>
 <div class="row">
     <div class="col col-md-12">
-        <!-- <button id="download-pdf">Download as PDF</button> -->
+        <button id="download-pdf">Download as PDF</button>
+
         <br><br><br><br>
     </div>
 </div>
@@ -435,41 +375,20 @@
 
 </script>
 
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
-
-
 <script>
     document.getElementById('download-pdf').addEventListener('click', function() {
-        // Scroll to the top of the page to ensure content is captured from the beginning
-        window.scrollTo(0, 0);
-
-        // Give the page a moment to scroll and settle
-        setTimeout(function() {
-            html2canvas(document.body, {
-                scale: 0.5, // Adjust scale as needed
-                useCORS: true, // If you have images from external domains
-                logging: true, // Enable for debugging
-                width: window.innerWidth,
-                height: document.body.scrollHeight // Capture the full page height
-            }).then(function(canvas) {
-                const imgData = canvas.toDataURL('image/jpeg', 1.0);
-                
-                // Create a jsPDF instance and set the page format to accommodate the content
-                const pdf = new jspdf.jsPDF({
-                    orientation: 'p',
-                    unit: 'px',
-                    format: [canvas.width, canvas.height]
-                });
-                
-                // Add the captured content as an image
-                pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
-                
-                // Save the PDF
-                pdf.save('download.pdf');
-            });
-        }, 100);
+        html2canvas(document.body).then(function(canvas) {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jspdf.jsPDF();
+            const imgProps= pdf.getImageProperties(imgData);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save("DevOpsTransformationCanvas.pdf");
+        });
     });
 </script>
+
 {% endblock content %}

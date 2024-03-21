@@ -86,11 +86,13 @@
         <div class="col col-md-4">
             
         </div>
-        <div class="col col-md-4"></div>
-        <div class="col col-md-4 text-end">
+        <div class="col col-md-12 text-end">
             <a href="{% url 'show_dvs_step_details' canvas.devvaluestream.ops_valuestream.id id %}">
                 {{canvas.devvaluestream}} Step Details
             </a>
+            &nbsp;&nbsp;
+            <a href="{% url 'valuestream_steps' 'dev' canvas.devvaluestream.id %}">DVS Steps</a>
+            &nbsp;&nbsp;
             <a href="{% url 'dev_trx_list_canvas' canvas.devvaluestream.id %}">
                 {{canvas.devvaluestream}} DVS Transformation Canvas List
             </a>

@@ -155,8 +155,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vR1.0.8c'
-BUILD_DESCRIPTION = 'ProdFix: none values, tags fixed, DevOps Transformation canvas FR 90 done, NFR 2 pending'
+BUILD_VERSION = 'vR1.0.8d'
+BUILD_DESCRIPTION = 'Prodfix, snapshot, real data'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 SITE_NAME = f"{SITE_TITLE}"

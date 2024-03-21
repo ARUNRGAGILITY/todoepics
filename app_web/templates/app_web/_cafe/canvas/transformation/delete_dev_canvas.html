@@ -26,7 +26,10 @@
         <br>
         {{canvas}}
         <br>
-        <button type="submit">Yes, delete it</button>
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit">Yes, delete it</button>
+        </form>
         &nbsp;&nbsp;&nbsp;
         <a href="{% url 'dev_trx_list_canvas' id %}">Cancel</a>
       </p>

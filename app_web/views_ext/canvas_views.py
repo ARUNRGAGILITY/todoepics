@@ -195,16 +195,18 @@ def dev_trx_list_canvas(request, id):
 def dev_trx_view_canvas(request, canvas_id):
     canvas = get_object_or_404(DevTransformationCanvas, id=canvas_id)
     id = canvas.devvaluestream.id
-    steps = canvas.devvaluestream.steps.filter(active=True).order_by('position')
+    steps = canvas.devvaluestream.steps.filter(active=True).order_by('position', 'created_at')
     first_step = steps.first()
     last_step = steps.last()
+    
+    for step in steps:
+        print(f">>> === |||| >>>{step.id}==> {step.position} ==> {step.name} |||| === <<<")
     # Check if first_step or last_step is not None before accessing id
     if first_step:
         first_step_id = first_step.id
     else:
         # Handle the case where there is no first step
         first_step_id = None  # Or set a default value or take another action
-
     if last_step:
         last_step_id = last_step.id
     else:
@@ -226,6 +228,15 @@ def dev_trx_view_canvas(request, canvas_id):
     # Example of combining rows with their corresponding tags
     rows_with_tags = [(row, next((tag for index, tag in marked_rows_with_tag_to_list if index == row_index + 1), '')) for row_index, row in enumerate(rows)]
 
+
+    # snapshot check
+    current_state_dtc = get_object_or_404(CurrentStateDTC, dtc=canvas)
+    # The snapshot data is already a Python dict if accessed directly
+    snapshot_data = current_state_dtc.snapshot
+    # Accessing parts of the snapshot
+    dev_value_stream_data = snapshot_data.get('dev_value_stream', [])
+    value_stream_steps_data = snapshot_data.get('value_stream_steps', [])
+    cdtc_rows = [value_stream_steps_data[i:i + columns_per_row] for i in range(0, len(value_stream_steps_data), columns_per_row)]
     # marked_steps_with_star = ""
     # marked_rows_with_tag = ""
     context = {'canvas': canvas, 'id':id,
@@ -236,12 +247,84 @@ def dev_trx_view_canvas(request, canvas_id):
                'formatted_created_at': formatted_created_at,
                'formatted_updated_at': formatted_updated_at, 
                'rows': rows,
+               'cdtc_rows': cdtc_rows,
                'rows_with_tags': rows_with_tags,
                'marked_steps_with_star':marked_steps_with_star,
                'marked_rows_with_tag':marked_rows_with_tag,
-               'marked_rows_with_tag_to_list':marked_rows_with_tag_to_list,}
+               'marked_rows_with_tag_to_list':marked_rows_with_tag_to_list,
+               'dev_value_stream_data':dev_value_stream_data[0],
+               'value_stream_steps_data':value_stream_steps_data,}
     template_file = f"{app_name}/_cafe/canvas/transformation/view_dev_canvas.html"
     return render(request, template_file, context)
+
+
+
+@login_required(login_url='login')
+def dev_trx_view_canvas_we(request, canvas_id):
+    canvas = get_object_or_404(DevTransformationCanvas, id=canvas_id)
+    id = canvas.devvaluestream.id
+    steps = canvas.devvaluestream.steps.filter(active=True).order_by('position', 'created_at')
+    first_step = steps.first()
+    last_step = steps.last()
+    
+    for step in steps:
+        print(f">>> === |||| >>>{step.id}==> {step.position} ==> {step.name} |||| === <<<")
+    # Check if first_step or last_step is not None before accessing id
+    if first_step:
+        first_step_id = first_step.id
+    else:
+        # Handle the case where there is no first step
+        first_step_id = None  # Or set a default value or take another action
+    if last_step:
+        last_step_id = last_step.id
+    else:
+        # Handle the case where there is no last step
+        last_step_id = None 
+    #print(f">>> === |||| first_step {first_step.id} {first_step}  last_step {last_step.id} {last_step} |||| === <<<")
+    formatted_created_at = canvas.created_at.strftime("%d/%m/%Y %H:%M:%S")
+    formatted_updated_at = canvas.updated_at.strftime("%d/%m/%Y %H:%M:%S")    
+    steps_count = steps.count()   
+    # We are going to send the steps 4 columns per row
+    # for displaying like post-it notes
+    columns_per_row = 4
+    rows = [steps[i:i + columns_per_row] for i in range(0, len(steps), columns_per_row)]
+    #print(f">>> === |||| MARKED STARS {canvas.marked_steps_with_star} |||| === <<<")
+    marked_steps_with_star = parse_marked_data(canvas.marked_steps_with_star)
+    marked_rows_with_tag = parse_marked_data(canvas.marked_rows_with_tag)
+    marked_rows_with_tag_to_list = parse_marked_rows_to_list(canvas.marked_rows_with_tag)
+    # Zip the rows with their corresponding tags
+    # Example of combining rows with their corresponding tags
+    rows_with_tags = [(row, next((tag for index, tag in marked_rows_with_tag_to_list if index == row_index + 1), '')) for row_index, row in enumerate(rows)]
+
+
+    # snapshot check
+    current_state_dtc = get_object_or_404(CurrentStateDTC, dtc=canvas)
+    # The snapshot data is already a Python dict if accessed directly
+    snapshot_data = current_state_dtc.snapshot
+    # Accessing parts of the snapshot
+    dev_value_stream_data = snapshot_data.get('dev_value_stream', [])
+    value_stream_steps_data = snapshot_data.get('value_stream_steps', [])
+    cdtc_rows = [value_stream_steps_data[i:i + columns_per_row] for i in range(0, len(value_stream_steps_data), columns_per_row)]
+    # marked_steps_with_star = ""
+    # marked_rows_with_tag = ""
+    context = {'canvas': canvas, 'id':id,
+               'first_step': first_step, 
+               'last_step':last_step, 
+               'first_step_id': first_step_id, 
+               'last_step_id': last_step_id,      
+               'formatted_created_at': formatted_created_at,
+               'formatted_updated_at': formatted_updated_at, 
+               'rows': rows,
+               'cdtc_rows': cdtc_rows,
+               'rows_with_tags': rows_with_tags,
+               'marked_steps_with_star':marked_steps_with_star,
+               'marked_rows_with_tag':marked_rows_with_tag,
+               'marked_rows_with_tag_to_list':marked_rows_with_tag_to_list,
+               'dev_value_stream_data':dev_value_stream_data[0],
+               'value_stream_steps_data':value_stream_steps_data,}
+    template_file = f"{app_name}/_cafe/canvas/transformation/view_dev_canvas_with_efficiency.html"
+    return render(request, template_file, context)
+
 
 @login_required(login_url='login')
 def dev_trx_view_agree_on_canvas(request, canvas_id):

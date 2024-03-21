@@ -211,7 +211,38 @@
              {% endif %}
             {% endfor %}
 
-          
+            <!-- print the efficicency of the future state -->
+             <!-- print the snapshot efficiency -->
+             <table class="table table-bordered table-striped">
+                <tr>
+                    <td>                            
+                        Development Value Stream Details of<br>
+                        <b>{{canvas.devvaluestream.name}}</b>
+                        <br>
+                        <font size="-1">{{canvas.devvaluestream.name}}</font>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Total PT = {{canvas.devvaluestream.total_value_creation_time}}</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Total LT = {{canvas.devvaluestream.total_time}}</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Activity Ratio = {{canvas.devvaluestream.efficiency}} %</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Rolled %C&A = {{canvas.devvaluestream.rolled_ca}} %</b>
+                    </td>
+                </tr>
+            </table>
            </div>
           
         </div>
@@ -297,7 +328,37 @@
                 </div>
                 {% endfor %}
 
-              
+                <!-- print the snapshot efficiency -->
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <td>                            
+                            Development Value Stream Details of<br>
+                            <b>{{dev_value_stream_data.fields.name}}</b>
+                            <br>
+                            <font size="-1">{{dev_value_stream_data.fields.name}}</font>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Total PT = {{dev_value_stream_data.fields.total_value_creation_time}}</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Total LT = {{dev_value_stream_data.fields.total_time}}</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Activity Ratio = {{dev_value_stream_data.fields.efficiency}} %</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Rolled %C&A = {{dev_value_stream_data.fields.rolled_ca}} %</b>
+                        </td>
+                    </tr>
+                </table>
                </div>
         </div>
         <!-- STEP DETAILS-->

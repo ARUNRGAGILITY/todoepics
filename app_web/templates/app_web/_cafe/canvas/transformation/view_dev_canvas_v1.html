@@ -210,8 +210,6 @@
             <div class="tag-text">{{ tag }}</div>
              {% endif %}
             {% endfor %}
-
-          
            </div>
           
         </div>
@@ -249,11 +247,22 @@
     </div>
     <div class="seven" data-title="Section 1">
         <div class="boxtitle text-center">
-            <b>Current/Snapshot State</b>&nbsp;&nbsp;(This is a snapshot for canvas creation)
+            <b>Current State</b>
+              <!-- Testing -->
+
+              <h2>Value Stream Steps</h2>
+
+                    {% for row in cdtc_rows %}
+                    {% for record in row %}
+                    <li>{{ record.fields.name }}</li>  <!-- Adjust based on your actual structure -->
+                    {% endfor %}
+                    {% endfor %}
+
+
         </div>
         <div class="boxbody text-start">
             <div class="step_details">
-                {% for row in cdtc_rows %}
+                {% for row in rows %}
                 <div class="row">
                 {% for record in row %}   
                 {% if forloop.first or forloop.parentlo.plast %}
@@ -275,16 +284,16 @@
                     {% endif %}
                 {% endif %}            
                 <div class="col-md-2 div_box my-4">
-                    {{ record.fields.name }}
+                    {{ record }}
                     <div class="role_box">
-                        {{record.fields.owner}}
+                        {{record.owner}}
                     </div>
                     <div class="details_box ">
-                        PT:{{record.fields.value_creation_time}}
+                        PT:{{record.value_creation_time}}
                         <br>
-                        LT:{{record.fields.delay_time}}
+                        LT:{{record.delay_time}}
                         <br>
-                        %CA:{{record.fields.percentage_accurate}}
+                        %CA:{{record.percentage_accurate}}
                     </div>
                 </div>
                 {% if not forloop.last %}
@@ -296,11 +305,8 @@
                 {% endfor %}
                 </div>
                 {% endfor %}
-
-              
                </div>
         </div>
-        <!-- STEP DETAILS-->
     </div>
     <div class="eight" data-title="Section 1">
         <div class="boxtitle text-center">

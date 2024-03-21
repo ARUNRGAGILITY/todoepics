@@ -89,6 +89,7 @@ urlpatterns = [
     path('dev_trx_add_canvas/<int:id>/', canvas_views.dev_trx_add_canvas, name='dev_trx_add_canvas'),
     path('dev_trx_list_canvas/<int:id>/', canvas_views.dev_trx_list_canvas, name='dev_trx_list_canvas'),
     path('dev_trx_view_canvas/<int:canvas_id>/', canvas_views.dev_trx_view_canvas, name='dev_trx_view_canvas'),
+     path('dev_trx_view_canvas_we/<int:canvas_id>/', canvas_views.dev_trx_view_canvas_we, name='dev_trx_view_canvas_we'),
     path('dev_trx_view_agree_on_canvas/<int:canvas_id>/', canvas_views.dev_trx_view_agree_on_canvas, name='dev_trx_view_agree_on_canvas'),
     path('dev_trx_edit_canvas/<int:canvas_id>/', canvas_views.dev_trx_edit_canvas, name='dev_trx_edit_canvas'),
     path('dev_trx_delete_canvas/<int:canvas_id>/', canvas_views.dev_trx_delete_canvas, name='dev_trx_delete_canvas'),

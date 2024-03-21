@@ -7,6 +7,14 @@ from .models import *
 from django.contrib import admin
 from django.apps import apps
 
+# current/future state DTC
+class CurrentStateDTCAdmin(admin.ModelAdmin):
+    list_display = ('dtc', 'name', 'description', 'snapshot', 'active', 'deleted') 
+class FutureStateDTCAdmin(admin.ModelAdmin):
+    list_display = ('dtc', 'name', 'description', 'snapshot', 'active', 'deleted') 
+
+admin.site.register(CurrentStateDTC, CurrentStateDTCAdmin)
+admin.site.register(FutureStateDTC, FutureStateDTCAdmin)
 # canvas
 class OpsTransformationCanvasAdmin(admin.ModelAdmin):
     list_display = ('opsvaluestream', 'name', 'description', 'active', 'deleted') 

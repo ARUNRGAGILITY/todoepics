@@ -17,9 +17,14 @@
     </div>
     <!-- role mgmt header/menu -->
     <div class="row">
-        <div class="col col-md-12">
+        <div class="col col-md-6">
             &nbsp;&nbsp;
-           <a href="{% url 'ops_valuestream_mgmt' %}"> Ops Value Stream: {{object}}</a>            
+           <a href="{% url 'ops_valuestream_mgmt' %}"> Ops Value Stream: {{object}}</a>         
+        </div>
+        <div class="col col-md-6 text-end">
+           {% if vs == 'dev' %}
+           <a href="{% url 'dev_valuestream_mgmt' parent.ops_valuestream.id %}">DVS</a>
+           {% endif %}
         </div>
     </div>
     
@@ -37,10 +42,80 @@
                         <td>
                             <form action="" method="POST">
                                 {% csrf_token %}
-                                {{form.as_p}}
-                                <input type="hidden" name="vs" value="{{vs}}" id="vs">
-                                <input type="hidden" name="id" value="{{id}}" id="id">
-                                <input type="submit" name="submit" value="Add" id="submit"/>
+                              
+
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="">
+                                            <b>
+                                                Name:
+                                            </b>
+                                        </td>
+                                        <td>
+                                            {{form.name}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <b>
+                                                Description:
+                                            </b>
+                                        </td>
+                                        <td>
+                                            {{form.description}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <b>
+                                                Owner:
+                                            </b>
+                                        </td>
+                                        <td>
+                                            {{form.owner}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <b>
+                                                Value Creation Time:
+                                            </b>
+                                        </td>
+                                        <td>
+                                            {{form.value_creation_time}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <b>
+                                                Delay Time:
+                                            </b>
+                                        </td>
+                                        <td>
+                                            {{form.delay_time}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <b>
+                                                % Accurate:
+                                            </b>
+                                        </td>
+                                        <td>
+                                            {{form.percentage_accurate}}
+                                        </td>
+                                    </tr>                                    
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <input type="hidden" name="vs" value="{{vs}}" id="vs">
+                                            <input type="hidden" name="id" value="{{id}}" id="id">
+                                            <input type="submit" name="submit" value="Add" id="submit"/>    
+                                        </td>
+                                    </tr>
+                                </table>
+
+
+                               
                                </form>
                             
                         </td>

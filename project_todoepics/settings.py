@@ -155,7 +155,7 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vR1.0.8e'
+BUILD_VERSION = 'vR1.0.9'
 BUILD_DESCRIPTION = 'Prodfix, snapshot, real data'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"

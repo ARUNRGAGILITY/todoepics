@@ -986,6 +986,8 @@ def add_vsm_steps(request, vs, id):
     
     context = {'page': 'add_vsm_steps', 
                 'parent': parent,
+                'vs': vs,
+                'id': id,
                'form': form}
     template_file = f"{app_name}/_3admin/valuestream_mgmt/add_vsm_steps.html"
     return render(request, template_file, context)

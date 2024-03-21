@@ -94,13 +94,16 @@ $( function() {
 
     <div class="row pt-2">
         <div class="col-md-12">
-            <table  id="outline" class="table table-bordered" >
+            <table class="table table-bordered">
                 <tr>
-                    <td colspan="7"><b>Trigger:</b>
+                    <td>
+                        <b>Trigger:</b>
                     {% if vs == 'ops' %}{{parent.trigger}}{% endif %}  
                     {% if vs == 'dev' %}{{object.trigger}}{% endif %}
                     </td>
                 </tr>
+            </table>
+            <table  id="outline" class="table table-bordered" >               
                 <tr>
                   
                     <th width="2%" align="right">#</th>
@@ -137,16 +140,18 @@ $( function() {
                         <a href="{% url 'delete_step' vs id object.id %}">Delete</a>
 
                     </td>
-                </tr>
-              
-                {% endfor %}
+                </tr>              
+                {% endfor %}               
+                </tbody>                
+            </table>
+            <table class="table table-bordered">
                 <tr>
-                    <td colspan="7"><b>Value:</b>
-                    {% if vs == 'ops' %}{{parent.value}}{% endif %}  
-                    {% if vs == 'dev' %}{{object.value}}{% endif %}
+                    <td>
+                        <b>Value:</b>
+                        {% if vs == 'ops' %}{{parent.value}}{% endif %}  
+                        {% if vs == 'dev' %}{{object.value}}{% endif %}
                     </td>
                 </tr>
-                </tbody>                
             </table>
         </div>
     </div>

@@ -15,6 +15,7 @@ from django.http import Http404
 from django.utils.html import strip_tags
 import json
 from django.http import JsonResponse
+from django.conf import settings
 # Create your views here.
 app_name = "app_web"
 
@@ -226,17 +227,19 @@ def login_page(request):
 # Registration Page
 def register(request):
     # take inputs
-    CORRECT_REG_CODE = "1010abcd"
+    coding_ai = getattr(settings, 'CODING_AI', 'NOTHERE')
+    CORRECT_REG_CODE = coding_ai
     # process inputs
     if request.method == 'POST':
         # Retrieve the registration code from the form
         reg_code = request.POST.get('reg_code', '')
         
         # Check if the reg_code is alphanumeric and matches the correct registration code
-        if not reg_code.isalnum() or reg_code != CORRECT_REG_CODE:
-            messages.error(request, "Invalid or incorrect registration code.")
-            # Return to the registration page with the form and error message
-            return redirect("register")
+        if CORRECT_REG_CODE != 'NOTHERE':
+            if not reg_code.isalnum() or reg_code != CORRECT_REG_CODE:
+                messages.error(request, "Invalid or incorrect registration code.")
+                # Return to the registration page with the form and error message
+                return redirect("register")
         
         # Proceed with the standard registration process if the reg_code is valid
         form = UserCreationForm(request.POST)

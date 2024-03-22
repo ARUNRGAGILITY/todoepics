@@ -228,7 +228,7 @@ def login_page(request):
 def register(request):
     # take inputs
     coding_ai = getattr(settings, 'CODING_AI', 'NOTHERE')
-    print(f">>>=== {coding_ai} === <<<")
+    print(f">>>=== CODINGAI: {coding_ai} === <<<")
     CORRECT_REG_CODE = coding_ai
     # process inputs
     if request.method == 'POST':

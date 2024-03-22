@@ -1,0 +1,8 @@
+Feature: User Registration
+
+  Scenario: Registering a new user
+    Given I am on the registration page
+    When I enter username "new_user" and email "user1@one.com" and password1 "test2@456" and password2 "test2@456" and RegistrationCode "abcd1"
+    And I click the registration "Register" button
+    Then I should see registration "Your account user1@one.com has been created"
+    Then I close the browser

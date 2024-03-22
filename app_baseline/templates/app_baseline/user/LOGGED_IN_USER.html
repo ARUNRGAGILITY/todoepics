@@ -1,0 +1,102 @@
+{% load static %}
+<form action="">
+    {% csrf_token %}
+</form>
+<!-- Header -->
+{% include "../common/__001_header1.html" %}
+{% if True %}
+{% include "../common/__002_header2.html" %}
+<!-- 
+{% include "../common/__003_header3.html" %}
+ -->
+<div class="green_bg text-white py-1">
+    <div class="container-fluid-width">
+        <div class="row no-gutters">
+            <div class="col-md-3">
+                <div class="left_header" id="left_header1">
+                    List of Topics
+                </div>
+            </div>
+            <div class="col-md-9 d-flex justify-content-start">
+                <div class="right_header" id="right_header1">
+                    User's Dashboard
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- Header --> 
+<!-- Main content -->
+<div class="container-fluid content-wrap d-flex flex-column">
+    <div class="row flex-grow">        
+      <!-- Left Pane -->
+      <div class="col-md-3  d-flex flex-column p-0 m-0">
+        <div id="jstree_display" class="flex-grow p-0 m-0 ">
+          <!-- jstree content -->
+          
+         <!-- LEFT CONTENT -->
+         <div id="jstree" class="jstree1" style="padding-left: 5px;">
+
+            <b>Create Space</b><br> 
+            <b>Create Site</b><br>
+            <b>Create Organization</b><br>
+            <b>Create Delivery Model</b><br>
+            <b>Create Visualization</b><br>
+
+            <b>Create Delivery Models</b><br>
+
+            <b>Create Authorization</b><br>
+            <b>Create Wiki</b><br>
+            <b>Create Flow Chart</b><br>
+            <b>Create Kanban</b><br>
+            <b>Create Connected Kanban</b><br>
+            <b>Create Scrum Software</b><br>
+            <b>Create Custom Agile Practice</b><br>
+
+            <b>Audit Trail</b><br>
+            <b>Usage</b><br>
+            <b>Scaling Model</b><br>
+            <b></b><br>
+
+            <b></b><br>
+
+
+         </div>
+         <!-- LEFT CONTENT -->
+        </div>
+      </div>      
+      <!-- Right Content -->
+      <div class="col-md-9  d-flex flex-column p-0 m-0">
+        <div id="content" class="flex-grow p-0 m-0">
+          <!-- content will be loaded here -->
+          
+          <!-- RIGHT CONTENT -->
+          <div id="detailsDiv">
+            <a href="{% url 'list_home' %}">List</a>
+            &nbsp;&nbsp;&nbsp;
+            <a href="{% url 'list_js_tree' %}">List Js Tree</a>
+
+            &nbsp;&nbsp;&nbsp;
+            <a href="{% url 'type_home' %}">Type</a>            
+            &nbsp;&nbsp;&nbsp;
+            <a href="{% url 'type_js_tree' %}">Type Js Tree</a>
+            <br>
+            <a href="{% url 'delivery_home' %}">Delivery</a>
+
+
+          </div>
+          <!-- RIGHT CONTENT -->
+          <!-- content display -->
+         </div>
+      </div>
+    </div>
+</div>
+<!-- Footer -->
+<div class=" text-center py-1 mt-auto">
+    <div class="container">
+        <p class="mb-0 footer-text"> {{COPYRIGHT_INFO}} </p>
+    </div>
+</div>
+
+

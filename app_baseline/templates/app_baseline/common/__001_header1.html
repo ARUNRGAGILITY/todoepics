@@ -1,0 +1,14 @@
+<div class=" py-1">
+    <div class="container-fluid-width">
+        <div class="row no-gutters">
+            <div class="col-md-3 d-flex justify-content-start align-items-center">
+                <a href="/" class="btn btn-xs bg-info text-white"><b>DevAgileAgility</b></a>
+                &nbsp;&nbsp;
+                <font size="-1">Welcome {{user.username}}</font>
+            </div>
+            <div class="col-md-9 d-flex justify-content-end align-items-center">
+                <a href="{% url 'logout' %}" class="btn btn-xs bg-warning"><b>Logout</b></a>
+            </div>
+        </div>
+    </div>
+</div>

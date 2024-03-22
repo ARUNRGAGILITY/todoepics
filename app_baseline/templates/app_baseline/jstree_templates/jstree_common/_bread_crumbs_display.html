@@ -1,0 +1,32 @@
+<div class="row py-0 no-gutters">
+    <div class="col-md-12">          
+        <ol class="breadcrumb1">
+        <li class="breadcrumb1-item  "><a href="/">Home</a></li>
+        {% if ancestors %}
+            {% for ancestor in ancestors %}
+            {% if forloop.first %}
+            <li class="breadcrumb1-item e"><a href="{% url 'list_home' %}">List</a></li>
+            <li class="breadcrumb1-item"><a href="{% url 'list_js_tree_id' ancestor.pk %}">{{ ancestor.title }}</a></li>
+            {% else %}
+            <li class="breadcrumb1-item"><a href="{% url 'list_js_tree_id' ancestor.pk %}">{{ ancestor.title }} </a></li>
+            {% endif %}
+            {% if forloop.last %}
+              {% if title != ancestor.title %}
+              <li class="breadcrumb1-item">{{ title }}</li>
+              {% endif %}
+            {% endif %}
+            {% endfor %}
+            {% if last_item  %}
+            <li class="breadcrumb1-item">{{ last_item }}</li>
+            {% endif %}
+        {% else %}
+        <li class="breadcrumb1-item"><a href="{% url 'list_home' %}">List</a></li>
+        <li class="breadcrumb1-item">{{ last_item }}</li>
+        {% endif %}
+        {% if last_item  %}
+            <li class="breadcrumb1-item">{{ title }}</li>
+        {% endif %}            
+        </ol>          
+    </div>
+  </div>
+</div>    

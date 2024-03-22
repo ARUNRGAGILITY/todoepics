@@ -1,0 +1,335 @@
+{% extends "../../common/__base_header_left_right_footer.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}List Items{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+<style>
+    .list_td {
+       
+    }
+    .delete_x {
+        font-size: larger;
+        font-weight:bolder;
+        color: red;
+       
+    }
+    .list_info {
+        
+    }
+    .list_action {
+       
+    }
+    .next_step {
+        
+
+    }
+    .display_tr {
+        background-color: yellow;
+        border: 1px solid white;
+    }
+    .display_td {
+        border: 1px solid white;
+    }
+    .breadcrumb {
+    margin: 0;
+    padding: 1px 0; /* Adds top and bottom padding */
+    }
+
+    .breadcrumb-item {
+    margin: 0;    /* Remove default margins */
+    padding: 0;   /* Remove default padding */
+    }
+
+    .breadcrumb ol {
+    margin: 0;    /* Remove default margins */
+    padding: 0;   /* Remove default padding */
+    }
+    .form-radio input[type='radio'] {
+  display: inline-block;
+}
+</style>
+{% include "../../common/__breadcrumbs_custom_css.html" %} 
+
+<form action="">
+    {% csrf_token %}
+</form>
+
+<!-- Header -->
+{% include "../../common/__001_header1.html" %}
+{% if True %}
+{% include "../../common/__002_header2.html" %}
+<!-- 
+{% include "../../common/__003_header3.html" %}
+ -->
+{% endif %}
+<!-- Header --> 
+<!-- Main content -->
+<div class="container-fluid content-wrap d-flex flex-column">
+    <div class="row flex-grow">        
+      <!-- Left Pane -->
+      <div class="col-md-12  d-flex flex-column p-0 m-0">            
+       <!-- -->
+            <div class="container-fluid-width">
+            <!-- MENU1 of the LIST -->
+            <div class="row  no-gutters">
+            <div class="col-md-12">        
+                <nav class="breadcrumb1" aria-label="breadcrumbs">
+                    <ol class="breadcrumb1">
+                    <li class="breadcrumb1-item  ">&nbsp;<a href="/">Home</a></li>
+                    {% if ancestors %}
+                        {% for ancestor in ancestors %}
+                        {% if forloop.first %}
+                        <li class="breadcrumb1-item"><a href="{% url 'list_home' %}">List</a></li>
+                        <li class="breadcrumb1-item"><a href="{% url 'list_items' ancestor.pk %}">{{ ancestor.title }}</a></li>
+                        {% else %}
+                        <li class="breadcrumb1-item"><a href="{% url 'list_items' ancestor.pk %}">{{ ancestor.title }} </a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if last_item  %}
+                        <li class="breadcrumb1-item">&nbsp;{{ last_item }}</li>
+                        {% endif %}
+                    {% else %}
+                    <li class="breadcrumb1-item"><a href="{% url 'list_home' %}">List</a></li>
+                    <li class="breadcrumb1-item">{{ last_item }}</li>
+                    {% endif %}
+                    </ol>
+                </nav>
+                
+            </div>
+               
+            </div>
+           
+
+            <!-- the INPUT FORM for the list -->
+            <div class="row pb-2 no-gutters">
+                <div class="col-md-12 d-flex justify-content-center align-items-center">
+                    <form action="" method="POST" id="listForm">
+                        {% csrf_token %}
+                        <b>List Items:</b>&nbsp;&nbsp;
+                        <input type="hidden" name="parent" value="{{parent_id}}"/>
+                        <input type="text" name="title" id="id_title" size="40">&nbsp;&nbsp;
+                        {{form.type}}
+                        <input type="submit" name="add" value="Add">
+                    </form>
+                    &nbsp;&nbsp;
+                    {{objects_count}} item(s)
+                </div>
+            </div>
+            <!-- DISPLAY the LIST -->
+            <div class="row no-gutters">
+                <div class="col-md-12 d-flex justify-content-center align-items-center">
+                    <table class="sortable_table" width="60%">
+                        <!-- BEGIN THEAD -->
+
+                        <!-- END THEAD -->
+
+
+                <!-- BEGIN TBODY -->
+                <tbody  id="sortable" class="sortable-tbody">
+                {% for object in objects %}
+                    <tr id="{{object.id}}_{{ forloop.counter }}" class="sortable-row display_tr">
+                        <!-- col 1, 2, 3, 4-->
+                        <td class="list_info" style="text-align: right;" width="8%">
+                            &nbsp;&nbsp;
+                            <span>
+                                {{forloop.counter}}
+                            </span>
+                            &nbsp;&nbsp;
+                        </td>
+                        <td class="title_text list_td" name="title" contenteditable="true"
+                            width="30%">
+                            <span class="" style="padding-left: 10px;">
+                            <b>{{object}}</b>
+                            <!-- {{object.user}} <br>
+                            {% if object.permission %}
+                                <h3>Permission Details for list_id {{ object.id }}</h3>
+                                <ul>
+                                    <li>Can View: {{ object.permission.can_view }}</li>
+                                    <li>Can Add: {{ object.permission.can_add }}</li>
+                                    <li>Can Change: {{ object.permission.can_change }}</li>
+                                    <li>Can Delete: {{ object.permission.can_delete }}</li>
+                                    <li>Users Can View: {{ object.permission.users_can_view }}</li>
+                                    <li>Inherit: {{ object.permission.inherit }}</li>
+                                </ul>
+                            {% else %}
+                                <p>No permissions set for this object.</p>
+                            {% endif %} -->
+                            </span>
+                        </td>
+                        <td class="list_action" contenteditable="false" width="8%">
+                            <span class="delete_x">
+                                &nbsp;&nbsp;
+                                <input type="checkbox" class="done_checkbox" name="done" id="{{forloop.counter}}_{{object.id}}" name="done" value="{{forloop.counter}}_{{object.id}}"
+                                {% if object.done %}checked{% endif %}>     
+                            </span>
+                            &nbsp;&nbsp;
+                        </td>
+                        <td class="list_action" contenteditable="false" width="8%">
+                            &nbsp;&nbsp;
+                            <span class="delete_x">
+                                <a href="{% url 'delete_list_item' object.id %}?list_item=yes" style="text-decoration: none;">
+                                    <img 
+                                    src="{% static 'img/icons/x-lg.svg' %}" 
+                                    class="" alt="Delete" class=""> 
+                                </a>
+                            </span>
+                            &nbsp;&nbsp;
+                        </td>
+                        <!-- <td class="list_action" contenteditable="false">
+                            &nbsp;&nbsp;
+                            <span class="next_step">
+                                <a href="" style="text-decoration: none;">
+                                    <img 
+                                    src="{% static 'img/bst_icons/gear.svg' %}" 
+                                    class="" alt="Level" class=""> 
+                                </a>
+                            </span>
+                            &nbsp;&nbsp;
+                        </td>
+                        <td class="list_action" contenteditable="false">
+                            &nbsp;&nbsp;
+                            <span class="next_step">
+                                <a href="" style="text-decoration: none;">
+                                    <img 
+                                    src="{% static 'img/icons/archive.svg' %}" 
+                                    class="" alt="Archive" class=""> 
+                                </a>
+                            </span>
+                            &nbsp;&nbsp;
+                        </td> -->
+                        <td class="list_action" contenteditable="false" width="8%">
+                            <span class="next_step">
+                                <a href="{% url 'list_items' object.id %}" style="text-decoration: none;">
+                                    <img 
+                                    src="{% static 'img/bst_icons/arrow-right.svg' %}" 
+                                    class="" alt="Level" class=""> 
+                                </a>
+                            </span>
+                        </td>         
+                        <td class="list_action" contenteditable="false" width="14%">
+
+                            <span class="next_step">
+                                <a href="{% url 'edit_list' object.id %}?list=yes" style="text-decoration: none;">
+                                    <img 
+                                    src="{% static 'img/bst_icons/pencil-square.svg' %}" 
+                                    class="" alt="Level" class=""> 
+                                </a>
+                                &nbsp;&nbsp;
+                                <a href="{% url 'clone_list_items' object.id %}" style="text-decoration: none;">
+                                    <img 
+                                    src="{% static 'img/bst_icons/copy_1.svg' %}" 
+                                    class="" alt="Level" class=""> 
+                                </a>
+                                &nbsp;&nbsp;
+                                <a href="{% url 'deep_clone_list_items' object.id %}" style="text-decoration: none;">
+                                    <img 
+                                    src="{% static 'img/bst_icons/clipboard.svg' %}" 
+                                    class="" alt="Level" class=""> 
+                                </a>
+                                &nbsp;&nbsp;
+                                <a href="{% url 'list_js_tree_id' object.id %}" style="text-decoration: none;">
+                                    <img 
+                                    src="{% static 'img/bst_icons/tree.svg' %}" 
+                                    class="" alt="Level" class=""> 
+                                </a>
+                            </span>
+
+                        </td>                              
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                    <!-- END TBODY -->
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $("#listForm").submit(function(event) {
+        var title = $("#id_title").val().trim();
+        var type = $("#id_type").val();
+
+        if (title === "" || type === "") {
+          alert("Both 'Title' and 'Type' are required.");
+          event.preventDefault();
+        }
+      });
+</script>
+<script>
+    // Set the focus for the input field
+    inputTitleField = document.getElementById('id_title');
+    inputTitleField.focus();
+
+    // update the done status
+    $(".done_checkbox").click(function (event) {
+      updateTodo($(this));
+    });
+    $('.title_text').on('blur', function () {
+        updateTodo($(this));
+    });
+    function updateTodo($element) {
+        var $tr = $element.closest('tr');
+        var object_id = $tr.attr('id').split('_')[0];  // Extract todo_id from the ID
+        var title = $tr.find('[name="title"]').text().trim();   
+        var done = $tr.find('.done_checkbox').prop('checked');  // Convert checkbox value to boolean
+
+        $.ajax({
+              type: 'POST',
+              url: '{% url "ajax_update_list_item" %}',
+              data: {
+                  object_id: object_id,
+                  title: title,
+                  done: done,
+                  csrfmiddlewaretoken: '{{ csrf_token }}'
+              },
+              success: function(response) {
+                  if (response.success) {
+                      $('#saved').fadeIn().delay(1000).fadeOut();
+                  }
+              }
+          });
+    }
+    
+</script>
+
+<script>
+    $(".sortable_table").find("tbody").sortable({
+      items: "> tr",
+      appendTo: "parent",
+      cancel: "[contenteditable]",
+      update: function(event, ui) {
+              var serialOrder = $('#sortable').sortable('serialize');
+              var arrayOrder = $('#sortable').sortable('toArray');
+              //alert(arrayOrder);
+              $.ajax({
+                url: '/ajax_update_list_sorted',
+                type: 'POST',
+                data : {
+                  'csrfmiddlewaretoken': "{{ csrf_token }}",
+                  'sorted_list_data': JSON.stringify(arrayOrder),
+                },
+                dataType: 'json',
+                success: function(data) {
+                  console.log(data);
+                }
+              })
+            }
+    });
+    </script>
+
+        </div>
+      </div>      
+      
+    </div>
+</div>
+<!-- Footer -->
+<div class=" text-center py-1 mt-auto">
+    <div class="container">
+        <p class="mb-0 footer-text"> {{COPYRIGHT_INFO}} </p>
+    </div>
+</div>
+
+{% else%}
+  {% include './GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

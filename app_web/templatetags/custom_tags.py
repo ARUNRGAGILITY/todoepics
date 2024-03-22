@@ -1,7 +1,7 @@
 from django import template
 from markdownx.utils import markdownify
 from django.template import Template, Context
-from app_web.models import Profile
+from app_web.models import *
 
 register = template.Library()
 
@@ -40,7 +40,7 @@ def has_admin_roles(context):
     request = context['request']
     user = request.user
     if user.is_authenticated:
-        profile = Profile.objects.get(user=user)
+        profile = AWProfile.objects.get(user=user)
         return profile.roles.filter(name__in=["Admin", "SiteAdmin"]).exists()
     return False
 

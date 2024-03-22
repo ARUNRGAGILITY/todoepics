@@ -27,14 +27,14 @@ admin.site.register(DevTransformationCanvas, DevTransformationCanvasAdmin)
 # organizations
 admin.site.register(SAFeType)
 #admin.site.register(Organization)
-class ProfileAdmin(admin.ModelAdmin):
+class AWProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'get_organizations')  # Example display columns
     filter_horizontal = ('organizations',)  # This makes it easier to edit many-to-many relationships
 
     def get_organizations(self, obj):
         return ", ".join([organization.name for organization in obj.organizations.all()])
     get_organizations.short_description = 'Organizations'
-admin.site.register(Profile, ProfileAdmin)
+admin.site.register(AWProfile, AWProfileAdmin)
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'safe_type', 'active', 'deleted', )
 admin.site.register(Organization, OrganizationAdmin)
@@ -49,10 +49,6 @@ admin.site.register(Feature)
 admin.site.register(Capability)
 admin.site.register(Spike)
 
-# class ProfileAdmin(admin.ModelAdmin):
-#     filter_horizontal = ('organizations',) # Enables a user-friendly widget for managing many-to-many relationships
-
-# admin.site.register(Profile, ProfileAdmin)
 
 class ValueStreamStepsAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'owner', 'active', 'deleted', )
@@ -92,15 +88,15 @@ admin.site.register(OpsValueStream)
 admin.site.register(DevValueStream)
 #admin.site.register(ValueStreamSteps)
 
-class ProfileInline(admin.StackedInline):
-    model = Profile
+class AWProfileInline(admin.StackedInline):
+    model = AWProfile
     can_delete = False
-    verbose_name_plural = 'profile'
+    verbose_name_plural = 'awprofile'
     fk_name = 'user'
 
 class CustomUserAdmin(BaseUserAdmin):
-    inlines = (ProfileInline, )
-    list_select_related = ('profile', )
+    inlines = (AWProfileInline, )
+    list_select_related = ('awprofile', )
 
     def get_inline_instances(self, request, obj=None):
         if not obj:

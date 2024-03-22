@@ -1,0 +1,66 @@
+{% extends "../../common/base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}List Home{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+{% include "../../user/001.top_level_logged_in_menu.html" %}
+<!-- begin content -->
+{% include "../../user/001.css_include.html" %}
+
+
+<!-- end content -->
+{% else%}
+  {% include './GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}
+
+==== TO BE CONTINUED TODAY OCT 2ND ====
+VIEW PART 
+
+from django.http import JsonResponse
+from .models import YourMpttModel
+
+def move_node(request):
+    try:
+        node_id = request.GET.get('node_id')
+        target_id = request.GET.get('target_id')
+        position = request.GET.get('position')  # 'before', 'after', or 'inside'
+
+        node = YourMpttModel.objects.get(id=node_id)
+        target = YourMpttModel.objects.get(id=target_id)
+
+        if position == 'before':
+            node.move_to(target, 'left')
+        elif position == 'after':
+            node.move_to(target, 'right')
+        elif position == 'inside':
+            node.move_to(target, 'first-child')
+
+        return JsonResponse({'status': 'success'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+        
+$('#jstree').jstree({
+  'core': {
+      'data': yourData,
+      'check_callback': true,  // Enable node manipulation
+  },
+  'plugins': ['dnd'],  // Add dnd (drag and drop) plugin
+}).on('move_node.jstree', function(e, data) {
+  $.ajax({
+      url: '/move_node/',
+      data: {
+          'node_id': data.node.id,
+          'target_id': data.parent,
+          'position': data.position
+      },
+      success: function(response) {
+          if(response.status === 'error') {
+              alert('Could not move node: ' + response.message);
+          }
+      }
+  });
+});

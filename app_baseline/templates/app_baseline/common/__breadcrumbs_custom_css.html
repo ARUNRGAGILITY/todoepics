@@ -1,0 +1,48 @@
+<style>
+/* General styling for the breadcrumb navigation */
+.breadcrumb1 {
+  padding: 0px; /* Reduced padding */
+  display: inline;
+}
+
+/* Styling for breadcrumb list items */
+.breadcrumb1-item
+{
+  margin: 0; /* No margin */
+  padding: 0px; /* Horizontal padding only */
+  line-height: 1.1; /* Adjust the line-height */
+}
+
+/* Styling for the text within breadcrumb items */
+.breadcrumb1-item a,
+.breadcrumb1-item
+ {
+  font-size: 15px; /* Adjust the font size */
+  color: inherit; /* Keeps the text color */
+}
+
+/* Additional styling if needed */
+.has-text-white {
+  color: #ffffff;
+}
+.breadcrumb1 {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;  /* Allow items to wrap to the next line */
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb1-item {
+  padding: 2px;
+  position: relative;
+}
+
+.breadcrumb1-item:not(:last-child)::after {
+  content: "/";
+  padding-left: 4px;
+  padding-right: 4px;
+}
+</style>
+
+{% include "../jstree_templates/jstree_common/permission.html" %}

@@ -1,0 +1,175 @@
+{% extends "../../common/__base_header_left_right_footer.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}List Home{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+
+<form action="">
+  {% csrf_token %}
+</form>
+{% include "../../common/__excel_table_css.html" %}
+<!-- Header -->
+{% include "../../common/__001_header1.html" %}
+{% if True %}
+{% include "../../common/__002_header2.html" %}
+<!-- 
+{% include "../../common/__003_header3.html" %}
+-->
+<div class="green_bg text-white py-1">
+  <div class="container-fluid-width">
+      <div class="row no-gutters">
+          <div class="col-md-3">
+              <div class="left_header" id="left_header1">
+                  
+              </div>
+          </div>
+          <div class="col-md-9 d-flex justify-content-start">
+              <div class="right_header" id="right_header1">
+                  
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+{% endif %}
+<!-- Header --> 
+<!-- Main content -->
+<div class="container-fluid content-wrap d-flex flex-column">
+  <div class="row flex-grow">        
+    <!-- Left Pane -->
+    <div class="col-md-3  d-flex flex-column p-0 m-0">
+      <div id="jstree_display" class="flex-grow p-0 m-0 ">
+        <!-- jstree content -->
+        <table class="excel_table_v1" width="30%">
+          <tr><td> </td><td>Project</td></tr>
+          <tr><td> </td><td>Product</td></tr>
+          <tr><td> </td><td>Service</td></tr>
+          <tr><td> </td><td>Solution</td></tr>
+          <tr><td> </td><td>ValueStream</td></tr>
+          <tr><td colspan="2"  class="align_left"> &nbsp; </td></tr>
+          <tr><td> </td><td>Team</td></tr>
+          <tr><td> </td><td>Members</td></tr>
+          <tr><td> </td><td>Location</td></tr>
+          <tr><td colspan="2" class="text-left"> &nbsp; </td></tr>
+          <tr><td> </td><td>BaseType</td></tr>
+          <tr><td> </td><td>BasePriority</td></tr>
+          <tr><td> </td><td>BaseStates</td></tr>          
+        </table>
+       <!-- LEFT CONTENT -->
+       <div id="jstree" class="jstree1"></div>
+       <!-- LEFT CONTENT -->
+      </div>
+    </div>      
+    <!-- Right Content -->
+    <div class="col-md-9  d-flex flex-column p-0 m-0">
+      <div id="content" class="flex-grow p-0 m-0">
+        <!-- content will be loaded here -->
+        
+        <!-- RIGHT CONTENT -->
+        <div id="detailsDiv">
+          <h1>Delivery Home</h1>
+          <a href="">Create Project/Product/Service/Solution/VSM/Team/Members/Organization/Location</a>
+          <table class="excel_table_v1" width="60%">
+            <tr>
+              <td width="10%" class="text-center">
+                <img 
+                src="{% static 'img/new_icons/project.png' %}" 
+                class="" alt="Project" class=""> 
+                <br>
+                Project
+              </td>
+              <td width="10%" class="text-center">
+                <img 
+                src="{% static 'img/new_icons/product.png' %}" 
+                class="" alt="Product" class=""> 
+                <br>
+                Product
+              </td>
+              <td width="10%" class="text-center">
+                <img 
+                src="{% static 'img/new_icons/service.png' %}" 
+                class="" alt="Service" class=""> 
+                <br>
+                Service
+              </td>
+              <td width="10%" class="text-center">
+                <img 
+                src="{% static 'img/new_icons/solution.png' %}" 
+                class="" alt="Solution" class=""> 
+                <br>
+                Solution
+              </td>
+              <td width="10%" class="text-center">
+                <img 
+                src="{% static 'img/new_icons/valuestream.png' %}" 
+                class="" alt="ValueStream" class=""> 
+                <br>
+                ValueStream
+              </td>
+            </tr>
+            <tr>
+              <td width="10%" class="text-center">
+                <img 
+                src="{% static 'img/new_icons/team.png' %}" 
+                class="" alt="Team" class=""> 
+                <br>
+                Team
+              </td>
+              <td width="10%" class="text-center">
+                <img 
+                src="{% static 'img/new_icons/members.png' %}" 
+                class="" alt="Members" class=""> 
+                <br>
+                Members
+              </td>
+              <td width="10%" class="text-center">
+                <img 
+                src="{% static 'img/new_icons/location.png' %}" 
+                class="" alt="Location" class=""> 
+                <br>
+                Location
+              </td>
+              <td width="10%" class="text-center">
+                <img 
+                src="{% static 'img/new_icons/basetype.png' %}" 
+                class="" alt="Type" class=""> 
+                <br>
+                BaseType
+              </td>
+              <td width="10%" class="text-center">
+                <img 
+                src="{% static 'img/new_icons/basepriority.png' %}" 
+                class="" alt="Priority" class=""> 
+                <br>
+                BasePriority
+              </td>
+            </tr>
+            <tr>
+              <td width="10%" class="text-center">
+                <img 
+                src="{% static 'img/new_icons/basestates.png' %}" 
+                class="" alt="BaseStates" class=""> 
+                <br>
+                BaseStates
+              </td>
+            </tr>
+          </table>
+        </div>
+        <!-- RIGHT CONTENT -->
+        <!-- content display -->
+       </div>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<div class=" text-center py-1 mt-auto">
+  <div class="container">
+      <p class="mb-0 footer-text"> {{COPYRIGHT_INFO}} </p>
+  </div>
+</div>
+
+{% else%}
+  {% include './GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

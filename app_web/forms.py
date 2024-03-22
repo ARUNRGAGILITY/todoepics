@@ -1,5 +1,5 @@
 from django import forms
-from .models import Profile
+from .models import *
 from django.contrib.auth.forms import UserCreationForm
 from .models import *
 from django.contrib.auth.models import User
@@ -101,7 +101,7 @@ class ValueStreamStepsForm(forms.ModelForm):
 
 class ProfileForm(forms.ModelForm):
     class Meta:
-        model = Profile
+        model = AWProfile
         fields = ['bio', 'roles']
         widgets = {
             'bio': forms.Textarea(attrs={'class': 'custom-css-class', 'rows': 4, 'cols': 40}),

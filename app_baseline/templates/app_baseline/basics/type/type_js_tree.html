@@ -1,0 +1,395 @@
+{% extends "../../common/__base_header_left_right_footer.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Type JS Tree{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.16/jstree.min.js" integrity="sha512-ekwRoEshEqHU64D4luhOv/WNmhml94P8X5LnZd9FNOiOfSKgkY12cDFz3ZC6Ws+7wjMPQ4bPf94d+zZ3cOjlig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+    .details-card {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 16px;
+    }
+
+    .details-section {
+        margin-bottom: 12px;
+    }
+
+</style>
+
+
+<form action="">
+    {% csrf_token %}
+</form>
+<!-- Header -->
+{% include "../../common/__001_header1.html" %}
+{% if True %}
+{% include "../../common/__002_header2.html" %}
+<!-- 
+{% include "../../common/__003_header3.html" %}
+ -->
+<div class="green_bg text-white py-1">
+    <div class="container-fluid-width">
+        <div class="row no-gutters">
+            <div class="col-md-3">
+                <div class="left_header" id="left_header1">
+                    Tree View
+                </div>
+            </div>
+            <div class="col-md-9 d-flex justify-content-start">
+                <div class="right_header" id="right_header1">
+                    Details
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- Header --> 
+<!-- Main content -->
+<div class="container-fluid content-wrap d-flex flex-column">
+    <div class="row flex-grow">        
+      <!-- Left Pane -->
+      <div class="col-md-3  d-flex flex-column p-0 m-0">
+        <div id="jstree_display" class="flex-grow p-0 m-0 ">
+          <!-- jstree content -->
+          
+         <!-- LEFT CONTENT -->
+         <div id="jstree" class="jstree1"></div>
+         <!-- LEFT CONTENT -->
+        </div>
+      </div>      
+      <!-- Right Content -->
+      <div class="col-md-9  d-flex flex-column p-0 m-0">
+        <div id="content" class="flex-grow p-0 m-0">
+          <!-- content will be loaded here -->
+          
+          <!-- RIGHT CONTENT -->
+          <div id="detailsDiv"></div>
+          <!-- RIGHT CONTENT -->
+          <!-- content display -->
+         </div>
+      </div>
+    </div>
+</div>
+<!-- Footer -->
+<div class=" text-center py-1 mt-auto">
+    <div class="container">
+        <p class="mb-0 footer-text"> {{COPYRIGHT_INFO}} </p>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+
+    $('#jstree').jstree({
+        'core': {
+            "expand_selected_onload" : false,
+            "check_callback": true,
+            'data': {
+                'url': 'ajax_type_get_tree_data',  // URL to your Django view
+                'dataType': 'json'
+            }
+        },
+        'types': {
+            "folder": {
+            "icon": "{% static 'img/bst_icons/card_text.svg' %}"
+            },
+            "file": {
+            "icon": "{% static 'img/bst_icons/card_list.svg' %}"
+            }
+        },
+        'plugins' : ['dnd', 'contextmenu', 'state', 'types'],
+        'contextmenu': {items: customMenu} //
+    })
+    .on('ready.jstree', function(e,data){
+        //$('#jstree').jstree('open_all');
+    })
+    .on('move_node.jstree', function(e, data) {
+        // Calculate move type ('before', 'after', or 'inside')
+        moveType = data.position;
+        
+        console.log("Data movetype:", moveType);
+        $.ajax({
+            url: '/ajax_type_move_node',
+            data: {
+                'node_id': data.node.id,
+                'target_id': data.node.parent,
+                'position': moveType,
+            },
+            success: function(response) {
+                if(response.status === 'error') {
+                    alert('Could not move node: ' + response.message);
+                }
+            }
+        });
+    });
+
+    // load the node details
+    $('#jstree').on("changed.jstree", function (e, data) {
+        if(data && data.selected && data.selected.length) {
+            var node = data.instance.get_node(data.selected[0]);
+           
+            // // Do something with the node details, for example:
+            // $('#detailsDiv').html('Selected Node ID: ' + node.id + '<br>' +
+            //                     'Selected Node Text: ' + node.text);
+            // Use AJAX to fetch additional node details
+            $.ajax({
+                    url: `/ajax_type_get_node_details/${node.id}`,
+                    type: 'GET',
+                    success: function(response) {
+                        // Display fetched data in the details div
+                        
+                                const detailsHTML = `
+                            <div class="details-card">
+                                <h3>${node.id} ${response.parent} :: ${response.title}</h3>
+                                <strong>Description:</strong>                             
+                                <div class="details-section" id="${node.id}" contenteditable="true">${response.description ? response.description : ''}</div>                              
+                            </div>
+                        `;
+                        $('#detailsDiv').html(detailsHTML);
+                    }
+                });
+            }
+    });
+
+    // Bind the double-click event
+    $('#jstree').bind("dblclick.jstree", function (event) {  
+        var jstree = $('#jstree').jstree(true);    
+        var selectedNode = $('#jstree').jstree('get_selected', true);  
+        if (selectedNode && selectedNode.length > 0 && selectedNode[0].id != "0") {
+            // Try with selected node
+            jstree.edit(selectedNode[0]);
+        }
+    })
+    // Bind the rename node event
+    .bind("rename_node.jstree", function (e, data) {    
+        if (data.node.text && data.text !== data.old) {   
+            // Code to update the new name to the data source.
+            $.ajax({
+                    url: 'ajax_rename_type_item', // Replace with your Django view URL
+                    type: 'POST',
+                    data: {
+                    'object_id': data.node.id,
+                    'title': data.node.text,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    success: function (response) {
+                    // Handle success
+                    },
+                    error: function (response) {
+                    // Handle error
+                    }
+                });
+            // For example, call your API here to update the name.
+        }    
+    });
+
+    // CUSTOM MENU FOR RENAMING
+    function customMenu(node) {
+        console.log("custom menu called");
+        return {
+            "Add": {
+            "label": "Add",
+            "icon": "{% static 'img/bst_icons/plus-lg.svg' %}",
+            "action": function (data) {
+                var jstree = $('#jstree').jstree(true);
+                var parent_node = jstree.get_node(node).id; 
+                $.ajax({                        
+                        url: 'ajax_type_add_node',  // URL to your Django view
+                        data: {
+                            'parent_id': parent_node,
+                            'title':"sample",
+                            // Add more data as needed
+                            
+                        },
+                        success: function(response) {
+                            // get the details of node after success
+                            if(response.status === 'success') {
+                                var new_node_data = {
+                                    "id": response.node_id,
+                                    "text": "New Node",  // Replace with text if received from server
+                                    // Add any other attributes you need
+                                };
+                                // Create the new node under the parent node
+                                var jstree = $('#jstree').jstree(true);
+                                jstree.create_node(node, new_node_data, 'last', function(new_node) {
+                                    // Optionally, start editing the new node
+                                    setTimeout(function () { jstree.edit(new_node); }, 0);
+                                });
+                            }
+                            else {
+                                // Handle error
+                                alert('Could not create node: ' + response.message);
+                            }
+                            // end the details viewing
+                        }
+                    });
+              
+                }
+            },
+            "Delete": {
+            "label": "Delete",
+            "icon": "{% static 'img/bst_icons/x-lg.svg' %}",
+            "action": function (data) {
+                    var tree = $('#jstree').jstree(true);
+                    var nodeId = tree.get_selected()[0]; // get the id of the selected node
+                    $.ajax({
+                    url: '/ajax_type_delete_node',
+                    method: 'POST',
+                    data: { 
+                        'node_id': nodeId,
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    
+                    success: function(response) {
+                        if (response.success === true) {
+                            tree.delete_node(nodeId);
+                        } else {
+                            alert('Could not delete node.');
+                        }
+                    },
+                    error: function() {
+                        alert('Error while deleting node.');
+                    }
+                    });
+                }
+            },
+            "Copy": {
+            "label": "Copy",
+            "icon": "{% static 'img/bst_icons/copy_1.svg' %}",
+            "action": function (data) {
+                    var tree = $('#jstree').jstree(true);
+                    var nodeId = tree.get_selected()[0]; // get the id of the selected node
+                    $.ajax({
+                    url: '/ajax_type_copy_node',
+                    method: 'POST',
+                    data: { 
+                        'node_id': nodeId,
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    
+                    success: function(response) {
+                        var new_node_data = {
+                            "id": response.node_id,
+                            "text": response.node_text,  // Replace with text if received from server
+                            // Add any other attributes you need
+                        };
+                        // Create the new node under the parent node
+                        var jstree = $('#jstree').jstree(true);
+                        let parent_node = jstree.get_parent(node);
+                        jstree.create_node(parent_node, new_node_data, 'last', function(new_node) {
+                            // Optionally, start editing the new node
+                            setTimeout(function () { jstree.edit(new_node); }, 0);
+                        });
+                        
+                    },
+                    error: function() {
+                        alert('Error while copying node.');
+                    }
+                    });
+                }
+            },
+            "Clone": {
+            "label": "Clone",
+            "icon": "{% static 'img/bst_icons/tree.svg' %}",
+            "action": function (data) {
+                    var tree = $('#jstree').jstree(true);
+                    var nodeId = tree.get_selected()[0]; // get the id of the selected node
+                    $.ajax({
+                    url: '/ajax_type_clone_node',
+                    method: 'POST',
+                    data: { 
+                        'node_id': nodeId,
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    
+                    success: function(response) {
+                        var new_node_data = {
+                            "id": response.node_id,
+                            "text": response.node_text,  // Replace with text if received from server
+                            // Add any other attributes you need
+                        };
+                        // Create the new node under the parent node
+                        var jstree = $('#jstree').jstree(true);
+                        let parent_node = jstree.get_parent(node);
+                        jstree.create_node(parent_node, new_node_data, 'last', function(new_node) {
+                            // Optionally, start editing the new node
+                            setTimeout(function () { jstree.edit(new_node); }, 0);
+                            
+                        });
+                        $('#jstree').jstree(true).refresh();
+                    },
+                    error: function() {
+                        alert('Error while Cloning node.');
+                        $('#jstree').jstree(true).refresh();
+                    }
+                    });
+                }
+            },
+            
+            // Add more actions here if you need
+        };
+    }
+
+    // // call ajax for renaming
+    $('#jstree').on('rename_node.jstree', function (e, data) {
+        $.ajax({
+            url: 'ajax_rename_type_item', // Replace with your Django view URL
+            type: 'POST',
+            data: {
+            'object_id': data.node.id,
+            'title': data.node.text,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+            // Handle success
+            },
+            error: function (response) {
+            // Handle error
+            }
+        });
+        });
+
+
+// end of the jstree document ready functions
+});
+
+
+// general functions 
+// update description
+$(document).on('blur', '.details-section', function() {
+  const newDescription = $(this).text();
+  const nodeId = $(this).attr('id');
+
+  $.ajax({
+    url: '/ajax_update_type_item_description',
+    type: 'POST',  // or POST, according to your needs
+    data: {
+      'node_id': nodeId,
+      'description': newDescription,
+      csrfmiddlewaretoken: '{{ csrf_token }}'
+    },
+    success: function(response) {
+      if (response.status === 'success') {
+        console.log('Description updated successfully');
+      } else {
+        console.log('Failed to update description: ' + response.message);
+      }
+    },
+    error: function() {
+      console.log('An error occurred while updating the description');
+    }
+  });
+});
+// end of the general functions
+</script>
+<!-- end content -->
+{% else%}
+  {% include './GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

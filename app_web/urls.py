@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 from .views_ext import canvas_views
-
+from app_baseline.urls.base import urls_base
 urlpatterns = [
     # all users will come to this visitor page
     path('', views.welcome, name="welcome"),
@@ -96,3 +96,4 @@ urlpatterns = [
     path('dev_trx_delete_canvas/<int:canvas_id>/', canvas_views.dev_trx_delete_canvas, name='dev_trx_delete_canvas'),
 ]
 
+urlpatterns += urls_base.urlpatterns_base

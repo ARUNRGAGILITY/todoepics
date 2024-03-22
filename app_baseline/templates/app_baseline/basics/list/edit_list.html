@@ -1,0 +1,88 @@
+{% extends "../../common/__base_header_left_right_footer.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}List Home{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+<form action="">
+    {% csrf_token %}
+</form>
+
+<!-- Header -->
+<div class=" py-1">
+    <div class="container-fluid-width">
+        <div class="row no-gutters">
+            <div class="col-md-3 d-flex justify-content-start align-items-center">
+                <a href="/" class="btn btn-xs bg-info text-white"><b>DevAgileAgility</b></a>
+                &nbsp;&nbsp;
+                <font size="-1">Welcome {{user.first_name}}</font>
+            </div>
+            <div class="col-md-9 d-flex justify-content-end align-items-center">
+                <a href="{% url 'logout' %}" class="btn btn-xs bg-warning"><b>Logout</b></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% if True %}
+<div class="lightgrey_bg py-1">
+<div class="container-fluid-width">
+    <b>TreeList:</b>&nbsp;&nbsp;
+    <a href="/">Home</a>
+    &nbsp;&nbsp;
+    <a href="{% url 'list_home' %}">List</a>
+</div>
+</div>
+<div class="lightblue_bg  py-1">
+<div class="container-fluid-width">
+    <h6 class="mb-0">Header3</h6>
+</div>
+</div>
+
+
+<div class="green_bg text-white py-1">
+    <div class="container-fluid-width">
+        <div class="row no-gutters">
+            <div class="col-md-12">
+                <b>Edit List</b>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<!-- Header --> 
+<!-- Main content -->
+<div class="container-fluid content-wrap d-flex flex-column">
+    <div class="row flex-grow">        
+      <!-- Left Pane -->
+      <div class="col-md-12  d-flex flex-column p-0 m-0">
+        <div class="container-fluid">          
+        
+            <div class="row pt-2">
+                <div class="col-md-12">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <b>List:</b>&nbsp;&nbsp;
+                        {{form.title}}&nbsp;&nbsp;
+                        {{form.type}}
+                        <input type="submit" name="edit" value="Update">
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <button onclick="window.history.back()">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!-- Footer -->
+<div class=" text-center py-1 mt-auto">
+    <div class="container">
+        <p class="mb-0 footer-text"> {{COPYRIGHT_INFO}} </p>
+    </div>
+</div>
+
+
+{% else%}
+  {% include './GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

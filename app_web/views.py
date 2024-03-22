@@ -38,7 +38,7 @@ def role_required(*role_names):
     Requires user to be logged in and to have at least one of the specified roles.
     """
     def in_roles(user):
-        if user.is_authenticated and (user.is_superuser or user.is_staff or Profile.objects.filter(user=user, roles__name__in=role_names).exists()):
+        if user.is_authenticated and (user.is_superuser or user.is_staff or AWProfile.objects.filter(user=user, roles__name__in=role_names).exists()):
             return True
         return False
     return user_passes_test_with_403(in_roles)
@@ -265,7 +265,7 @@ def user_page(request):
     # take inputs
     # process inputs
     user = request.user
-    show_admin_link = user.is_superuser or user.is_staff or Profile.objects.filter(user=user, roles__name__in=["Admin", "SiteAdmin"]).exists()
+    show_admin_link = user.is_superuser or user.is_staff or AWProfile.objects.filter(user=user, roles__name__in=["Admin", "SiteAdmin"]).exists()
     # send outputs (info, template, request)
     context = {
         'page': 'user_page',
@@ -283,7 +283,7 @@ def logout_page(request):
 # edit User profile
 @login_required
 def edit_profile(request):
-    profile = Profile.objects.get(user=request.user)
+    profile = AWProfile.objects.get(user=request.user)
     form = ProfileForm(instance=profile)
     if request.method == 'POST':
         form = ProfileForm(request.POST, instance=profile)
@@ -302,8 +302,8 @@ def profile_page(request):
      # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)
-    show_admin_link = user.is_superuser or user.is_staff or Profile.objects.filter(user=user, roles__name__in=["Admin", "SiteAdmin"]).exists()
+    profile, created = AWProfile.objects.get_or_create(user=request.user)
+    show_admin_link = user.is_superuser or user.is_staff or AWProfile.objects.filter(user=user, roles__name__in=["Admin", "SiteAdmin"]).exists()
     # send outputs (info, template, request)
     context = {
         'page': 'profile_page',
@@ -321,8 +321,8 @@ def admin_page(request):
     # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)
-    show_admin_link = user.is_superuser or user.is_staff or Profile.objects.filter(user=user, roles__name__in=["Admin", "SiteAdmin"]).exists()
+    profile, created = AWProfile.objects.get_or_create(user=request.user)
+    show_admin_link = user.is_superuser or user.is_staff or AWProfile.objects.filter(user=user, roles__name__in=["Admin", "SiteAdmin"]).exists()
     # send outputs (info, template, request)
     context = {
         'page': 'profile_page',
@@ -340,7 +340,7 @@ def roles_mgmt(request):
     # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile, created = AWProfile.objects.get_or_create(user=request.user)
     objects = Role.objects.filter(active=True).order_by('position')
     objects_count = objects.count()
     # processing
@@ -376,7 +376,7 @@ def ops_valuestream_mgmt(request):
     # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile, created = AWProfile.objects.get_or_create(user=request.user)
     # Get the ContentType for OpsValueStream
     
     objects = OpsValueStream.objects.filter(active=True).order_by('position').annotate(
@@ -423,7 +423,7 @@ def dev_valuestream_mgmt(request, id):
     # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile, created = AWProfile.objects.get_or_create(user=request.user)
     parent = OpsValueStream.objects.get(active=True, id=id)
     objects = DevValueStream.objects.filter(active=True, ops_valuestream=parent).order_by('position')
     objects_count = objects.count()    
@@ -463,7 +463,7 @@ def valuestream_steps(request, vs, id):
     # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile, created = AWProfile.objects.get_or_create(user=request.user)
     parent = None
     objects = None
     objects_count = None
@@ -524,7 +524,7 @@ def edit_dev_valuestream(request, id):
     # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile, created = AWProfile.objects.get_or_create(user=request.user)
     object = DevValueStream.objects.get(active=True, id=id)
     # processing
     form = DevValueStreamForm(instance=object)
@@ -557,7 +557,7 @@ def edit_ops_valuestream(request, id):
     # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile, created = AWProfile.objects.get_or_create(user=request.user)
     object = OpsValueStream.objects.get(active=True, id=id)
     print(f">>> === opsvs {object} === <<<")
     # processing
@@ -594,7 +594,7 @@ def valuestream_mgmt(request):
     # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)   
+    profile, created = AWProfile.objects.get_or_create(user=request.user)   
     
     # send outputs (info, template, request)
     context = {
@@ -614,7 +614,7 @@ def summary_ops_valuestream(request, id):
     # process inputs
     steps_count = 0
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)   
+    profile, created = AWProfile.objects.get_or_create(user=request.user)   
     object = OpsValueStream.objects.get(active=True, id=id)
     dev_value_streams = DevValueStream.objects.filter(ops_valuestream=object).prefetch_related('supported_ops_steps')
     vsm_steps = ValueStreamSteps.objects.filter(active=True, opsvaluestream=object)
@@ -678,7 +678,7 @@ def view_dev_valuestream(request, id):
     # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)   
+    profile, created = AWProfile.objects.get_or_create(user=request.user)   
     object = DevValueStream.objects.get(active=True, id=id)
     parent = object.ops_valuestream.id
     vsm_steps = ValueStreamSteps.objects.filter(active=True, devvaluestream=object)
@@ -708,7 +708,7 @@ def summary_dev_valuestream(request, id):
     # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)   
+    profile, created = AWProfile.objects.get_or_create(user=request.user)   
     object = DevValueStream.objects.get(active=True, id=id)
     parent = object.ops_valuestream.id
     vsm_steps = ValueStreamSteps.objects.filter(active=True, devvaluestream=object)
@@ -738,7 +738,7 @@ def edit_step(request, vs, ref_id, id):
     # take inputs
     # process inputs
     user = request.user
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile, created = AWProfile.objects.get_or_create(user=request.user)
     object = ValueStreamSteps.objects.get(active=True, id=id)
     vsm_steps = None
     ovs = None

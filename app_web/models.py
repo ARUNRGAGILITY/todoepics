@@ -388,7 +388,7 @@ class Role(models.Model):
     def __str__(self):
         return self.name
 
-class Profile(models.Model):
+class AWProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     organizations = models.ManyToManyField(Organization, related_name="members")
     roles = models.ManyToManyField(Role, blank=True)  # Allow multiple roles
@@ -403,7 +403,7 @@ class Profile(models.Model):
     
     def save(self, *args, **kwargs):
         # Custom save logic here
-        super(Profile, self).save(*args, **kwargs)  # Ensure this is called
+        super(AWProfile, self).save(*args, **kwargs)  # Ensure this is called
 
 
 ##################################################################

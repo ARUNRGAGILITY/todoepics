@@ -1,0 +1,103 @@
+{% include "../../common/__breadcrumbs_custom_css.html" %}
+<div class="container-fluid-width">    
+    <div class="row py-0 no-gutters">
+        <div class="col-md-12">
+          
+            <ol class="breadcrumb1">
+            <li class="breadcrumb1-item  ">&nbsp;<a href="/">Home</a></li>
+            {% if ancestors %}
+                {% for ancestor in ancestors %}
+                {% if forloop.first %}
+                <li class="breadcrumb1-item e"><a href="{% url 'list_home' %}">List</a></li>
+                <li class="breadcrumb1-item"><a href="{% url 'list_js_tree_id' ancestor.pk %}">{{ ancestor.title }}</a></li>
+                {% else %}
+                <li class="breadcrumb1-item"><a href="{% url 'list_js_tree_id' ancestor.pk %}">{{ ancestor.title }} </a></li>
+                {% endif %}
+                {% if forloop.last %}
+                  {% if title != ancestor.title %}
+                  <li class="breadcrumb1-item">{{ title }}</li>
+                  {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% if last_item  %}
+                <li class="breadcrumb1-item">{{ last_item }}</li>
+                {% endif %}
+                
+            {% else %}
+            <li class="breadcrumb1-item"><a href="{% url 'list_home' %}">List</a></li>
+            <li class="breadcrumb1-item">{{ last_item }}</li>
+            {% endif %}
+            {% if last_item  %}
+                <li class="breadcrumb1-item">{{ title }}</li>
+            {% endif %}
+            
+            </ol>
+          
+        </div>
+      </div>
+    </div>    
+</div>
+<div class="container-fluid-width">
+  <div class="row no-gutters">
+    <div class="col-md-12">
+     <div id="content-window">
+      &nbsp;
+      {{parent}}/{{title}}
+      <br>
+      {{object.type}}.template will be utilized with main, CRUD, search and details page
+      {% if description != "" and description != None and description != "null" %}
+      ::{{ description }}
+      <a href="javascript:void(0);" onclick="loadSettings({{list_id}})">Settings</a>
+
+      {% else %}
+      <div class="details-section" id="{{list_id}}" contenteditable="true" style="background-color: lightyellow;"></div>   
+      {% endif %}
+     </div>
+    </div>
+  </div>
+</div>
+<script>
+    // update description
+$(document).on('blur', '.details-section', function() {
+  const newDescription = $(this).text();
+  const nodeId = $(this).attr('id');
+
+  $.ajax({
+    url: '/ajax_update_list_item_description',
+    type: 'POST',  // or POST, according to your needs
+    data: {
+      'node_id': nodeId,
+      'description': newDescription,
+      csrfmiddlewaretoken: '{{ csrf_token }}'
+    },
+    success: function(response) {
+      if (response.status === 'success') {
+        console.log('Description updated successfully');
+      } else {
+        console.log('Failed to update description: ' + response.message);
+      }
+    },
+    error: function() {
+      console.log('An error occurred while updating the description');
+    }
+  });
+});
+// end of the general functions
+</script>
+<script>
+  function loadSettings(node_id) {
+    $.ajax({
+        url: '/ajax_get_settings',
+        data: { 'node_id': node_id, csrfmiddlewaretoken: '{{ csrf_token }}' },
+        type: 'POST',
+        success: function(response) {
+            // Assuming that your content window has id='content-window'
+            $('#content-window').html(response);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+</script>

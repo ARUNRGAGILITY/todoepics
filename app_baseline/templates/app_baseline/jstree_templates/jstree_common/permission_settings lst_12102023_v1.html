@@ -1,0 +1,70 @@
+{% extends "../../common/__base_header_left_right_footer.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}List Home{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+<form method="post">
+    {% csrf_token %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Permission Settings</h1>        
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {{form.as_p}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center align-items-center">
+            <button type="submit">Save</button>        
+        </div>
+    </div>
+</div>
+</form>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- jQuery UI -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+
+<script>
+    // JavaScript to add a "(None)" option
+    var selectElem = document.getElementById('id_users');
+    var noneOption = document.createElement("option");
+    noneOption.text = "(None)";
+    noneOption.value = "";
+    selectElem.add(noneOption, selectElem[0]);
+
+    // Event to deselect other options when "(None)" is selected
+    selectElem.addEventListener('change', function() {
+        if (selectElem.value === "") {
+            for (var i = 1; i < selectElem.options.length; i++) {
+                selectElem.options[i].selected = false;
+            }
+        }
+    });
+
+    // JavaScript to add a "(None)" option
+    var selectElem1 = document.getElementById('id_groups');
+    var noneOption1 = document.createElement("option");
+    noneOption1.text = "(None)";
+    noneOption1.value = "";
+    selectElem1.add(noneOption1, selectElem1[0]);
+
+    // Event to deselect other options when "(None)" is selected
+    selectElem1.addEventListener('change', function() {
+        if (selectElem1.value === "") {
+            for (var i = 1; i < selectElem1.options.length; i++) {
+                selectElem1.options[i].selected = false;
+            }
+        }
+    });
+</script>
+{% else%}
+  {% include './GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

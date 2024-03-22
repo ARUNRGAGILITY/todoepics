@@ -1,0 +1,177 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <b>{{object}} >> {{list_id}} :: Permission Settings</b>        
+        </div>
+    </div>
+   
+    <div class="row">
+        <div class="col-md-12">
+            <b>List Permission Form</b>
+            <form id="settingsForm" method="post" > <!-- Replace 'your_view_name' with the actual view name that handles this form -->
+                {% csrf_token %}
+                <input type="hidden" name="list_node_id" value="{{list_id}}">
+                {{form.inherit}}&nbsp;&nbsp;Inherit&nbsp;&nbsp;{{form.users_can_view}}&nbsp;&nbsp;All Users Can View
+                {{form.can_view}}&nbsp;View &nbsp;{{form.can_add}}&nbsp;Add&nbsp;
+                {{form.can_change}}&nbsp;Change &nbsp;{{form.can_delete}}&nbsp;Delete&nbsp;
+                <br>
+                {{form.users}}&nbsp;&nbsp;Users&nbsp;&nbsp;
+                {{form.groups}}&nbsp;&nbsp;Groups&nbsp;&nbsp;
+                <button id="saveButton" type="button">Save</button>
+            </form>
+        </div>
+    </div>
+   <!--
+    display pref
+   -->
+   <div class="row">
+    <div class="col-md-6">
+
+    </div>
+    <div class="col-md-6 d-flex justify-content-end align-items-center">
+        <div class="display_common_menu">
+            <a href="" class="btn btn-xs btn-warning">Delete</a>
+        </div>
+    </div>
+   </div>
+    <!-- Table -->
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered"  id="permissionTable">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" class="select_all">
+                        </th>
+                        <th>#</th>
+                        <th>List Node</th>
+                        <th>Users</th>
+                        <th>Groups</th>
+                        <th>Inherit</th>
+                        <th>Users Can View</th>
+                        <th>Permissions</th>
+                        <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for lc in list_permission %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="select_me" id="{{forloop.counter}}_{{lc.id}}">
+                            </td>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{lc.id}}</td>
+                            <td>
+                                {% for user in lc.users.all %}
+                                    {{ user.username }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for group in lc.groups.all %}
+                                    {{ group.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{lc.inherit}}</td>
+                            <td>{{lc.users_can_view}}</td>
+                            <td>
+                                {% if lc.can_view %}View{% endif %}&nbsp;
+                                {% if lc.can_add %}Add{% endif %}&nbsp;
+                                {% if lc.can_change %}Change{% endif %}&nbsp;
+                                {% if lc.can_delete %}Delete{% endif %}&nbsp;
+                            </td>
+                            <td>
+                                {% if lc.can_change or user.is_staff or user.is_superuser %}
+                                <a href="{% url 'edit_permission' lc.id %}">Edit</a>&nbsp;&nbsp;
+                                {% endif %}
+                                {% if lc.can_delete or user.is_staff  or user.is_superuser %}
+                                <a href="{% url 'delete_permission' lc.id %}">Delete</a>&nbsp;&nbsp;
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+    
+<script>
+    // JavaScript to add a "(None)" option
+    var selectElem = document.getElementById('id_users');
+    var noneOption = document.createElement("option");
+    noneOption.text = "(None)";
+    noneOption.value = "";
+    selectElem.add(noneOption, selectElem[0]);
+
+    // Event to deselect other options when "(None)" is selected
+    selectElem.addEventListener('change', function() {
+        if (selectElem.value === "") {
+            for (var i = 1; i < selectElem.options.length; i++) {
+                selectElem.options[i].selected = false;
+            }
+        }
+    });
+
+    // JavaScript to add a "(None)" option
+    var selectElem1 = document.getElementById('id_groups');
+    var noneOption1 = document.createElement("option");
+    noneOption1.text = "(None)";
+    noneOption1.value = "";
+    selectElem1.add(noneOption1, selectElem1[0]);
+
+    // Event to deselect other options when "(None)" is selected
+    selectElem1.addEventListener('change', function() {
+        if (selectElem1.value === "") {
+            for (var i = 1; i < selectElem1.options.length; i++) {
+                selectElem1.options[i].selected = false;
+            }
+        }
+    });
+</script>
+
+<script>
+$(document).ready(function() {
+    $("#saveButton").click(function() {
+        // Collect your form data here
+        var formData = $("#settingsForm").serialize();
+        var data = {
+            // populate this object with your form's data
+            'formData': formData , csrfmiddlewaretoken: '{{ csrf_token }}'
+        };
+        console.log("data", formData),
+        $.ajax({
+          url: '/ajax_save_list_permission',
+          data: data,
+          type: 'POST',
+         
+          success: function(response) {
+              // Assuming that your content window has id='content-window'
+              location.reload();
+
+          },
+          error: function(error) {
+              console.log(error);
+          }
+      });
+    });    
+});
+</script>
+
+<script>
+    $('.select_all').click(function() {
+    // Check or uncheck all row checkboxes based on "Select All" checkbox state
+    $('.select_me').prop('checked', $(this).prop('checked'));
+  });
+  
+  // Optionally: Uncheck "Select All" if any row-checkbox is unchecked
+  $('.select_me').click(function() {
+    if (!$(this).prop('checked')) {
+      $('#select_all').prop('checked', false);
+    }
+  });
+</script>
+

@@ -12,7 +12,8 @@ urlpatterns = [
     path('loginsys/', include('app_loginsystem.urls')),
     # TodoEpics
     path('todoepics/', include('app_todoepics.urls')),
-    
+    ## imported xpresskanban
+
     # markdown
     path('markdownx/', include('markdownx.urls')), 
 ]

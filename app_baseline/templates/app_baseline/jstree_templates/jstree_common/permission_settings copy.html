@@ -1,0 +1,120 @@
+{% extends "../../common/__base_header_left_right_footer.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}List Home{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+
+
+
+  <h2>Permission Settings</h2>
+
+
+
+    <!-- Your custom jQuery autocomplete textbox and selected users container -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Add a text box for user input -->
+          <input type="text" id="userSearch" placeholder="Search for users..." />
+
+          <!-- Add a container to show selected users -->
+          <div id="selectedUsers"></div>
+
+          <!-- Add a hidden field to keep track of selected user IDs -->
+          <input type="hidden" name="selected_users" id="selectedUserIds" />
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    var selectedUsers = [];
+
+    $('#userSearch').on('input', function() {
+        var query = $(this).val().toLowerCase();
+        
+        $.ajax({
+            url: "/ajax_user_suggest",  // Your Django view that returns user suggestions
+            method: "GET",
+            data: {
+                'q': query  // Pass the search query to your Django view
+            },
+            success: function(response) {
+                console.log("Response received:", response);  // Debug log
+                // Remove any existing suggestions
+                $('.suggestion').remove();
+
+                response.forEach(function(user) {
+                    console.log("Adding suggestion for:", user.label);  // Debug log
+                    var suggestion = $('<div class="suggestion"></div>').text(user.label).attr('data-id', user.id);
+                    
+                    suggestion.on('click', function() {
+                        var id = $(this).attr('data-id');
+                        if (!selectedUsers.includes(id)) {
+                            selectedUsers.push(id);
+                            $('#selectedUserIds').val(selectedUsers.join(','));
+
+                            var selectedUser = $('<div class="selectedUser"></div>').text(user.label);
+                            var removeBtn = $('<span> X </span>');
+                            
+                            removeBtn.on('click', function() {
+                                var index = selectedUsers.indexOf(id);
+                                if (index > -1) {
+                                    selectedUsers.splice(index, 1);
+                                    $('#selectedUserIds').val(selectedUsers.join(','));
+                                }
+                                selectedUser.remove();
+                            });
+                            
+                            selectedUser.append(removeBtn);
+                            $('#selectedUsers').append(selectedUser);
+                        }
+                        
+                        $('.suggestion').remove();
+                    });
+                    
+                    $('#userSearch').after(suggestion);
+                });
+            }
+        });
+    });
+});
+
+
+</script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Permission Settings</h1>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- jQuery UI -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+{% else%}
+  {% include './GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

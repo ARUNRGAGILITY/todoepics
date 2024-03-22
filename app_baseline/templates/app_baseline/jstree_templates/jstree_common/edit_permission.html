@@ -1,0 +1,11 @@
+<h1>Edit Permission</h1>
+<div class="row">
+    <div class="col-md-12">
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <br>
+            <input type="submit" name="submit" value="Save Details">
+        </form>
+    </div>
+</div>

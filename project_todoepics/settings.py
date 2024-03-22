@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'app_web',
     'app_loginsystem',
     'app_todoepics',
+    # onbranch/MVP_BASE
+    'app_baseline',
+
 ]
 
 MIDDLEWARE = [
@@ -155,10 +158,11 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'v1.0.10'
-BUILD_DESCRIPTION = 'fix rolled back .val to .html in the canvas save/view'
+BUILD_VERSION = 'vR1.0.10a'
+BUILD_DESCRIPTION = 'fix issues'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
+CODING_AI = "codingagi"
 SITE_NAME = f"{SITE_TITLE}"
 CONTACT_EMAIL = "contact@a{SITE_TITLE}.com"
 ## copyright information

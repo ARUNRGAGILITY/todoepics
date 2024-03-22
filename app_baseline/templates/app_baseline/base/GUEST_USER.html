@@ -1,0 +1,29 @@
+<div class="container-fluid">
+    <!-- header -->
+    <div class="row my-1">
+        <div class="col-md-6 d-flex justify-content-start align-items-center">
+            <b>{{SITE_NAME}}</b>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end align-items-center">
+            <a href="{% url 'login' %}" class="btn btn-sm btn-success">Login</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="{% url 'register' %}" class="btn btn-sm btn-info">Register</a>
+            &nbsp;&nbsp;
+        </div>
+    </div>
+
+    <!-- content -->
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <b>Welcome!</b>
+            <p>
+                This is a Project baseline home page, 
+                Where you can register if you have the invite
+                and login.
+            </p>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <!-- footer -->
+</div>

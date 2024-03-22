@@ -1,0 +1,271 @@
+{% extends "../../common/base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}List Home{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.16/jstree.min.js" integrity="sha512-ekwRoEshEqHU64D4luhOv/WNmhml94P8X5LnZd9FNOiOfSKgkY12cDFz3ZC6Ws+7wjMPQ4bPf94d+zZ3cOjlig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+    .details-card {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 16px;
+    }
+
+    .details-section {
+        margin-bottom: 12px;
+    }
+
+</style>
+{% include "../../user/001.top_level_logged_in_menu.html" %}
+<!-- begin content -->
+{% include "../../user/001.css_include.html" %}
+<!-- begin tree display -->
+<form action="">
+    {% csrf_token %}
+</form>
+<div class="container-fluid">
+    <!-- header -->
+    <div class="row">
+        <div class="col-md-12">
+            <b>TreeList:</b>&nbsp;&nbsp;<a href="{% url 'list_home' %}">List</a>
+        </div>
+    </div>
+    <!-- content -->
+    <div class="row">
+        <div class="col-md-3">
+            <div id="jstree"></div>
+        </div>
+        <div class="col-md-9 d-flex justify-content-start ">
+            <div id="detailsDiv"></div>
+        </div>
+    </div>
+</div>
+<!-- end display-->
+
+
+<script>
+    $(document).ready(function(){
+
+    $('#jstree').jstree({
+        'core': {
+            "check_callback": true,
+            'data': {
+                'url': 'ajax_get_tree_data',  // URL to your Django view
+                'dataType': 'json'
+            }
+        },
+        'types': {
+            "folder": {
+            "icon": "{% static 'img/bst_icons/card_text.svg' %}"
+            },
+            "file": {
+            "icon": "{% static 'img/bst_icons/card_list.svg' %}"
+            }
+        },
+        'plugins' : ['dnd', 'contextmenu', 'state', 'types'],
+        'contextmenu': {items: customMenu} //
+    }).on('ready.jstree', function (e, data) {
+    // expand all nodes when the tree is ready
+    $('#jstree').jstree('open_all');
+    }).on('move_node.jstree', function(e, data) {
+        console.log(data); // Log the entire data object
+        console.log(data.node); // Should give details about the moved node
+        console.log(data.parent); // Should give the new parent ID of the moved node
+        console.log(data.position); //
+        // Calculate move type ('before', 'after', or 'inside')
+        moveType = data.position;
+        
+        console.log("Data movetype:", moveType);
+        $.ajax({
+            url: '/ajax_move_node',
+            data: {
+                'node_id': data.node.id,
+                'target_id': data.node.parent,
+                'position': moveType,
+            },
+            success: function(response) {
+                if(response.status === 'error') {
+                    alert('Could not move node: ' + response.message);
+                }
+            }
+        });
+    });
+
+    // load the node details
+    $('#jstree').on("changed.jstree", function (e, data) {
+        if(data && data.selected && data.selected.length) {
+            var node = data.instance.get_node(data.selected[0]);
+            
+            // // Do something with the node details, for example:
+            // $('#detailsDiv').html('Selected Node ID: ' + node.id + '<br>' +
+            //                     'Selected Node Text: ' + node.text);
+            // Use AJAX to fetch additional node details
+            $.ajax({
+                    url: `/ajax_get_node_details/${node.id}`,
+                    type: 'GET',
+                    success: function(response) {
+                        // Display fetched data in the details div
+                                const detailsHTML = `
+                            <div class="details-card">
+                                <h3>${node.id} ${response.parent} :: ${response.title}</h3>                             
+                                <div class="details-section" contenteditable="true">
+                                    <strong>Description:</strong> ${response.description}
+                                </div>                              
+                            </div>
+                        `;
+                        $('#detailsDiv').html(detailsHTML);
+                    }
+                });
+            }
+    });
+
+
+    // Bind the double-click event
+    $('#jstree').bind("dblclick.jstree", function (event) {  
+        console.log("double click rename_node ----- called");   
+        var jstree = $('#jstree').jstree(true);    
+        var selectedNode = $('#jstree').jstree('get_selected', true);    
+        console.log("Selected Node ID:", selectedNode[0].id);
+        console.log("Selected Node Text:", selectedNode[0].text);
+
+        if (selectedNode && selectedNode.length > 0 && selectedNode[0].id != "0") {
+            console.log("About to make the node editable.");
+            console.log("===> "+ typeof selectedNode[0]);
+            console.log(">>> === "+ selectedNode[0].text + " === <<<");
+            // Try with selected node
+            jstree.edit(selectedNode[0]);
+            console.log("Should be editable now.");
+        }
+
+    })
+    // Bind the rename node event
+    .bind("rename_node.jstree", function (e, data) {    
+        if (data.node.text && data.text !== data.old) {   
+            console.log("rename_node ----- called"); 
+            // Code to update the new name to the data source.
+            $.ajax({
+                    url: 'ajax_rename_list_item', // Replace with your Django view URL
+                    type: 'POST',
+                    data: {
+                    'object_id': data.node.id,
+                    'title': data.node.text,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    },
+                    success: function (response) {
+                    // Handle success
+                    },
+                    error: function (response) {
+                    // Handle error
+                    }
+                });
+
+            // For example, call your API here to update the name.
+        }    
+    });
+
+    // CUSTOM MENU FOR RENAMING
+    function customMenu(node) {
+        console.log("custom menu called");
+        return {
+            "Add": {
+            "label": "Add",
+            "action": function (data) {
+                var jstree = $('#jstree').jstree(true);
+                var parent_node = jstree.get_node(node).id; 
+                $.ajax({
+                        
+                        url: 'ajax_add_node',  // URL to your Django view
+                        data: {
+                            'parent_id': parent_node,
+                            'title':"sample",
+                            // Add more data as needed
+                            
+                        },
+                        success: function(response) {
+                            // get the details of node after success
+                            if(response.status === 'success') {
+                                var new_node_data = {
+                                    "id": response.node_id,
+                                    "text": "New Node",  // Replace with text if received from server
+                                    // Add any other attributes you need
+                                };
+
+                                // Create the new node under the parent node
+                                var jstree = $('#jstree').jstree(true);
+                                jstree.create_node(node, new_node_data, 'last', function(new_node) {
+                                    // Optionally, start editing the new node
+                                    setTimeout(function () { jstree.edit(new_node); }, 0);
+                                });
+                            }
+                            else {
+                                // Handle error
+                                alert('Could not create node: ' + response.message);
+                            }
+                            // end the details viewing
+                        }
+                    });
+              
+                }
+            },
+            "Rename": {
+            "label": "Rename",
+            "action": function (data) {
+                    console.log("rename menu called");
+                    var inst = $.jstree.reference(data.reference);
+                    inst.edit(inst.get_node(data.reference));
+                }
+            },
+            "Copy": {
+            "label": "Copy",
+            "action": function (data) {
+                    console.log("Copy menu called");
+                    var inst = $.jstree.reference(data.reference);
+                    inst.edit(inst.get_node(data.reference));
+                }
+            },
+            "Clone": {
+            "label": "Clone",
+            "action": function (data) {
+                    console.log("Clone menu called");
+                    var inst = $.jstree.reference(data.reference);
+                    inst.edit(inst.get_node(data.reference));
+                }
+            },
+            
+            // Add more actions here if you need
+        };
+    }
+
+    // // call ajax for renaming
+    $('#jstree').on('rename_node.jstree', function (e, data) {
+        $.ajax({
+            url: 'ajax_rename_list_item', // Replace with your Django view URL
+            type: 'POST',
+            data: {
+            'object_id': data.node.id,
+            'title': data.node.text,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+            // Handle success
+            },
+            error: function (response) {
+            // Handle error
+            }
+        });
+        });
+
+
+// end of the jstree document ready functions
+});
+
+</script>
+<!-- end content -->
+{% else%}
+  {% include './GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

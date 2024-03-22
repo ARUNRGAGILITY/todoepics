@@ -158,8 +158,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vR1.0.10a'
-BUILD_DESCRIPTION = 'fix issues'
+BUILD_VERSION = 'vR1.0.10b'
+BUILD_DESCRIPTION = 'fix issues: codingai'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 CODING_AI = "codingagi"

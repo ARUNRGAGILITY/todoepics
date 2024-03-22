@@ -528,7 +528,7 @@ def ajax_update_dtc_field(request):
     else:
         obj = Model.objects.get(id=idx)
         setattr(obj, field_name, value)
-    print(f">>> === dev_id: {dvs_id}, obj: {obj}, model: {model_name}, field_name: {field_name}, value: {value}, id: {idx} object_id={object_id}, === <<<")
+    #print(f">>> === dev_id: {dvs_id}, obj: {obj}, model: {model_name}, field_name: {field_name}, value: {value}, id: {idx} object_id={object_id}, === <<<")
     obj.save()
 
     return JsonResponse({'success': True})

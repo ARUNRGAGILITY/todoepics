@@ -155,8 +155,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vR1.0.9'
-BUILD_DESCRIPTION = 'Prodfix, snapshot, real data'
+BUILD_VERSION = 'v1.0.10'
+BUILD_DESCRIPTION = 'fix rolled back .val to .html in the canvas save/view'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 SITE_NAME = f"{SITE_TITLE}"

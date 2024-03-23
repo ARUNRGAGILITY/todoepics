@@ -158,8 +158,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vMVP_BASE_MERGED1'
-BUILD_DESCRIPTION = 'Merged with MVP branch'
+BUILD_VERSION = 'vmain_23_1.0'
+BUILD_DESCRIPTION = 'fixing regn'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 CODING_AI = "codingagi1"

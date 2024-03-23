@@ -238,7 +238,7 @@ def register(request):
         # Check if the reg_code is alphanumeric and matches the correct registration code
         if CORRECT_REG_CODE != 'NOTHERE':
             if not reg_code.isalnum() or reg_code != CORRECT_REG_CODE:
-                messages.error(request, f"Invalid or incorrect registration code.CRC=RC{CORRECT_REG_CODE}={reg_code}")
+                messages.error(request, f"Invalid or incorrect registration code.")
                 # Return to the registration page with the form and error message
                 return redirect("register")
         

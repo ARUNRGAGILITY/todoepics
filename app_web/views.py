@@ -224,7 +224,7 @@ def login_page(request):
     template_file = f"{app_name}/_2user/login.html"
     return render(request, template_file, context)
 
-# Registration Page
+# Registration Page (updated)
 def register(request):
     # take inputs
     coding_ai = getattr(settings, 'CODING_AI', 'NOTHERE')

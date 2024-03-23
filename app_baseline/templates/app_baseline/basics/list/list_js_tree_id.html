@@ -125,7 +125,7 @@
             "icon": "{% static 'img/type_icons/planning.svg' %}"
             },
             "task": {
-            "icon": "{% static 'img/type_icons/task.svg' %}"
+            "icon": "{% static 'img/type_icons/type_task1.svg' %}"
             },
             "component": {
             "icon": "{% static 'img/type_icons/type_component.svg' %}"
@@ -268,7 +268,7 @@
         var tree = $('#jstree').jstree(true);  // Get the jsTree instance
         var selectedId = tree.get_selected()[0];  // Get the ID of the selected node
         var selectedNode = tree.get_node(selectedId);  // Get the actual node object
-
+        
         // default add
         var addItem = {
             "Add": {
@@ -486,7 +486,13 @@
             // Add more actions here if you need            
         };
         //return defaultItems;
-        basicMenu = {...addItem, ...defaultItems};
+        /////////////////////////////////////////////////////////////
+        // Fix for the default menu at the last has to be removed
+        // to avoid creating more levels than intended
+        /////////////////////////////////////////////////////////////
+        // FIX THIS: 
+        // basicMenu = {...addItem, ...defaultItems};
+        basicMenu = { ...defaultItems};
         delcopycloneMenu = defaultItems;
         defaultMenu = basicMenu;        
         var finalContextMenu;

@@ -158,11 +158,11 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vR1.0.10d1'
-BUILD_DESCRIPTION = 'fix issues: codingai'
+BUILD_VERSION = 'vR1.0.10d3'
+BUILD_DESCRIPTION = 'fixing regn'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
-CODING_AI = "codingagi"
+CODING_AI = "codingagi1"
 SITE_NAME = f"{SITE_TITLE}"
 CONTACT_EMAIL = "contact@a{SITE_TITLE}.com"
 ## copyright information

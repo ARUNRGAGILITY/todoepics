@@ -1,0 +1,45 @@
+{% extends "../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}User/MyWorkspace/Projects{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+{% include "../_2user/user_loggedin_menu.html" %}
+<div class="container-fluid">
+    {% include "../_2user/tabbed_my_profile_workspace_links.html" %}
+    {% include "./tabbed_my_workspace_links.html" %}
+
+    <!-- content part1 -->
+    <div class="row">
+        <div class="col col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="4">User: {{user.username}}'s Workspace</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                        Projects
+                    </td>
+                </tr>
+                </tbody>
+            </table>         
+        </div>
+    </div>
+    <!-- end content part1 -->
+
+    <div class="row">
+        <div class="col col-md-12">
+           Projects
+        </div>
+    </div>
+</div>
+{% else%}
+  {% include './_2user/guest_user.html' %}
+{% endif %}
+{% endblock content %}
+
+
+

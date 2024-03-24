@@ -4,14 +4,22 @@
 {% block title %}Organization Transformation{% endblock title %} 
 {% block content %} 
 <!-- BEGIN: PAGE -->
-<div class="container">
+<div class="container-fluid">
+
+     <!-- Tab links -->
+     {% include "./tab_links.html" %}
+
     <div class="row">
         <div class="col col-md-12">
-            <h2>Organization Transformation</h2>
+            <b class="h2">Organization Transformation</b>  &nbsp;&nbsp;
+            <a href="{% url 'organization_transformation' %}" class="btn btn-primary">
+                Ready for Organization Transformation
+            </a>
             <p>Every small, medium, large organization faces the perfection challenges of transformation.</p>
             <p>Even the startups has the same set of challenges of transformation.</p>
 
             <p><b>What is and Why Organization Transformation?</b>
+               
                 <p>
                     Organization transformation refers to the 
                     comprehensive and fundamental changes an organization 

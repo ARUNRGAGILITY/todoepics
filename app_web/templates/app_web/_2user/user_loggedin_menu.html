@@ -1,0 +1,73 @@
+<style>
+    .navbar-nav .nav-link {
+  display: inline-flex; /* Using flex to ensure alignment */
+  align-items: center; /* Centers items vertically */
+  line-height: 1.5; /* Adjust as needed for your design */
+}
+
+/* Specifically targeting the active state to ensure it doesn't shift */
+.navbar-nav .nav-link.active {
+  position: relative;
+  top: 0; /* Ensures the active link doesn't move vertically */
+  /* Additional styling for the active state can go here */
+}
+
+    /* Custom Styles for Active Nav Link */
+    .nav-link.active {
+        background-color: #007bff; /* Bootstrap primary color */
+        color: white !important; /* Override text color */
+        border-radius: 5px; /* Rounded corners */
+        padding: 3px; /* More padding */
+        box-shadow: 0 2px 5px rgba(0,0,0,.2); /* Subtle shadow */
+    }
+  </style>
+ <!-- Navbar Display -->
+ <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container-fluid no-gutters">        
+        <a class="navbar-brand" href="/">{{SITE_NAME}}</a>
+         <!-- Bootstrap Toggler Button -->
+         <button class="navbar-toggler" type="button"
+         data-bs-toggle="collapse" data-bs-target="#navbarNav" data-target="#navbarNav"
+         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item ">                   
+                    <a class="nav-link {% if page == 'welcome' %}active{% endif %}" 
+                    href="{% url 'welcome' %}">Home</a>
+                </li>
+            </ul>
+            
+            
+                {% if user.is_authenticated %}
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link {% if page == 'user_page' %}active{% endif %}" 
+                        href="{% url 'user_page' %}">{{user.username}}</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout_page' %}">Logout</a>
+                    </li>
+                </ul>
+                {% else %}
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link {% if page == 'login' %}active{% endif %}" 
+                        href="{% url 'login' %}">Login</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link {% if page == 'register' %}active{% endif %}" 
+                        href="{% url 'register' %}">Register</a>
+                    </li>          
+                </ul>
+                {% endif %}
+            
+        </div>
+    </div>
+  </nav>
+  <!-- Navbar display -->

@@ -34,25 +34,63 @@
             </div>
         </div>
         <div class="row">
-            <div class="col col-md-1"></div>
-            <div class="col col-md-10 text-center">
-                <table class="table">
-                    <tr>
-                        <td width="33%" class="text-end">
-                            <a href="{% url 'organization_transformation' %}" class="btn btn-success btn-sm">Organization Transformation</a> 
-                            &nbsp;&gt;
-                        </td>
-                        <td width="33%" class="text-center">
-                            <a href="{% url 'transformation_leadership' %}" class="btn btn-primary btn-sm">Transformation Leadership</a> 
-                            &nbsp;&gt;
-                        </td>
-                        <td width="33%">
-                            <a href="{% url 'transformation_sw_training_services' %}" class="btn btn-secondary btn-sm">Transformation Software, Training &amp; Services</a> 
-                        </td>
-                    </tr>
-                </table>
-            </div>           
-            <div class="col col-md-1"></div>
+
+            <div class="col col-md-4">
+
+                <!-- Bootstrap card -->
+                <div class="card fixed-height-card">
+                    <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                    <div class="card-body">
+                      <h5 class="card-title">Organization Transformation</h5>
+                      <p class="card-text">
+                        Make your organization safe, transforming and sustainable!
+                     </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'organization_transformation' %}" class="btn btn-primary">
+                            Organization Transformation
+                        </a>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="col col-md-4">
+
+                <!-- Bootstrap card -->
+                <div class="card fixed-height-card">
+                    <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                    <div class="card-body">
+                      <h5 class="card-title">Transformation Leadership</h5>
+                      <p class="card-text">
+                        Create a Leadership for doing the right things at right time.
+                     </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'transformation_leadership' %}" class="btn btn-primary">
+                            Organization Transformation
+                        </a>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="col col-md-4">
+                <!-- Bootstrap card -->
+                <div class="card fixed-height-card">
+                    <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                    <div class="card-body">
+                      <h5 class="card-title">Transformation Services</h5>
+                      <p class="card-text">
+                        Creating Platform, Systems and Environment for the people's growth.
+                     </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'transformation_sw_training_services' %}" class="btn btn-primary">
+                            Transformation Services
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- cards -->
         </div>     
     </div>    
 </div>

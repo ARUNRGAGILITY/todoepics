@@ -1,0 +1,7 @@
+<div class="row pb-2">
+    <div class="col col-md-12 text-start">
+        {% if parent_page == 'my_profile' %} <b>My Profile</b>{% else %}<a href="{% url 'my_profile_page' %}">My Profile</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;       
+        {% if parent_page == 'my_workspace' %} <b>My Workspace</b>{% else %} <a href="{% url 'my_workspace_page' %}">My Workspace</a> {% endif %}    
+    </div>
+</div>

@@ -1,9 +1,9 @@
 {% extends "../_1base/bootstrap_base.html" %} 
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}User/Edit Profile{% endblock title %} 
-
+{% block title %}User/MySettings{% endblock title %} 
 {% block content %}
+{% if user.is_authenticated %}
 {% include "./user_loggedin_menu.html" %}
 <div class="container-fluid">
     {% include "./tabbed_my_profile_workspace_links.html" %}
@@ -21,25 +21,26 @@
                 <tbody>
                 <tr>
                     <td colspan="4">
-                        User's Profile, Role Workspace, and Organization Access
+                        User's Settings: General Settings, OOO, Meetings
                     </td>
                 </tr>
                 </tbody>
             </table>         
         </div>
     </div>
+    <!-- end content part1 -->
 
-
-    <!-- Profile related form -->
-    <!-- need to add image, avatar, ooo settings -->
     <div class="row">
-        <div class="col-md-12">
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Save changes</button>
-            </form>
+        <div class="col col-md-12">
+            In this place we offer to setup the profile edit profile, general settings, personal kanban, 
+            personal projects, todo list etc., 
         </div>
     </div>
 </div>
-{% endblock %}
+{% else%}
+  {% include './_2user/guest_user.html' %}
+{% endif %}
+{% endblock content %}
+
+
+

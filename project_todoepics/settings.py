@@ -158,8 +158,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vmain_23_1.0'
-BUILD_DESCRIPTION = 'fixing regn'
+BUILD_VERSION = 'vBASE_PRODUCT_V1.0'
+BUILD_DESCRIPTION = 'Date:24032024 Release UI/UX fix with basic myprofile, workspace'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 CODING_AI = "codingagi1"

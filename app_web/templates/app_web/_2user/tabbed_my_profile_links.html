@@ -1,0 +1,9 @@
+<div class="row pb-2">
+    <div class="col col-md-12 text-start">
+        {% if page == 'my_profile_page' %} <b>My Profile</b>{% else %}<a href="{% url 'my_profile_page' %}">My Profile Page</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        {% if page == 'edit_profile' %} <b>Edit Profile</b>{% else %}<a href="{% url 'edit_profile' %}">Edit Profile</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        {% if page == 'my_settings_page' %} <b>My Settings</b>{% else %} <a href="{% url 'my_settings_page' %}">My Settings</a> {% endif %}    
+    </div>
+</div>

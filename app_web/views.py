@@ -44,7 +44,104 @@ def role_required(*role_names):
         return False
     return user_passes_test_with_403(in_roles)
 
+########### PROFILE and GENERAL links #################
+def my_profile_page(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_profile',
+        'page': 'my_profile_page',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user/my_profile_page.html"
+    return render(request, template_file, context)
 
+def my_settings_page(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_profile',
+        'page': 'my_settings_page',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user/my_settings_page.html"
+    return render(request, template_file, context)
+
+def my_workspace_page(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_workspace',
+        'page': 'my_workspace_page',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user/my_workspace_page.html"
+    return render(request, template_file, context)
+
+def my_kanban(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_workspace',
+        'page': 'my_kanban',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user_ws/my_kanban.html"
+    return render(request, template_file, context)
+
+def my_todolist(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_workspace',
+        'page': 'my_todolist',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user_ws/my_todolist.html"
+    return render(request, template_file, context)
+
+def my_checklist(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_workspace',
+        'page': 'my_checklist',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user_ws/my_checklist.html"
+    return render(request, template_file, context)
+
+def my_projects(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_workspace',
+        'page': 'my_projects',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user_ws/my_projects.html"
+    return render(request, template_file, context)
 
 def welcome(request):
     # take inputs
@@ -59,17 +156,7 @@ def welcome(request):
     template_file = f"{app_name}/welcome.html"
     return render(request, template_file, context)
 
-"""
-    path('help/', views.help, name="help"),
-    path('beagile/', views.help, name="help"),
-    path('about/', views.about, name="about"),
-    path('organization_transformation/', views.organization_transformation, name="organization_transformation"),
-    path('transformation_leadership/', views.transformation_leadership, name="transformation_leadership"),
-    path('transformation_sw_training_services/', views.transformation_sw_training_services, name="transformation_sw_training_services"),
-    
 
-
-"""
 def help(request):
     # take inputs
     # process inputs
@@ -295,9 +382,13 @@ def edit_profile(request):
             form.save()
             # Redirect to the profile page or wherever appropriate
             return redirect('profile_page')
-
+    context = { 
+               'parent_page': 'my_profile',
+               'page': 'edit_profile',
+                'form': form,
+               }
     template_file = f"{app_name}/_2user/edit_profile.html"
-    return render(request, template_file, {'form': form})
+    return render(request, template_file, context)
 
 
 # Profile Page

@@ -1,13 +1,13 @@
 {% extends "../_1base/bootstrap_base.html" %} 
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}User/Edit Profile{% endblock title %} 
-
+{% block title %}User/MyWorkspace{% endblock title %} 
 {% block content %}
+{% if user.is_authenticated %}
 {% include "./user_loggedin_menu.html" %}
 <div class="container-fluid">
     {% include "./tabbed_my_profile_workspace_links.html" %}
-    {% include "./tabbed_my_profile_links.html" %}
+    {% include "../_2user_ws/tabbed_my_workspace_links.html" %}
 
     <!-- content part1 -->
     <div class="row">
@@ -15,31 +15,32 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th colspan="4">User: {{user.username}}'s Profile</th>
+                        <th colspan="4">User: {{user.username}}'s Workspace</th>
                     </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td colspan="4">
-                        User's Profile, Role Workspace, and Organization Access
+                        User's Workspace
                     </td>
                 </tr>
                 </tbody>
             </table>         
         </div>
     </div>
+    <!-- end content part1 -->
 
-
-    <!-- Profile related form -->
-    <!-- need to add image, avatar, ooo settings -->
     <div class="row">
-        <div class="col-md-12">
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Save changes</button>
-            </form>
+        <div class="col col-md-12">
+           Personal Workspace is where the User may actually utilize their own personal space for 
+           projects, kanban, todolist, checklist etc.,
         </div>
     </div>
 </div>
-{% endblock %}
+{% else%}
+  {% include './_2user/guest_user.html' %}
+{% endif %}
+{% endblock content %}
+
+
+

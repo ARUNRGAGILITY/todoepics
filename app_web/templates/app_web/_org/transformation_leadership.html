@@ -4,10 +4,19 @@
 {% block title %}Organization Transformation{% endblock title %} 
 {% block content %} 
 <!-- BEGIN: PAGE -->
-<div class="container">
+<div class="container-fluid">
+
+    <!-- Tab links -->
+    {% include "./tab_links.html" %}
+
+
     <div class="row">
         <div class="col col-md-12">
-            <h2>Transformation Leadership</h2>
+            <b class="h2">Transformation Leadership</b>
+            &nbsp;&nbsp;
+            <a href="{% url 'organization_transformation' %}" class="btn btn-primary">
+                Enable Transformation Leadership
+            </a>
             <p>                
                 Transformational leadership is a style of leadership where leaders work 
                 with teams to identify needed change, creating a vision to guide the 

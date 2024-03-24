@@ -1,0 +1,9 @@
+<div class="row pb-2">
+    <div class="col col-md-12 text-start">
+        {% if page == 'organization_transformation' %} <b>Organization Transformation</b>{% else %}<a href="{% url 'organization_transformation' %}">Organization Transformation</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        {% if page == 'transformation_leadership' %} <b>Transformation Leadership</b>{% else %} <a href="{% url 'transformation_leadership' %}">Transformation Leadership</a> {% endif %}    
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        {% if page == 'transformation_sw_training_services' %} <b> Transformation Services</b>{% else %}<a href="{% url 'transformation_sw_training_services' %}"> SW &amp; Training Services</a> {% endif %}                        
+    </div>
+</div>

@@ -4,47 +4,88 @@
 {% block title %}Welcome{% endblock title %} 
 {% block content %}
 {% if user.is_authenticated %}
+{% include "./user_loggedin_menu.html" %}
 <div class="container-fluid">
-    <!-- header -->
-    <div class="row">
-        <div class="col col-md-5">
-           <h1>Welcome to {{SITE_TITLE}}</h1>
-        </div>
-        <div class="col col-md-7 text-end">  
-            {% if show_admin_link %}
-            <a href="{% url 'admin_page' %}">Admin Page</a>
-            {% endif %}    
-            &nbsp;&nbsp;  
-            <a href="/">Home</a> 
-            &nbsp;&nbsp;  
-            <a href="">Dashboard</a> 
-            &nbsp;&nbsp;  
-            <a href="">Apps</a>
-            &nbsp;&nbsp;  
-            <b>
-                <a href="{% url 'profile_page' %}">{{user.username}}</a>
-            </b>
-            &nbsp;&nbsp;            
-            <a href="{% url 'logout_page' %}" class="btn btn-xs mt-1 bg-warning">Logout</a>
-        </div>
-    </div>
     <!-- content part1 -->
     <div class="row">
         <div class="col col-md-12">
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th colspan="4">Apps</th>
+                        <th colspan="4">User: {{user.username}}'s Dashboard</th>
                     </tr>
                 </thead>
                 <tbody>
                    <tr>
                     <td colspan="4">
-                        Here you will find the apps for Leaders, Managers, Teams 
+                        User's Profile, Role Workspace, and Organization Access
                     </td>
                    </tr>
                 </tbody>
             </table>
+            <!-- card1 -->
+
+                <div class="row">
+                    <div class="col col-md-4">
+
+                        <!-- Bootstrap card -->
+                        <div class="card fixed-height-card">
+                            <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                            <div class="card-body">
+                            <h5 class="card-title">My Profile</h5>
+                            <p class="card-text">
+                                Setup and configure your Personal Profile and Settings.
+                            </p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'my_profile_page' %}" class="btn btn-primary">
+                                    My Profile
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="col col-md-4">
+
+                        <!-- Bootstrap card -->
+                        <div class="card fixed-height-card">
+                            <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                            <div class="card-body">
+                            <h5 class="card-title">My Roles</h5>
+                            <p class="card-text">
+                                Access your Roles in General and in Project(s).
+                            </p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'edit_profile' %}" class="btn btn-primary">
+                                    My Roles
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col col-md-4">
+
+                        <!-- Bootstrap card -->
+                        <div class="card fixed-height-card">
+                            <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                            <div class="card-body">
+                            <h5 class="card-title">My Organizations</h5>
+                            <p class="card-text">
+                                Access your Organization(s) and View Organizations on this site.
+                            </p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'edit_profile' %}" class="btn btn-primary">
+                                    My Organizations
+                                </a>
+                            </div>
+                        </div>
+                       
+                    </div>
+           
         </div>
     </div>
     <!-- end content part1 -->

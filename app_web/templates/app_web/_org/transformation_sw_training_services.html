@@ -4,10 +4,19 @@
 {% block title %}Organization Transformation{% endblock title %} 
 {% block content %} 
 <!-- BEGIN: PAGE -->
-<div class="container">
+<div class="container-fluid">
+
+     <!-- Tab links -->
+     {% include "./tab_links.html" %}
+
+
     <div class="row">
         <div class="col col-md-12">
-            <h2>Transformation Software &amp; Training Services</h2>
+            <b class="h2">Transformation Software &amp; Training Services</b>
+            &nbsp;&nbsp;
+            <a href="{% url 'transformation_sw_training_services' %}" class="btn btn-primary">
+                Setup Transformation Services
+            </a>
             <p>
                 In the rapidly evolving business landscape, organizations are 
                 increasingly embracing change and adopting agile practices to enhance

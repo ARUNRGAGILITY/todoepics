@@ -1,0 +1,67 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        {% block title %}Home{% endblock title %}
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  </head>
+  <body class="d-flex flex-column min-vh-100">
+    <header>
+       <div class="container-fluid">
+        <div class="row">
+            <div class="col col-md-6">
+                {% if page == 'organization_transformation' %} <b>Organization Transformation</b>{% else %}<a href="{% url 'organization_transformation' %}">Organization Transformation</a> {% endif %}              
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% if page == 'transformation_leadership' %} <b>Transformation Leadership</b>{% else %} <a href="{% url 'transformation_leadership' %}">Transformation Leadership</a> {% endif %}    
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% if page == 'transformation_sw_training_services' %} <b> SW &amp; Training Services</b>{% else %}<a href="{% url 'transformation_sw_training_services' %}"> SW &amp; Training Services</a> {% endif %}                        
+                
+            </div>
+            <div class="col col-md-6 text-end">                
+                {% if page == 'cafe' %} <b>CAFE</b>{% else %}<a href="{% url 'cafe' %}">CAFE</a> {% endif %}              
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% if page == 'beaiagile' %} <b>Be AIAgile</b>{% else %}<a href="{% url 'beaiagile' %}">Be AIAgile</a> {% endif %}              
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% if page == 'help' %} <b>Help</b>{% else %} <a href="{% url 'help' %}">Help</a> {% endif %}    
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% if page == 'welcome' %} <b>Home</b>{% else %}<a href="{% url 'welcome' %}">Home</a> {% endif %}                        
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% if page == 'user_page' %} <b>User Dashboard</b>{% else %}<a href="{% url 'user_page' %}">Dashboard</a> {% endif %}                        
+                
+                
+                
+                {% if user.is_authenticated %}
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                User: <a href="{% url 'user_page' %}">{{user.username}}</a>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="{% url 'logout_page' %}" class="btn btn-sm btn-primary">Logout</a>
+                {% else %}
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="{% url 'login' %}">Login</a>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="{% url 'register' %}">Register</a>
+                {% endif %}
+            </div>
+        </div>
+       </div>
+    </header>
+
+    <main class="flex-fill">
+        {% block content %}
+        <!-- Main content goes here -->
+        {% endblock %}
+    </main>
+
+    <footer class="mt-auto  text-center py-3">
+        <font size="-1">{{COPYRIGHT_INFO}}</font>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>    
+  </body>
+</html>

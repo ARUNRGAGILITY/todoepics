@@ -1,0 +1,13 @@
+<div class="row pb-2">
+    <div class="col col-md-12 text-start">
+        {% if page == 'my_workspace_page' %} <b>My Workspace Page</b>{% else %}<a href="{% url 'my_workspace_page' %}">My Workspace Page</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        {% if page == 'my_kanban' %} <b>My Kanban</b>{% else %}<a href="{% url 'my_kanban' %}">My Kanban</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        {% if page == 'my_todolist' %} <b>My TodoList</b>{% else %}<a href="{% url 'my_todolist' %}">My TodoList</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        {% if page == 'my_checklist' %} <b>My Checklist</b>{% else %}<a href="{% url 'my_checklist' %}">My Checklist</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        {% if page == 'my_projects' %} <b>My Projects</b>{% else %} <a href="{% url 'my_projects' %}">My Projects</a> {% endif %}    
+    </div>
+</div>

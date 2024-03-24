@@ -94,6 +94,18 @@ urlpatterns = [
     path('dev_trx_view_agree_on_canvas/<int:canvas_id>/', canvas_views.dev_trx_view_agree_on_canvas, name='dev_trx_view_agree_on_canvas'),
     path('dev_trx_edit_canvas/<int:canvas_id>/', canvas_views.dev_trx_edit_canvas, name='dev_trx_edit_canvas'),
     path('dev_trx_delete_canvas/<int:canvas_id>/', canvas_views.dev_trx_delete_canvas, name='dev_trx_delete_canvas'),
+    
+    
+    # setting up general ui/ux and access links for the users
+    # profile
+    path('my_profile_page/', views.my_profile_page, name="my_profile_page"),
+    path('my_settings_page/', views.my_settings_page, name="my_settings_page"),
+    path('my_workspace_page/', views.my_workspace_page, name="my_workspace_page"),
+    
+    path('my_kanban/', views.my_kanban, name="my_kanban"),
+    path('my_todolist/', views.my_todolist, name="my_todolist"),
+    path('my_checklist/', views.my_checklist, name="my_checklist"),
+    path('my_projects/', views.my_projects, name="my_projects"),
 ]
 
 urlpatterns += urls_base.urlpatterns_base

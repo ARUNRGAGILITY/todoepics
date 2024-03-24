@@ -110,6 +110,10 @@ urlpatterns = [
     path('my_roles_page/', views.my_roles_page, name="my_roles_page"),
     path('my_admin_roles/', views.my_admin_roles, name="my_admin_roles"),
     path('my_project_roles/', views.my_project_roles, name="my_project_roles"),
+    
+    path('my_organizations_page/', views.my_organizations_page, name="my_organizations_page"),
+    path('my_authorized_organizations/', views.my_authorized_organizations, name="my_authorized_organizations"),
+    path('my_viewable_organizations/', views.my_viewable_organizations, name="my_viewable_organizations"),
 ]
 
 urlpatterns += urls_base.urlpatterns_base

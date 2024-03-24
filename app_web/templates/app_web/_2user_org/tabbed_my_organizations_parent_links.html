@@ -1,0 +1,12 @@
+<div class="row pb-2">
+    <div class="col col-md-12 text-start">
+        {% if parent_page == 'my_organizations_page' %} <b>My Organizations Page</b>{% else %}
+        <a href="{% url 'my_organizations_page' %}">My Organizations Page</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;    
+        {% if parent_page == 'my_authorized_organizations' %} <b>My Authorized Organizations</b>{% else %}
+        <a href="{% url 'my_authorized_organizations' %}">My Authorized Organizations</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;       
+        {% if parent_page == 'my_viewable_organizations' %} <b>My Viewable Organizations</b>{% else %} 
+        <a href="{% url 'my_viewable_organizations' %}">My Viewable Organizations</a> {% endif %}    
+    </div>
+</div>

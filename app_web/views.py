@@ -186,8 +186,50 @@ def my_project_roles(request):
     template_file = f"{app_name}/_2user_roles/my_project_roles.html"
     return render(request, template_file, context)
 
+############################################################## >> my organizations
+def my_organizations_page(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_organizations_page',
+        'page': 'my_organizations_page',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user_org/my_organizations_page.html"
+    return render(request, template_file, context)
 
+def my_authorized_organizations(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_authorized_organizations',
+        'page': 'my_authorized_organizations',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user_org/my_authorized_organizations.html"
+    return render(request, template_file, context)
 
+def my_viewable_organizations(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_viewable_organizations',
+        'page': 'my_viewable_organizations',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user_org/my_viewable_organizations.html"
+    return render(request, template_file, context)
+
+############################################################ >> Starting links
 
 def welcome(request):
     # take inputs

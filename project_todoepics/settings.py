@@ -158,8 +158,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vBASE_PRODUCT_V1.0.0'
-BUILD_DESCRIPTION = 'Date:24032024 basic placeholder my roles: admin, personal constructs'
+BUILD_VERSION = 'vBASE_PRODUCT_V1.0.1'
+BUILD_DESCRIPTION = 'Date:24032024 basic placeholder my organizations: auth,view constructs'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 CODING_AI = "codingagi1"

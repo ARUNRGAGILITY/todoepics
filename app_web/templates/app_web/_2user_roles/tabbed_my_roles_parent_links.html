@@ -1,0 +1,9 @@
+<div class="row pb-2">
+    <div class="col col-md-12 text-start">
+        {% if parent_page == 'my_roles_page' %} <b>My Roles Page</b>{% else %}<a href="{% url 'my_roles_page' %}">My Roles Page</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;    
+        {% if parent_page == 'my_admin_roles' %} <b>My Admin Roles</b>{% else %}<a href="{% url 'my_admin_roles' %}">My Admin Roles</a> {% endif %}              
+        &nbsp;&nbsp;|&nbsp;&nbsp;       
+        {% if parent_page == 'my_project_roles' %} <b>My Project Roles</b>{% else %} <a href="{% url 'my_project_roles' %}">My Project Roles</a> {% endif %}    
+    </div>
+</div>

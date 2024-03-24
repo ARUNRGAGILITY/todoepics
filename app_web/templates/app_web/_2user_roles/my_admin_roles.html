@@ -1,0 +1,58 @@
+{% extends "../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}User/MyRoles/Admin{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+{% include "../_2user/user_loggedin_menu.html" %}
+<div class="container-fluid">
+    {% include "../_2user_roles/tabbed_my_roles_parent_links.html" %}
+    {% include "./tabbed_my_admin_roles_links.html" %}
+
+    <!-- content part1 -->
+    <div class="row">
+        <div class="col col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="4">User: {{user.username}}'s Admin Roles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                        Admin
+                    </td>
+                </tr>
+                </tbody>
+            </table>         
+        </div>
+    </div>
+    <!-- end content part1 -->
+
+    <div class="row">
+        <div class="col col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <!-- <tr>
+                        <th colspan="4">User: {{user.username}}'s Admin</th>
+                    </tr> -->
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                        Details
+                    </td>
+                </tr>
+                </tbody>
+            </table>         
+        </div>
+    </div>
+</div>
+{% else%}
+  {% include './_2user/guest_user.html' %}
+{% endif %}
+{% endblock content %}
+
+
+

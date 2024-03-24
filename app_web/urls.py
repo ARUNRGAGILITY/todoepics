@@ -106,6 +106,10 @@ urlpatterns = [
     path('my_todolist/', views.my_todolist, name="my_todolist"),
     path('my_checklist/', views.my_checklist, name="my_checklist"),
     path('my_projects/', views.my_projects, name="my_projects"),
+    
+    path('my_roles_page/', views.my_roles_page, name="my_roles_page"),
+    path('my_admin_roles/', views.my_admin_roles, name="my_admin_roles"),
+    path('my_project_roles/', views.my_project_roles, name="my_project_roles"),
 ]
 
 urlpatterns += urls_base.urlpatterns_base

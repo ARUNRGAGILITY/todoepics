@@ -143,6 +143,52 @@ def my_projects(request):
     template_file = f"{app_name}/_2user_ws/my_projects.html"
     return render(request, template_file, context)
 
+#################################################### >>> MY ROLES
+def my_roles_page(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_roles_page',
+        'page': 'my_roles_page',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user_roles/my_roles_page.html"
+    return render(request, template_file, context)
+
+def my_admin_roles(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_admin_roles',
+        'page': 'my_admin_roles',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user_roles/my_admin_roles.html"
+    return render(request, template_file, context)
+
+def my_project_roles(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'my_project_roles',
+        'page': 'my_project_roles',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user_roles/my_project_roles.html"
+    return render(request, template_file, context)
+
+
+
+
 def welcome(request):
     # take inputs
     # process inputs

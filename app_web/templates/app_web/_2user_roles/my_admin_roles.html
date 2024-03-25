@@ -29,25 +29,32 @@
         </div>
     </div>
     <!-- end content part1 -->
-
-    <div class="row">
-        <div class="col col-md-12">
-            <table class="table table-bordered">
-                <thead>
-                    <!-- <tr>
-                        <th colspan="4">User: {{user.username}}'s Admin</th>
-                    </tr> -->
-                </thead>
-                <tbody>
-                <tr>
-                    <td colspan="4">
-                        Details
-                    </td>
-                </tr>
-                </tbody>
-            </table>         
-        </div>
+    
+   <!-- Display the roles -->
+   <div class="row">
+    <div class="col col-md-12">
+        <table class="table table-bordered">                
+            <tbody>
+            <tr>
+                <td colspan="4">
+                    {% for role in roles %}
+                        {% if role.name == "SiteAdmin" %}
+                        <b>You are a Site Admin.</b>
+                        <a href="{% url 'site_admin_home' %}">Site Admin</a>
+                        {% elif role.name == "OrgAdmin" %}
+                        <b>You are Organization Admin.</b>
+                        {% elif role.name == "ProjectAdmin" %}
+                        <b>You are Project Admin.</b>                           
+                        {% endif %}
+                    {% empty %}
+                        <b>No Admin Roles Yet.</b>
+                    {% endfor %}
+                </td>
+            </tr>
+            </tbody>
+        </table>         
     </div>
+</div>
 </div>
 {% else%}
   {% include './_2user/guest_user.html' %}

@@ -16,6 +16,7 @@ from django.utils.html import strip_tags
 import json
 from django.http import JsonResponse
 from django.conf import settings
+from django.db.models import Q
 # Create your views here.
 app_name = "app_web"
 
@@ -149,11 +150,14 @@ def my_roles_page(request):
     # process inputs
     user = None
     user = request.user   
+    profile = AWProfile.objects.get(user=user, active=True)
+    roles = profile.roles.filter(active=True)
     # send outputs (info, template, request)
     context = {
         'parent_page': 'my_roles_page',
         'page': 'my_roles_page',
         'user': user,
+        'roles': roles,
     }       
     template_file = f"{app_name}/_2user_roles/my_roles_page.html"
     return render(request, template_file, context)
@@ -163,11 +167,14 @@ def my_admin_roles(request):
     # process inputs
     user = None
     user = request.user   
+    profile = AWProfile.objects.get(user=user, active=True)
+    roles = profile.roles.filter(active=True)
     # send outputs (info, template, request)
     context = {
         'parent_page': 'my_admin_roles',
         'page': 'my_admin_roles',
         'user': user,
+        'roles': roles,
     }       
     template_file = f"{app_name}/_2user_roles/my_admin_roles.html"
     return render(request, template_file, context)
@@ -220,14 +227,68 @@ def my_viewable_organizations(request):
     # process inputs
     user = None
     user = request.user   
+    viewable_organizations = Organization.objects.filter(active=True)
     # send outputs (info, template, request)
     context = {
         'parent_page': 'my_viewable_organizations',
         'page': 'my_viewable_organizations',
         'user': user,
+        'viewable_organizations': viewable_organizations,
     }       
     template_file = f"{app_name}/_2user_org/my_viewable_organizations.html"
     return render(request, template_file, context)
+
+
+# SITE ADMIN
+
+def site_admin_home(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    organizations = Organization.objects.filter(active=True)
+    for org in organizations:
+        org.admins = OrgAdmins.objects.filter(organization=org).select_related('user')
+
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'site_admin_home',
+        'page': 'site_admin_home',
+        'user': user,
+        'organizations': organizations,
+    }       
+    template_file = f"{app_name}/_2admin_roles/site_admin/site_admin_home.html"
+    return render(request, template_file, context)
+
+def ajax_user_suggestions(request):
+    query = request.GET.get('query', '')
+    if query:
+        users = User.objects.filter(Q(username__icontains=query) | Q(id__icontains=query)) 
+        suggestions = list(users.values('id', 'username'))
+    else:
+        suggestions = []
+    return JsonResponse(suggestions, safe=False)
+
+
+
+@login_required
+def ajax_add_org_admin(request):
+    user_id = request.POST.get('user_id')
+    organization_id = request.POST.get('organization_id')
+
+    # Ensure the user and organization exist
+    user = get_object_or_404(User, pk=user_id)
+    organization = get_object_or_404(Organization, pk=organization_id )
+
+    # Create the OrgAdmins association
+    OrgAdmins.objects.create(user=user, organization=organization)
+
+    # Query all admins for this organization
+    org_admins = OrgAdmins.objects.filter(organization=organization).select_related('user')
+    admins_list = [{'id': admin.user.id, 'username': admin.user.username} for admin in org_admins]
+
+    return JsonResponse({'status': 'success', 'admins': admins_list})
+
 
 ############################################################ >> Starting links
 

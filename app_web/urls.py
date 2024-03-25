@@ -114,6 +114,11 @@ urlpatterns = [
     path('my_organizations_page/', views.my_organizations_page, name="my_organizations_page"),
     path('my_authorized_organizations/', views.my_authorized_organizations, name="my_authorized_organizations"),
     path('my_viewable_organizations/', views.my_viewable_organizations, name="my_viewable_organizations"),
+    
+    # ADMIN ROLES
+    path('site_admin_home/', views.site_admin_home, name="site_admin_home"),
+    path('ajax-user-suggestions/', views.ajax_user_suggestions, name='ajax-user-suggestions'),
+    path('ajax_add_org_admin/', views.ajax_add_org_admin, name="ajax_add_org_admin"),
 ]
 
 urlpatterns += urls_base.urlpatterns_base

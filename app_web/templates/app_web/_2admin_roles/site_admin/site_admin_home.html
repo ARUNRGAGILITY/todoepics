@@ -1,0 +1,159 @@
+{% extends "../../_1base/modern_welcome_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Admin/SiteAdmin{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="container-fluid">
+
+
+    <!-- content part1 -->
+    <div class="row">
+        <div class="col col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="4">User: {{user.username}}'s Site Administration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                          <!-- Table Display -->
+                          <table class="table table-bordered">
+                                      
+                            <thead>
+                                <th width="2%" class="text-end">#</th>
+                                <th width="10%">Organization</th>
+                                <th>Description</th>
+                                <th>Type</th>
+                                <th>Add Admin</th>
+                                <th>Org Admins</th>
+                            </thead>             
+                            {% for org in organizations %}   
+                            <tr>
+                                <td width="2%" class="text-end">
+                                    {{forloop.counter}}
+                                </td>                              
+                                <td>
+                                    {{org.name}}
+                                </td>
+                                <td>
+                                    {{org.description}}
+                                </td>
+                                <td>
+                                   {{org.safe_type}}
+                                </td>
+                                <td>
+                                    <input type="hidden" name="org_id" value="{{org.id}}_{{forloop.counter}}"> <!-- Hidden field to store the organization ID -->
+                                    <input type="text" class="org-admin-input" data-org-id="{{org.id}}" data-counter="{{forloop.counter}}"
+                                    name="org_admins" id="org_admins_{{forloop.counter}}" value="">
+                                    <div class="suggestions-container" id="suggestions_{{forloop.counter}}"></div>
+                                    <input type="hidden" id="selectedAdmins" name="selectedAdmins">
+                                </td>
+                                <td>
+                                    <ul id="admins-list-{{ org.id }}">
+                                        {% for admin in org.admins %}
+                                        <li>{{ admin.user.username }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>     
+                            {% endfor %}                         
+                        </table>           
+                    </td>
+                </tr>
+                </tbody>
+            </table>         
+        </div>
+    </div>
+    <!-- end content part1 -->
+    
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+  // Bind event to inputs with class 'org-admin-input'
+  $(".org-admin-input").on("keyup", function() {
+    var inputElement = $(this);
+    var query = inputElement.val();
+    var inputId = inputElement.attr('id');
+    //var counter = inputId.split('_').pop(); // Get the counter part of the ID
+    var counter = inputElement.data("counter");
+    var suggestionsContainerId = "#suggestions_" + counter;
+
+    if (query.length > 2) {
+      $.ajax({
+        url: "{% url 'ajax-user-suggestions' %}",
+        data: { 'query': query },
+        dataType: 'json',
+        success: function(data) {
+          var suggestionsContainer = $(suggestionsContainerId);
+          suggestionsContainer.empty(); // Clear previous suggestions
+          $.each(data, function(index, item) {
+            suggestionsContainer.append("<div class='suggestion-item' data-id='" + item.id + "' data-counter='" + counter + "'>" + item.username + "</div>");
+          });
+
+          // Bind click event to each suggestion item
+          $(".suggestion-item").click(function() {
+            var userId = $(this).data("id");
+            var counter = $(this).data("counter"); // Counter value, ensure this is being set correctly when generating suggestions
+            // Use the counter to find the corresponding input element that triggered the suggestion
+            var inputElement = $('.org-admin-input[data-counter="' + counter + '"]');
+            
+            // Retrieve the organization ID from the data-org-id attribute of the input element
+            var organizationId = inputElement.data("org-id");
+
+            console.log("Selected user ID: " + userId + ", Organization ID: " + organizationId);
+            // Here you can handle the selection, such as adding the user ID to a hidden field or displaying it
+            inputElement.val($(this).text()); // For example, setting the selected username in the input box
+            suggestionsContainer.empty(); // Clear suggestions
+
+            // Add the selected user ID to the hidden field
+            $.ajax({
+                url: "/ajax_add_org_admin/", // Adjust to your URL
+                type: "POST",
+                data: {
+                    'user_id': userId, // User ID from the suggestion item
+                    'organization_id': organizationId,
+                    'csrfmiddlewaretoken': "{{ csrf_token }}",
+                },
+                success: function(response) {
+                    // Handle success, e.g., show a message, clear the input
+                    console.log("User added successfully");
+                    // Assuming you have a container to display admins
+                    var adminsContainer = $('#admins-list-' + organizationId);
+                    adminsContainer.empty(); // Clear previous list
+
+                    // Populate with new list of admins
+                    response.admins.forEach(function(admin) {
+                        adminsContainer.append('<li>' + admin.username + '</li>');
+                    });
+
+                    // Clear the input field
+                    $('.org-admin-input[data-org-id="' + organizationId + '"]').val('');
+                },
+                error: function(xhr, errmsg, err) {
+                    // Handle error
+                    console.error("Error adding user");
+                }
+            });
+            // end ajax
+
+
+          });
+        }
+      });
+    }
+  });
+});
+</script>
+
+{% else%}
+  {% include './_2user/guest_user.html' %}
+{% endif %}
+{% endblock content %}
+
+
+

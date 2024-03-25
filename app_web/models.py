@@ -37,7 +37,12 @@ class Organization(BaseModel1):
 
     def __str__(self):
         return self.name
-
+##################################################################
+# ORG ADMINS
+##################################################################
+class OrgAdmins(BaseModel1):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 ##################################################################
 # STRATEGIC THEME
 ##################################################################

@@ -1,10 +1,10 @@
-{% extends "../_1base/bootstrap_base.html" %} 
+{% extends "../_1base/modern_welcome_base.html" %} 
 {% load static %}
 {% load crispy_forms_tags %}
 {% block title %}User/MyOrganizations/Viewable{% endblock title %} 
 {% block content %}
 {% if user.is_authenticated %}
-{% include "../_2user/user_loggedin_menu.html" %}
+
 <div class="container-fluid">
     {% include "../_2user_org/tabbed_my_organizations_parent_links.html" %}
     {% include "./tabbed_my_viewable_organizations_links.html" %}
@@ -22,6 +22,38 @@
                 <tr>
                     <td colspan="4">
                         Viewable Organizations 
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+
+                        <!-- Table Display -->
+                        <table class="table table-bordered">
+                                      
+                            <thead>
+                                <th width="2%" class="text-end">#</th>
+                                <th width="10%">Organization</th>
+                                <th>Description</th>
+                                <th>Type</th>
+                            </thead>             
+                            {% for org in viewable_organizations %}   
+                            <tr>
+                                <td width="2%" class="text-end">
+                                    {{forloop.counter}}
+                                </td>                              
+                                <td>
+                                    {{org.name}}
+                                </td>
+                                <td>
+                                    {{org.description}}
+                                </td>
+                                <td>
+                                   {{org.safe_type}}
+                                </td>
+                            </tr>     
+                            {% endfor %}                         
+                        </table>           
+                        
                     </td>
                 </tr>
                 </tbody>

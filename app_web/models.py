@@ -33,7 +33,7 @@ class SAFeType(BaseModel1):
     def __str__(self):
         return self.name
 class Organization(BaseModel1):
-    safe_type = models.ForeignKey(SAFeType, on_delete=models.CASCADE, related_name="organizations")
+    org_type = models.ForeignKey(SAFeType, on_delete=models.CASCADE, related_name="organizations")
 
     def __str__(self):
         return self.name
@@ -43,6 +43,15 @@ class Organization(BaseModel1):
 class OrgAdmins(BaseModel1):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
+    
+class ProjectAdmins(BaseModel1):
+    # need to add projects
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 ##################################################################
 # STRATEGIC THEME
 ##################################################################

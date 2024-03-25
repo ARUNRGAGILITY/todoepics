@@ -120,6 +120,14 @@ urlpatterns = [
     path('ajax-user-suggestions/', views.ajax_user_suggestions, name='ajax-user-suggestions'),
     path('ajax_add_org_admin/', views.ajax_add_org_admin, name="ajax_add_org_admin"),
     path('ajax_delete_org_admin/', views.ajax_delete_org_admin, name="ajax_delete_org_admin"),
+    path('add_organization/', views.add_organization, name="add_organization"),
+    path('delete_organization/<int:id>', views.delete_organization, name="delete_organization"),
+    path('edit_organization/<int:id>', views.edit_organization, name="edit_organization"),
+    path('view_organization/<int:id>', views.view_organization, name="view_organization"),
+    
+    path('org_admin_home/', views.org_admin_home, name="org_admin_home"),
+    path('ajax_add_project_admin/', views.ajax_add_project_admin, name="ajax_add_project_admin"),
+    path('ajax_delete_project_admin/', views.ajax_delete_project_admin, name="ajax_delete_project_admin"),
 ]
 
 urlpatterns += urls_base.urlpatterns_base

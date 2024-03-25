@@ -307,6 +307,143 @@ def ajax_delete_org_admin(request):
     OrgAdmins.objects.filter(organization_id=org_id, user_id=user_id).update(active=False, deleted=True)
     
     return JsonResponse({'status': 'success'})
+
+
+
+# SITE ADMIN
+@login_required
+def org_admin_home(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    organizations = Organization.objects.filter(active=True)
+    for org in organizations:
+        org.admins = ProjectAdmins.objects.filter(organization=org, active=True).select_related('user')
+
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'site_admin_home',
+        'page': 'site_admin_home',
+        'user': user,
+        'organizations': organizations,
+    }       
+    template_file = f"{app_name}/_2admin_roles/org_admin/org_admin_home.html"
+    return render(request, template_file, context)
+
+
+@login_required
+def ajax_add_project_admin(request):
+    user_id = request.POST.get('user_id')
+    organization_id = request.POST.get('organization_id')
+
+    # Ensure the user and organization exist
+    user = get_object_or_404(User, pk=user_id)
+    organization = get_object_or_404(Organization, pk=organization_id, active=True )
+
+    # Create the OrgAdmins association
+    ProjectAdmins.objects.create(user=user, organization=organization, active=True)
+
+    # Query all admins for this organization
+    project_admins = ProjectAdmins.objects.filter(organization=organization, active=True).select_related('user')
+    admins_list = [{'id': admin.user.id, 'username': admin.user.username, 'org_id': admin.organization.id} for admin in project_admins]
+
+    return JsonResponse({'status': 'success', 'admins': admins_list})
+
+@login_required
+def ajax_delete_project_admin(request):
+    org_id = request.POST.get('org_id')
+    user_id = request.POST.get('user_id')
+    
+    # Perform deletion
+    ProjectAdmins.objects.filter(organization_id=org_id, user_id=user_id).update(active=False, deleted=True)
+    
+    return JsonResponse({'status': 'success'})
+
+@login_required
+def add_organization(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    form = OrganizationForm()
+    
+    if request.method == 'POST':
+        form = OrganizationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Redirect to the main page
+            return redirect('site_admin_home')
+        else:
+            print(f">>> === form invalid {form.errors} === <<<")
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'site_admin_home',
+        'page': 'add_organization',
+        'user': user,
+        'form': form,
+    }       
+    template_file = f"{app_name}/_2admin_roles/site_admin/add_organization.html"
+    return render(request, template_file, context)
+
+@login_required
+def edit_organization(request, id):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    organization = get_object_or_404(Organization, pk=id)
+    form = OrganizationForm(instance=organization)
+    
+    if request.method == 'POST':
+        form = OrganizationForm(request.POST, instance=organization)
+        if form.is_valid():
+            form.save()
+            # Redirect to the main page
+            return redirect('site_admin_home')
+        else:
+            print(f">>> === form invalid {form.errors} === <<<")
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'site_admin_home',
+        'page': 'edit_organization',
+        'user': user,
+        'form': form,
+        'organization': organization,
+    }       
+    template_file = f"{app_name}/_2admin_roles/site_admin/edit_organization.html"
+    return render(request, template_file, context)
+
+@login_required
+def delete_organization(request, id):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    organization = get_object_or_404(Organization, pk=id)
+    organization.active = False
+    organization.deleted = True
+    organization.save()
+    # Redirect to the main page
+    return redirect('site_admin_home')
+
+@login_required
+def view_organization(request, id):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    organization = get_object_or_404(Organization, pk=id)
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'site_admin_home',
+        'page': 'view_organization',
+        'user': user,
+        'organization': organization,
+    }       
+    template_file = f"{app_name}/_2admin_roles/site_admin/view_organization.html"
+    return render(request, template_file, context)
+    
 ############################################################ >> Starting links
 
 def welcome(request):

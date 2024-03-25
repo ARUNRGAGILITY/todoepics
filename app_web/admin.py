@@ -36,7 +36,7 @@ class AWProfileAdmin(admin.ModelAdmin):
     get_organizations.short_description = 'Organizations'
 admin.site.register(AWProfile, AWProfileAdmin)
 class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'safe_type', 'active', 'deleted', )
+    list_display = ('name', 'description', 'org_type', 'active', 'deleted', )
 admin.site.register(Organization, OrganizationAdmin)
 ## cafe
 

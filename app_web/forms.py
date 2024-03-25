@@ -14,6 +14,11 @@ class OpsValueStreamForm(forms.ModelForm):
         model = OpsValueStream
         fields = ['name', 'description']  
 
+class OrganizationForm(forms.ModelForm):
+    class Meta:
+        model = Organization
+        fields = ['org_type', 'name', 'description', ]  
+
 
 class OpsValueStreamForm(forms.ModelForm):
     trigger = forms.CharField(widget=forms.TextInput(attrs={'size': '50'}))

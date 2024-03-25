@@ -1,0 +1,63 @@
+{% extends "../../_1base/modern_welcome_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Admin/SiteAdmin/EditOrg{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="container-fluid">
+
+    <!-- content part1 -->
+    <div class="row">
+        <div class="col col-md-12">
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col col-md-4 text-start">
+                        User: {{user.username}}'s Site Administration
+                    </div>
+                    <div class="col col-md-8 text-end">
+                        <a href="{% url 'user_page' %}">My Page</a>
+                        &nbsp;|&nbsp;
+                        <a href="{% url 'my_admin_roles' %}">My Admin Roles</a>
+                        &nbsp;|&nbsp;
+                        <a href="{% url 'site_admin_home' %}">Site Admin</a>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="4">User: {{user.username}}'s Site Administration :: Edit Organization</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                          <table class="table table-bordered">
+                            <tr>
+                                <td>
+                                    <form method="post" action="">
+                                        {% csrf_token %}
+                                        {{ form|crispy }}
+                                        <button type="submit" class="btn btn-primary">Edit Organization</button>
+                                    </form>
+                                </td>
+                            </tr>
+                          </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>         
+        </div>
+    </div>
+    <!-- end content part1 -->
+    
+</div>
+{% else%}
+  {% include './_2user/guest_user.html' %}
+{% endif %}
+{% endblock content %}
+
+
+

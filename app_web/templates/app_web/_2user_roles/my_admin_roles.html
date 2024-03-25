@@ -43,6 +43,7 @@
                         <a href="{% url 'site_admin_home' %}">Site Admin</a>
                         {% elif role.name == "OrgAdmin" %}
                         <b>You are Organization Admin.</b>
+                        <a href="{% url 'org_admin_home' %}">Org Admin</a>
                         {% elif role.name == "ProjectAdmin" %}
                         <b>You are Project Admin.</b>                           
                         {% endif %}

@@ -1,7 +1,7 @@
 {% extends "../../_1base/modern_welcome_base.html" %} 
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}Admin/SiteAdmin{% endblock title %} 
+{% block title %}Admin/OrgAdmin{% endblock title %} 
 {% block content %}
 {% if user.is_authenticated %}
 
@@ -11,30 +11,15 @@
     <!-- content part1 -->
     <div class="row">
         <div class="col col-md-12">
-            <!-- Level1 info and links -->
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col col-md-4 text-start">
-                        User: {{user.username}}'s Site Administration
-                    </div>
-                    <div class="col col-md-8 text-end">
-                        <a href="{% url 'user_page' %}">My Page</a>
-                        &nbsp;|&nbsp;
-                        <a href="{% url 'my_admin_roles' %}">My Admin Roles</a>
-                    </div>
-                </div>
-
-                <div class="row pt-2 pb-2">
-                    <div class="col col-md-4 text-start">
-                        Here is the list of organizations in this Site.
-                    </div>
-                    <div class="col col-md-8 text-end">
-                        <a href="{% url 'add_organization' %}" class="btn btn-sm btn-success">+ Add Organization</a>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="4">User: {{user.username}}'s Organization Administration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="4">
                           <!-- Table Display -->
                           <table class="table table-bordered">
                                       
@@ -43,9 +28,8 @@
                                 <th width="10%">Organization</th>
                                 <th>Description</th>
                                 <th>Type</th>
-                                <th>Actions</th>
                                 <th>Add Admin</th>
-                                <th>Org Admins</th>
+                                <th>Project Admins</th>
                             </thead>             
                             {% for org in organizations %}   
                             <tr>
@@ -62,14 +46,10 @@
                                    {{org.org_type}}
                                 </td>
                                 <td>
-                                    <a href="{% url 'view_organization' org.id %}">View</a>&nbsp;&nbsp;
-                                    <a href="{% url 'edit_organization' org.id %}">Edit</a>&nbsp;&nbsp;
-                                    <a href="{% url 'delete_organization' org.id %}">Delete</a>
-                                </td>
-                                <td>
                                     <input type="hidden" name="org_id" value="{{org.id}}_{{forloop.counter}}"> <!-- Hidden field to store the organization ID -->
-                                    <input type="text" class="org-admin-input" data-org-id="{{org.id}}" data-counter="{{forloop.counter}}"
-                                    name="org_admins" id="org_admins_{{forloop.counter}}" value="">
+                                    <input type="text" class="project-admin-input" data-org-id="{{org.id}}" 
+                                    data-counter="{{forloop.counter}}"
+                                    name="project_admins" id="project_admins_{{forloop.counter}}" value="">
                                     <div class="suggestions-container" id="suggestions_{{forloop.counter}}"></div>
                                     <input type="hidden" id="selectedAdmins" name="selectedAdmins">
                                 </td>
@@ -87,13 +67,10 @@
                             </tr>     
                             {% endfor %}                         
                         </table>           
-                    </div>
-                </div>
-
-            </div>
-
-
-            
+                    </td>
+                </tr>
+                </tbody>
+            </table>         
         </div>
     </div>
     <!-- end content part1 -->
@@ -107,7 +84,7 @@ $(document).ready(function() {
         const orgId = $(this).data('org-id');
         const userId = $(this).data('user-id');
         $.ajax({
-            url: '{% url "ajax_delete_org_admin" %}',
+            url: '{% url "ajax_delete_project_admin" %}',
             type: 'POST',
             data: {
                 'org_id': orgId,
@@ -126,7 +103,7 @@ $(document).ready(function() {
     });
 
   // Bind event to inputs with class 'org-admin-input'
-  $(".org-admin-input").on("keyup", function() {
+  $(".project-admin-input").on("keyup", function() {
     var inputElement = $(this);
     var query = inputElement.val();
     var inputId = inputElement.attr('id');
@@ -151,7 +128,7 @@ $(document).ready(function() {
             var userId = $(this).data("id");
             var counter = $(this).data("counter"); // Counter value, ensure this is being set correctly when generating suggestions
             // Use the counter to find the corresponding input element that triggered the suggestion
-            var inputElement = $('.org-admin-input[data-counter="' + counter + '"]');
+            var inputElement = $('.project-admin-input[data-counter="' + counter + '"]');
             
             // Retrieve the organization ID from the data-org-id attribute of the input element
             var organizationId = inputElement.data("org-id");
@@ -163,7 +140,7 @@ $(document).ready(function() {
 
             // Add the selected user ID to the hidden field
             $.ajax({
-                url: "/ajax_add_org_admin/", // Adjust to your URL
+                url: "/ajax_add_project_admin/", // Adjust to your URL
                 type: "POST",
                 data: {
                     'user_id': userId, // User ID from the suggestion item
@@ -197,7 +174,7 @@ $(document).ready(function() {
                     });
 
                     // Clear the input field
-                    $('.org-admin-input[data-org-id="' + organizationId + '"]').val('');
+                    $('.project-admin-input[data-org-id="' + organizationId + '"]').val('');
                 },
                 error: function(xhr, errmsg, err) {
                     // Handle error

@@ -158,8 +158,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vBASE_PRODUCT_V1.0.2'
-BUILD_DESCRIPTION = '25032024: added site-admin adding orgadmins'
+BUILD_VERSION = 'vBASE_PRODUCT_V1.0.3'
+BUILD_DESCRIPTION = '25032024: delete site-admin adding orgadmins'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 CODING_AI = "codingagi1"

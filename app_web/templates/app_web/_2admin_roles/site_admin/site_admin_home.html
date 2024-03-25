@@ -55,7 +55,11 @@
                                 <td>
                                     <ul id="admins-list-{{ org.id }}">
                                         {% for admin in org.admins %}
-                                        <li>{{ admin.user.username }}</li>
+                                        <li>{{ admin.user.username }}
+                                            <span class="delete-admin" data-org-id="{{ org.id }}" 
+                                            data-user-id="{{ admin.user.id }}" style="cursor:pointer;">
+                                            <img src="{% static 'img/bst_icons/person-x.svg' %}" alt="">
+                                        </li>
                                         {% endfor %}
                                     </ul>
                                 </td>
@@ -74,6 +78,29 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 $(document).ready(function() {
+
+    $(document).on('click', '.delete-admin', function() {
+        const orgId = $(this).data('org-id');
+        const userId = $(this).data('user-id');
+        $.ajax({
+            url: '{% url "ajax_delete_org_admin" %}',
+            type: 'POST',
+            data: {
+                'org_id': orgId,
+                'user_id': userId,
+                'csrfmiddlewaretoken': "{{ csrf_token }}"
+            },
+            success: function(response) {
+                // Handle successful deletion, e.g., remove the list item
+                $('span[data-user-id="' + userId + '"][data-org-id="' + orgId + '"]').closest('li').remove();
+            },
+            error: function(xhr, errmsg, err) {
+                // Handle error
+                console.log('Error deleting admin: ' + errmsg);
+            }
+        });
+    });
+
   // Bind event to inputs with class 'org-admin-input'
   $(".org-admin-input").on("keyup", function() {
     var inputElement = $(this);
@@ -126,9 +153,23 @@ $(document).ready(function() {
                     var adminsContainer = $('#admins-list-' + organizationId);
                     adminsContainer.empty(); // Clear previous list
 
+                    // // Populate with new list of admins
+                    // response.admins.forEach(function(admin) {
+                    //     adminsContainer.append('<li>' + admin.username + '</li>');
+                    // });
+
                     // Populate with new list of admins
                     response.admins.forEach(function(admin) {
-                        adminsContainer.append('<li>' + admin.username + '</li>');
+                        console.log('<li>' + admin.username +
+                            '<span class="delete-admin" data-org-id="' + admin.org_id + 
+                            '" data-user-id="' + admin.id + '" style="cursor:pointer;">' +
+                            '<img src="/static/img/bst_icons/person-x.svg" alt="delete">' +
+                            '</span></li>')
+                        adminsContainer.append('<li>' + admin.username +
+                            '<span class="delete-admin" data-org-id="' + admin.org_id + 
+                            '" data-user-id="' + admin.id + '" style="cursor:pointer;">' +
+                            '<img src="/static/img/bst_icons/person-x.svg" alt="delete">' +
+                            '</span></li>');
                     });
 
                     // Clear the input field

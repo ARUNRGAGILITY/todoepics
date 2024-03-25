@@ -46,6 +46,7 @@ def role_required(*role_names):
     return user_passes_test_with_403(in_roles)
 
 ########### PROFILE and GENERAL links #################
+@login_required
 def my_profile_page(request):
     # take inputs
     # process inputs
@@ -59,7 +60,7 @@ def my_profile_page(request):
     }       
     template_file = f"{app_name}/_2user/my_profile_page.html"
     return render(request, template_file, context)
-
+@login_required
 def my_settings_page(request):
     # take inputs
     # process inputs
@@ -74,6 +75,7 @@ def my_settings_page(request):
     template_file = f"{app_name}/_2user/my_settings_page.html"
     return render(request, template_file, context)
 
+@login_required
 def my_workspace_page(request):
     # take inputs
     # process inputs
@@ -88,6 +90,7 @@ def my_workspace_page(request):
     template_file = f"{app_name}/_2user/my_workspace_page.html"
     return render(request, template_file, context)
 
+@login_required
 def my_kanban(request):
     # take inputs
     # process inputs
@@ -102,6 +105,7 @@ def my_kanban(request):
     template_file = f"{app_name}/_2user_ws/my_kanban.html"
     return render(request, template_file, context)
 
+@login_required
 def my_todolist(request):
     # take inputs
     # process inputs
@@ -116,6 +120,7 @@ def my_todolist(request):
     template_file = f"{app_name}/_2user_ws/my_todolist.html"
     return render(request, template_file, context)
 
+@login_required
 def my_checklist(request):
     # take inputs
     # process inputs
@@ -130,6 +135,7 @@ def my_checklist(request):
     template_file = f"{app_name}/_2user_ws/my_checklist.html"
     return render(request, template_file, context)
 
+@login_required
 def my_projects(request):
     # take inputs
     # process inputs
@@ -145,6 +151,7 @@ def my_projects(request):
     return render(request, template_file, context)
 
 #################################################### >>> MY ROLES
+@login_required
 def my_roles_page(request):
     # take inputs
     # process inputs
@@ -162,6 +169,7 @@ def my_roles_page(request):
     template_file = f"{app_name}/_2user_roles/my_roles_page.html"
     return render(request, template_file, context)
 
+@login_required
 def my_admin_roles(request):
     # take inputs
     # process inputs
@@ -179,6 +187,7 @@ def my_admin_roles(request):
     template_file = f"{app_name}/_2user_roles/my_admin_roles.html"
     return render(request, template_file, context)
 
+@login_required
 def my_project_roles(request):
     # take inputs
     # process inputs
@@ -194,6 +203,7 @@ def my_project_roles(request):
     return render(request, template_file, context)
 
 ############################################################## >> my organizations
+@login_required
 def my_organizations_page(request):
     # take inputs
     # process inputs
@@ -208,6 +218,7 @@ def my_organizations_page(request):
     template_file = f"{app_name}/_2user_org/my_organizations_page.html"
     return render(request, template_file, context)
 
+@login_required
 def my_authorized_organizations(request):
     # take inputs
     # process inputs
@@ -221,7 +232,7 @@ def my_authorized_organizations(request):
     }       
     template_file = f"{app_name}/_2user_org/my_authorized_organizations.html"
     return render(request, template_file, context)
-
+@login_required
 def my_viewable_organizations(request):
     # take inputs
     # process inputs
@@ -240,7 +251,7 @@ def my_viewable_organizations(request):
 
 
 # SITE ADMIN
-
+@login_required
 def site_admin_home(request):
     # take inputs
     # process inputs
@@ -248,7 +259,7 @@ def site_admin_home(request):
     user = request.user   
     organizations = Organization.objects.filter(active=True)
     for org in organizations:
-        org.admins = OrgAdmins.objects.filter(organization=org).select_related('user')
+        org.admins = OrgAdmins.objects.filter(organization=org, active=True).select_related('user')
 
     # send outputs (info, template, request)
     context = {
@@ -259,7 +270,7 @@ def site_admin_home(request):
     }       
     template_file = f"{app_name}/_2admin_roles/site_admin/site_admin_home.html"
     return render(request, template_file, context)
-
+@login_required
 def ajax_user_suggestions(request):
     query = request.GET.get('query', '')
     if query:
@@ -269,8 +280,6 @@ def ajax_user_suggestions(request):
         suggestions = []
     return JsonResponse(suggestions, safe=False)
 
-
-
 @login_required
 def ajax_add_org_admin(request):
     user_id = request.POST.get('user_id')
@@ -278,18 +287,26 @@ def ajax_add_org_admin(request):
 
     # Ensure the user and organization exist
     user = get_object_or_404(User, pk=user_id)
-    organization = get_object_or_404(Organization, pk=organization_id )
+    organization = get_object_or_404(Organization, pk=organization_id, active=True )
 
     # Create the OrgAdmins association
-    OrgAdmins.objects.create(user=user, organization=organization)
+    OrgAdmins.objects.create(user=user, organization=organization, active=True)
 
     # Query all admins for this organization
-    org_admins = OrgAdmins.objects.filter(organization=organization).select_related('user')
-    admins_list = [{'id': admin.user.id, 'username': admin.user.username} for admin in org_admins]
+    org_admins = OrgAdmins.objects.filter(organization=organization, active=True).select_related('user')
+    admins_list = [{'id': admin.user.id, 'username': admin.user.username, 'org_id': admin.organization.id} for admin in org_admins]
 
     return JsonResponse({'status': 'success', 'admins': admins_list})
 
-
+@login_required
+def ajax_delete_org_admin(request):
+    org_id = request.POST.get('org_id')
+    user_id = request.POST.get('user_id')
+    
+    # Perform deletion
+    OrgAdmins.objects.filter(organization_id=org_id, user_id=user_id).update(active=False, deleted=True)
+    
+    return JsonResponse({'status': 'success'})
 ############################################################ >> Starting links
 
 def welcome(request):

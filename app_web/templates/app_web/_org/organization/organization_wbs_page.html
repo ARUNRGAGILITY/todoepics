@@ -1,0 +1,60 @@
+{% extends "../../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}CBA/Organization/WBS{% endblock title %} 
+{% block content %} 
+
+  
+<!-- BEGIN: PAGE -->
+<div class="container-fluid">
+    {% include "./organization_navigation_links.html" %}
+    {% include "./organization_links.html" %}
+
+
+    <div class="row">
+        <div class="col col-md-12">
+            <b>{{organization}} WBS</b>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8 text-center">                        
+                        <h3>Setup {{organization}} WorkBreakDownStrucure-WBS</h3>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8 text-center">
+                        {% if new_wbs == True %}
+                            <b>Select the existing WorkBreakDownStrucure-WBS:</b>
+                            {% if new_list %}
+                                <form action="" method="POST" id="listForm">
+                                    {% csrf_token %}
+                                    <b>{{organization}}:</b>&nbsp;&nbsp;
+                                    <input type="hidden" name="title" id="id_title" size="40" 
+                                        value="{{organization}}::WBS">&nbsp;&nbsp;
+                                    {{form.type}}
+                                    <input type="submit" name="add" value="Add">
+                                </form>
+                            {% else %}
+                                <b>WBS has not been setup for this organization</b>
+                            {% endif %}
+
+                        {% else %}                
+                            {% if mapping_wbs.list.id != None %}
+                                <a href="{% url 'list_js_tree_id' mapping_wbs.list.id %}">{{organization}} WBS</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+
+
+</div>
+<!-- END: PAGE --> 
+{% endblock content %}

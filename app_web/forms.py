@@ -104,13 +104,22 @@ class ValueStreamStepsForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'custom-css-class', 'rows': 4, 'cols': 40}),
         }
 
-class ProfileForm(forms.ModelForm):
+class SuperUserProfileForm(forms.ModelForm):
     class Meta:
         model = AWProfile
         fields = ['bio', 'roles']
         widgets = {
             'bio': forms.Textarea(attrs={'class': 'custom-css-class', 'rows': 4, 'cols': 40}),
             'roles': forms.CheckboxSelectMultiple,
+        }
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = AWProfile
+        fields = ['bio',]
+        widgets = {
+            'bio': forms.Textarea(attrs={'class': 'custom-css-class', 'rows': 4, 'cols': 40}),
         }
 
 

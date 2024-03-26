@@ -12,9 +12,9 @@
     {% csrf_token %}
 </form>
 <!-- Header -->
-{% include "app_web/_2user/user_loggedin_menu.html" %}
+{% include "../../common/__001_header1.html" %}
 {% if True %}
-
+{% include "../../common/__002_header2.html" %}
 <!-- 
 {% include "../../common/__003_header3.html" %}
  -->
@@ -23,11 +23,7 @@
         <div class="row no-gutters">
             <div class="col-md-3">
                 <div class="left_header" id="left_header1">
-                    {% if mapping_wbs != None %}
-                    {{mapping_wbs.organization}}
-                    {% else %}
-                    {{root_object}}
-                    {% endif %}
+                    Tree View
                 </div>
             </div>
             <div class="col-md-9 d-flex justify-content-start">

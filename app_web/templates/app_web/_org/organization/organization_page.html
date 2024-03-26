@@ -1,0 +1,250 @@
+{% extends "../../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}CBA/Organization{% endblock title %} 
+{% block content %} 
+<style>
+    .rounded-top {
+      border-radius: 10px 10px 0 0; /* Top-left, Top-right, Bottom-right, Bottom-left */
+      border: 2px solid #333; /* Just to show the border clearly */
+      padding: 2px;
+      margin: 2px;
+      text-align: start;
+    }
+
+    .rounded-bottom {
+      border-radius: 0 0  10px 10px; /* Bottom-left, Bottom-right, Top-left, Top-right */
+      border: 2px solid #333; /* Just to show the border clearly */
+      padding: 2px;
+      margin: 2px;
+      text-align: start;
+    }
+
+    .flat-div {
+      border: 2px solid #333; /* Just to show the border clearly */
+      padding: 2px;
+      margin: 2px;
+      text-align: start;
+    }
+
+    /* DIV FOR FLEX */
+    .parent-div {
+  position: relative; /* Establish a positioning context */
+  padding: 20px; /* For demonstration */
+  background-color: white; /* Light background for visibility */
+  /* Ensure it's large enough to demonstrate positioning */
+  width: 100%; /* Or specify a width */
+  min-height: 150px; /* Or specify a height */
+  margin-top: 2px; /* Just for some spacing from top or other elements */
+}
+
+.corner-div {
+  position: absolute; /* Position within parent context */
+  top: 0; /* Align to the top of the parent */
+  right: 0; /* Align to the right of the parent */
+  background-color: lightgrey; /* Grey background */
+  color: black; /* Black text */
+  border-radius: 0 2px 0 0 ; /* Round only the top-right corner */
+  padding: 2px; /* Add some padding */
+  z-index: 10; /* Ensure it appears above the parent content */
+  font-size: 12px;
+  font-weight: bold;
+}
+
+  </style>
+
+  
+<!-- BEGIN: PAGE -->
+<div class="container-fluid">
+    {% include "./organization_navigation_links.html" %}
+    {% include "./organization_links.html" %}
+    <div class="row">
+        <div class="col col-md-12">
+            <h2>Organization Page</h2>  
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col col-md-12 rounded-top rounded-bottom parent-div">
+                       <div class="corner-div">
+                        Portfolio
+                       </div>
+
+                        <table class="table table-bordered">
+                            <tr>
+                                <td colspan="2">
+                                    Portfolio Flow
+                                </td>
+                                <td colspan="1" rowspan="2">
+                                    Portfolio Backlog
+                                </td>
+                                <td colspan="1">
+                                    Big Data
+                                </td>
+                                <td colspan="1">
+                                    Value-Stream Management
+                                </td>
+                                <td colspan="2">
+                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">
+                                    Strategic Theme
+                                </td>
+                                <td colspan="1">
+                                    Portfolio Vision
+                                </td>
+                                <td colspan="1">
+                                    Lean Budgets
+                                </td>
+                                <td colspan="1">
+                                    Value-Stream Coordination
+                                </td>
+                                <td colspan="1">
+                                    Solutions
+                                </td>
+                                <td colspan="1">
+                                    
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+                                    
+                                </td>
+                                <td colspan="1">
+                                    Gaurd Rails
+                                </td>
+                                <td colspan="1">
+                                    Development Value Streams
+                                </td>
+                                <td colspan="1">
+                                    
+                                </td>
+                                <td colspan="1">
+                                    KPIs
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-md-12 rounded-bottom rounded-top parent-div">
+                        <div class="corner-div">Essential</div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td colspan="3">
+                                    ART Flow
+                                </td>
+                                <td colspan="3" class="text-center">
+                                    Continuous Delivery Pipeline
+                                </td>
+                                <td colspan="1">
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">
+                                    Customer Centricity
+                                </td>
+                                <td colspan="1" rowspan="2">
+                                    Lean UX
+                                </td>
+                                <td colspan="1" rowspan="2">
+                                    ART Backlog
+                                </td>
+                                <td colspan="3" class="text-center">
+                                    Agile Release Train
+                                </td>
+                                <td>
+                                    Solution
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="1">
+                                    Design Thinking
+                                </td>
+                               
+                             
+                                <td colspan="1">
+                                    Continuous Exploration
+                                </td>
+                                <td colspan="1">
+                                    Continuous Integration
+                                </td>
+                                <td colspan="1">
+                                    Continuous Deployment
+                                </td>
+                                <td colspan="1">
+                                    Solution Context
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+
+                                </td>
+                                <td colspan="3" class="text-center">
+                                    Release on Demand
+                                </td>
+                                <td colspan="1">
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table class="table table-bordered">
+                            <tr>
+                                <td colspan="3">
+                                    Team Flow
+                                </td>
+                                <td colspan="1" class="text-center" rowspan="2">
+                                    System Demos
+                                </td>
+                                <td colspan="1">
+                                    Cloud
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">
+                                    SAFe Scrum
+                                </td>
+                                <td colspan="1" rowspan="1">
+                                    Built-in Quality
+                                </td>
+                                <td colspan="1" rowspan="1">
+                                    Team Backlog
+                                </td>
+                                
+                                <td colspan="1">
+                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">
+                                    SAFe Team Kanban
+                                </td>
+                                <td colspan="1">
+                                    
+                                </td>
+                                <td colspan="1">
+                                    
+                                </td>
+                                <td colspan="1" class="text-center">
+                                    Architecture Runway
+                                </td>
+                               
+                              
+                                <td colspan="1">
+                                    DevOps
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>         
+        </div>
+    </div>
+</div>
+<!-- END: PAGE --> 
+{% endblock content %}

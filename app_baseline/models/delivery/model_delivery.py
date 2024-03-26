@@ -20,6 +20,10 @@ class Organization(CoreDelivery):
     
 class Project(CoreDelivery):
     # Additional fields specific to the Project model
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    actual_end_date = models.DateField(null=True, blank=True)
+    actual_start_date = models.DateField(null=True, blank=True)
     organization =  models.ForeignKey(Organization, null=True, blank=True, on_delete=models.SET_NULL)
     type = models.ForeignKey(BaseType, null=True, blank=True, on_delete=models.SET_NULL)
     state = models.ForeignKey(BaseState, null=True, blank=True, on_delete=models.SET_NULL)

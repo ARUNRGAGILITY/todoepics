@@ -1,0 +1,162 @@
+{% include "../../common/__breadcrumbs_custom_css.html" %}
+<div class="container-fluid-width">    
+    <div class="row py-0 no-gutters">
+        <div class="col-md-12">          
+            <ol class="breadcrumb1">
+            <li class="breadcrumb1-item  ">&nbsp;<a href="/">Home</a></li>
+            {% if ancestors %}
+                {% for ancestor in ancestors %}
+                {% if forloop.first %}               
+                <li class="breadcrumb1-item"><a href="{% url 'list_js_tree_id' ancestor.pk %}">{{ ancestor.title }}</a></li>
+                {% else %}
+                <li class="breadcrumb1-item"><a href="{% url 'list_js_tree_id' ancestor.pk %}">{{ ancestor.title }} </a></li>
+                {% endif %}
+                {% if forloop.last %}
+                  {% if title != ancestor.title %}
+                  <li class="breadcrumb1-item">{{ title }}</li>
+                  {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% if last_item  %}
+                <li class="breadcrumb1-item">{{ last_item }}</li>
+                {% endif %}                
+            {% else %}           
+            <li class="breadcrumb1-item">{{ last_item }}</li>
+            {% endif %}
+            {% if last_item  %}
+                <li class="breadcrumb1-item">{{ title }}</li>
+            {% endif %}            
+            </ol>          
+        </div>
+      </div>
+    </div>    
+</div>
+<div class="container-fluid-width">
+  <div class="row no-gutters">
+    <div class="col col-md-12">
+     <div id="content-window">
+      <!-- <table class="table table-bordered">
+        <tr>
+          <td width="50%" class="text-start"></td>
+          <td width="10%" class="text-end">
+            <a href="">Clear</a>
+          </td>
+        </tr>
+      </table> -->
+      <form action="" method="POST">
+        {% csrf_token %}
+      <table class="table table-bordered">
+         <tr>
+          <td colspan="1"  width="10%"><b>Summary:</b> </td>
+          <td colspan="3">
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
+            class="title"  data-model="List" 
+            data-field="title"  data-id="{{object.id}}">{% if object.title != None %}{{object.title}}{% endif %}</div>         
+          </td>
+        </tr>
+        <tr>
+          <td colspan="1" width="10%"><b>Description:</b> </td>
+          <td colspan="3">
+            <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
+            class="title"  data-model="List" 
+            data-field="description"  data-id="{{object.id}}">{% if object.description != None %}{{object.description}}{% endif %}</div>         
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" >
+            <input type="submit" name="submit" value="Save">
+          </td>
+        </tr>
+      </table>
+      </form>
+     </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  
+  $('.editable-div').on('blur', function () {
+    var $element = $(this);
+    var model = $element.data('model');
+    var field = $element.data('field');
+    var dev_id = $element.data('dev-id');
+    //var value = $element.text().trim();
+    var value = $element.html();
+    var id = $element.data('id');
+
+    // Assuming you have a way to get the object's ID you're editing
+    // This could be another data attribute, or part of the session, etc.
+    var objectId = '{{id}}' /* you need to determine this based on your app's logic */;
+
+    $.ajax({
+        type: 'POST',
+        url: '{% url "ajax_update_tree_field" %}',  // Update with the URL of your view
+        data: {
+            'model': model,
+            'field': field,
+            'value': value,
+            'id': id,
+            'dev_id': dev_id,
+            'object_id': objectId,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        success: function(response) {
+            // Handle success
+            console.log('Update successful');
+        },
+        error: function(response) {
+            // Handle error
+            console.log('Update failed');
+        }
+    });
+});
+
+</script>
+
+<script>
+    // update description
+$(document).on('blur', '.details-section', function() {
+  const newDescription = $(this).text();
+  const nodeId = $(this).attr('id');
+
+  $.ajax({
+    url: '/ajax_update_list_item_description',
+    type: 'POST',  // or POST, according to your needs
+    data: {
+      'node_id': nodeId,
+      'description': newDescription,
+      csrfmiddlewaretoken: '{{ csrf_token }}'
+    },
+    success: function(response) {
+      if (response.status === 'success') {
+        console.log('Description updated successfully');
+      } else {
+        console.log('Failed to update description: ' + response.message);
+      }
+    },
+    error: function() {
+      console.log('An error occurred while updating the description');
+    }
+  });
+});
+// end of the general functions
+</script>
+<script>
+  function loadSettings(node_id) {
+    $.ajax({
+        url: '/ajax_get_settings',
+        data: { 'node_id': node_id ,  csrfmiddlewaretoken: '{{ csrf_token }}'},
+        type: 'POST',
+        success: function(response) {
+            // Assuming that your content window has id='content-window'
+            console.log("RESPONE ", response);
+            $('#content-window').html(response);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+</script>

@@ -128,6 +128,11 @@ urlpatterns = [
     path('org_admin_home/', views.org_admin_home, name="org_admin_home"),
     path('ajax_add_project_admin/', views.ajax_add_project_admin, name="ajax_add_project_admin"),
     path('ajax_delete_project_admin/', views.ajax_delete_project_admin, name="ajax_delete_project_admin"),
+    
+    # ORGANIZATION VIEWING
+    path('organization_page/<int:id>/', views.organization_page, name="organization_page"),
+    path('organization_admin_page/<int:id>/', views.organization_admin_page, name="organization_admin_page"),
+    path('organization_wbs_page/<int:id>/', views.organization_wbs_page, name="organization_wbs_page"),
 ]
 
 urlpatterns += urls_base.urlpatterns_base

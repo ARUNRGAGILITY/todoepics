@@ -153,23 +153,8 @@ class Task(BaseModel1):
 ##################################################################
 # VALUESTREAM
 ##################################################################
-class OVS_Types(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    description = models.TextField(null=True, blank=True)
-    position = models.PositiveIntegerField(default=1000)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True, null=True, blank=True)
-    deleted = models.BooleanField(default=True, null=True, blank=True)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='ovstypes')
 
-    class Meta:
-        ordering = ['position']
-
-    def __str__(self):
-        return self.name
-
-class DVS_Types(models.Model):
+class DVS_Types(BaseModel1):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(null=True, blank=True)
     position = models.PositiveIntegerField(default=1000)
@@ -423,3 +408,40 @@ class AWProfile(models.Model):
 ##################################################################
 # end of model file
 ##################################################################
+
+class OVS_Types(BaseModel1):
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(null=True, blank=True)
+    position = models.PositiveIntegerField(default=1000)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True, null=True, blank=True)
+    deleted = models.BooleanField(default=True, null=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='ovstypes')
+
+    class Meta:
+        ordering = ['position']
+
+    def __str__(self):
+        return self.name
+
+##################################################################
+# end of model file
+##################################################################
+from django.core.exceptions import ValidationError
+
+class MappingWBS(BaseModel1):
+    organization = models.OneToOneField('Organization', on_delete=models.CASCADE, unique=True)
+    list = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, null=True, blank=True)
+
+    def clean(self):
+        # Ensure that the list and type are related
+        if self.list.type != self.type:
+            raise ValidationError('The selected list must be of the specified type.')
+
+    def __str__(self):
+        return f"WBS Mapping for {self.organization.name}"
+
+    class Meta:
+        verbose_name = "WBS Mapping"
+        verbose_name_plural = "WBS Mappings"

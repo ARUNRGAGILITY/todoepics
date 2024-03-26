@@ -21,7 +21,41 @@
                 <tbody>
                 <tr>
                     <td colspan="4">
-                        Authorized Organizations 
+                        <!-- Table Display -->
+                        <table class="table table-bordered">
+                                      
+                            <thead>
+                                <th width="2%" class="text-end">#</th>
+                                <th width="10%">Organization</th>
+                                <th>Description</th>
+                                <th>Type</th>
+                                <th>My Role</th>
+                            </thead>             
+                            {% for org in authorized_organizations %}   
+                                {% if  org.is_org_admin %}
+                                <tr>
+                                    <td width="2%" class="text-end">
+                                        {{forloop.counter}}
+                                    </td>                              
+                                    <td>
+                                        {{org.name}}
+                                    </td>
+                                    <td>
+                                        {{org.description}}
+                                    </td>
+                                    <td>
+                                    {{org.org_type}}
+                                    </td>     
+                                    <td>
+                                        {% if org.is_org_admin %}
+                                            <a href="{% url 'organization_page' org.id %}">Org Admin</a>
+                                        {% endif %}
+                                    </td>                         
+                                </tr>     
+                                {% endif %}                          
+                            {% endfor %}                         
+                        </table>           
+                        
                     </td>
                 </tr>
                 </tbody>

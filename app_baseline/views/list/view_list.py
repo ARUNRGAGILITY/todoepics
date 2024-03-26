@@ -13,6 +13,7 @@ from ...models.list.model_list import *
 
 from ...decorators.authz.decorator_authorization import *
 from ...decorators.authz.decoraton_v1_authz import *
+from app_web.models import *
 # which app is being referred
 app_base_ref = base_app_ref
 
@@ -798,7 +799,7 @@ def ajax_get_node_details_template(request):
             template = specific_template    
             logger.debug(f">>> === specific_template *** {template} *** === <<<")        
         except TemplateDoesNotExist:
-            template = f"{template_base}/general/general_template.html"
+            template = f"{template_base}/general/wbs_general_template.html"
                    
         #============================================================================
         #return JsonResponse(context)
@@ -973,14 +974,39 @@ def list_js_tree_id(request, list_id):
     object = List.objects.get(id=list_id)
     objects = List.objects.filter(id=list_id, active=True).order_by('position', '-created_at')
     objects_count = objects.count()
-    print(f">>> === TREEID(((((((((((((((((((((((((({objects})))))))))))))))))))))))))) === <<<")
+    
+    # get the organization from the list id
+    print(f">>> === LIST ID {list_id} {object}=== <<<")
+    root_object = None
+    mapping_wbs = MappingWBS.objects.filter(list_id=object.id).first()
+    if mapping_wbs == None:
+        root_object = object.get_root()
+        print(f">>> === ROOT ||| {root_object}=== <<<")
     permitted_nodes = get_permitted_nodes_for_user(request, objects)
     objects = permitted_nodes
     objects_count = permitted_nodes.count()
     
     logger.debug(f">>> === PN {objects} PNC {objects_count} === <<<")
-    context = {'page': 'list_js_tree', 'list_id': list_id, 'object': object, 'objects': objects, 'objects_count': objects_count}
+    context = {'page': 'list_js_tree', 'list_id': list_id, 'object': object, 
+               'objects': objects, 'objects_count': objects_count, 
+               'mapping_wbs': mapping_wbs,
+               'root_object': root_object,}
     template_url = f"{app_base_ref}/basics/list/list_js_tree_id.html"
     return render(request, template_url, context)
 # end experiment jstree
 ######################################################################################
+@login_required(login_url='login')
+def ajax_update_tree_field(request):
+    model_name = request.POST.get('model')
+    field_name = request.POST.get('field')
+    value = request.POST.get('value')
+    idx = request.POST.get('id')
+    object_id = request.POST.get('object_id')
+    print(f">>> === AJAX UPDATE DTC FIELD === <<<")
+    Model = apps.get_model('app_baseline', model_name)  # Update 'your_app_name'
+    obj = None
+    obj = Model.objects.get(id=idx)
+    setattr(obj, field_name, value)
+    obj.save()
+
+    return JsonResponse({'success': True})

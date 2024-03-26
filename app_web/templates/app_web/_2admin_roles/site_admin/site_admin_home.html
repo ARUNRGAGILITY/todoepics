@@ -53,7 +53,9 @@
                                     {{forloop.counter}}
                                 </td>                              
                                 <td>
-                                    {{org.name}}
+                                    <a href="{% url 'organization_page' org.id %}">
+                                        {{org.name}}
+                                    </a>
                                 </td>
                                 <td>
                                     {{org.description}}

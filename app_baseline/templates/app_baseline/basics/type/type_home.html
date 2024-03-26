@@ -63,6 +63,9 @@
                 {% csrf_token %}
                 <b>Type:</b>&nbsp;&nbsp;
                 <input type="text" name="title" id="id_title" size="40">&nbsp;&nbsp;
+                <br><br>
+                <b>Category: </b>&nbsp;&nbsp;{{form.type_type}}
+                &nbsp;&nbsp;
                 <input type="submit" name="add" value="Add">
             </form>
             &nbsp;&nbsp;
@@ -79,9 +82,28 @@
     <!-- DISPLAY the LIST -->
     <div class="row">
         <div class="col-md-12 d-flex justify-content-center align-items-center">
-            <table class="sortable_table" width="60%">
+            <table class="sortable_table" width="100%">
                 <!-- BEGIN THEAD -->
-
+                <thead>
+                    <tr>
+                        <th width="4%" style="text-align: right;">
+                            #
+                        </th>
+                        <th width="30%" style="padding-left: 10px;">
+                            Type
+                        </th>
+                        
+                        <th>
+                           
+                        </th>
+                        <th>
+                            Category
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
                 <!-- END THEAD -->
                 <!-- BEGIN TBODY -->
                 <tbody  id="sortable" class="sortable-tbody">
@@ -126,6 +148,9 @@
                               </span>
                               {% endif %}
                             {% endwith %} 
+                        </td>
+                        <td style="text-align: left;" width="10%">
+                            {{object.type_type}}
                         </td>
                         <td class="list_action" contenteditable="false" width="4%">
                             <span class="delete_x">

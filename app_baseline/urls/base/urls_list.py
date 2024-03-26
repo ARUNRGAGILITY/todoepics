@@ -42,4 +42,6 @@ urlpatterns_list = [
     path('ajax_save_list_permission', view_list.ajax_save_list_permission, name='ajax_save_list_permission'),
 
     path('test_method/<int:list_id>', view_list.test_method, name='test_method'),
+    path('ajax_update_tree_field', view_list.ajax_update_tree_field, name='ajax_update_tree_field'),
+    
 ]

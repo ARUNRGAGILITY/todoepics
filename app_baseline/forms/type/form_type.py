@@ -28,4 +28,4 @@ class TypeForm(forms.ModelForm):
         
     class Meta:
         model = Type
-        fields = ['parent', 'title','description' ]
+        fields = ['parent', 'title', 'type_type', 'description' ]

@@ -28,7 +28,12 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th colspan="4">User: {{user.username}}'s Site Administration :: Edit Organization</th>
+                        <th colspan="2">Edit Organization</th>
+                        <td colspan="2" class="text-end">
+                            <a href="{% url 'add_organization' %}">Add</a>
+                            &nbsp;|&nbsp;
+                            <a href="{% url 'delete_organization' organization.id %}">Delete</a>
+                        </td>
                     </tr>
                 </thead>
                 <tbody>

@@ -158,8 +158,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vBASE_PRODUCT_V1.0.4'
-BUILD_DESCRIPTION = '25032024: SiteAdmin Organization CRUD '
+BUILD_VERSION = 'vBASE_PRODUCT_V1.0.5'
+BUILD_DESCRIPTION = 'updated WBS entries for organization _g1_'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 CODING_AI = "codingagi1"

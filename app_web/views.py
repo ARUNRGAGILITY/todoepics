@@ -17,6 +17,8 @@ import json
 from django.http import JsonResponse
 from django.conf import settings
 from django.db.models import Q
+from app_baseline.models.list.model_list import *
+from app_baseline.forms.list.form_list import *
 # Create your views here.
 app_name = "app_web"
 
@@ -203,6 +205,8 @@ def my_project_roles(request):
     return render(request, template_file, context)
 
 ############################################################## >> my organizations
+# the my_organizations_page is a landing page for user role 
+# this will all the organizations summary or two broader authorized /viewable organizations links
 @login_required
 def my_organizations_page(request):
     # take inputs
@@ -218,17 +222,50 @@ def my_organizations_page(request):
     template_file = f"{app_name}/_2user_org/my_organizations_page.html"
     return render(request, template_file, context)
 
+
+def is_org_admin(user, organization):
+    return OrgAdmins.objects.filter(user=user, organization=organization).exists()
+
 @login_required
-def my_authorized_organizations(request):
+def my_organization_admin_page(request):
     # take inputs
     # process inputs
     user = None
     user = request.user   
     # send outputs (info, template, request)
     context = {
+        'parent_page': 'my_organization_admin_page',
+        'page': 'my_organization_admin_page',
+        'user': user,
+    }       
+    template_file = f"{app_name}/_2user_org/my_organizations_page.html"
+    return render(request, template_file, context)
+
+
+@login_required
+def my_authorized_organizations(request):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    profile = AWProfile.objects.get(user=user, active=True)
+    organizations = profile.organizations.filter(active=True)
+     # Prepare a subquery to check if the user is an OrgAdmin for the organization
+    org_admins_subquery = OrgAdmins.objects.filter(
+        user=user,
+        organization_id=OuterRef('pk'),  # Links to the outer query's organization PK
+    )
+
+    # Annotate each organization with whether the user is an OrgAdmin for it
+    authorized_organizations = Organization.objects.filter(active=True).annotate(
+        is_org_admin=Exists(org_admins_subquery)
+    ).order_by('name')  # Adding order for consistent results
+    # send outputs (info, template, request)
+    context = {
         'parent_page': 'my_authorized_organizations',
         'page': 'my_authorized_organizations',
         'user': user,
+        'authorized_organizations': authorized_organizations,
     }       
     template_file = f"{app_name}/_2user_org/my_authorized_organizations.html"
     return render(request, template_file, context)
@@ -239,6 +276,16 @@ def my_viewable_organizations(request):
     user = None
     user = request.user   
     viewable_organizations = Organization.objects.filter(active=True)
+     # Prepare a subquery to check if the user is an OrgAdmin for the organization
+    org_admins_subquery = OrgAdmins.objects.filter(
+        user=user,
+        organization_id=OuterRef('pk'),  # Links to the outer query's organization PK
+    )
+
+    # Annotate each organization with whether the user is an OrgAdmin for it
+    viewable_organizations = Organization.objects.filter(active=True).annotate(
+        is_org_admin=Exists(org_admins_subquery)
+    ).order_by('name')  # Adding order for consistent results
     # send outputs (info, template, request)
     context = {
         'parent_page': 'my_viewable_organizations',
@@ -444,6 +491,113 @@ def view_organization(request, id):
     template_file = f"{app_name}/_2admin_roles/site_admin/view_organization.html"
     return render(request, template_file, context)
     
+    
+# organization pages
+# this is actual organization page,
+
+@login_required
+def organization_page(request, id):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    organization = get_object_or_404(Organization, pk=id)
+    org_admin = is_org_admin(user, organization)
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'organization_page',
+        'page': 'organization_page',
+        'user': user,
+        'organization': organization,
+        'is_org_admin': org_admin,
+    }       
+    template_file = f"{app_name}/_org/organization/organization_page.html"
+    return render(request, template_file, context)
+
+# organization pages
+@login_required
+def organization_admin_page(request, id):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    organization = get_object_or_404(Organization, pk=id)
+    org_admin = is_org_admin(user, organization)
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'organization_admin_page',
+        'page': 'organization_admin_page',
+        'user': user,
+        'organization': organization,
+        'is_org_admin': org_admin,
+    }       
+    template_file = f"{app_name}/_org/organization/organization_admin_page.html"
+    return render(request, template_file, context)
+
+def check_active_mapping_for_organization(organization_id):
+    return MappingWBS.objects.filter(organization_id=organization_id, active=True).exists()
+# organization pages
+@login_required
+def organization_wbs_page(request, id):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    organization = get_object_or_404(Organization, pk=id)
+    org_admin = is_org_admin(user, organization)
+    print(f">>> === org_admin {organization} === <<<")
+    # step1: check the mappingwbs model to find out org id exists
+    new_wbs = True
+    if check_active_mapping_for_organization(organization.id):
+        mapping_wbs = MappingWBS.objects.get(organization=organization, active=True)
+        new_wbs = False               
+    else:
+        mapping_wbs = MappingWBS.objects.create(
+                        name=f"{organization}-WBS", description="",
+                        organization=organization, active=True)
+        print(f">>> === Mapping does not exists **** created {mapping_wbs} === <<<")
+
+    if new_wbs == False and  mapping_wbs.list is not None:
+            print(f">>> === mapping exists === <<<")   
+            print(f">>> === mapping exists go to regular page === <<<")
+            return redirect('list_js_tree_id', list_id=mapping_wbs.list.id)
+    # step2: create the entry for the list by round-trip 
+    form = ListForm(request, type_type_filter='WorkBreakDownStructure')
+    new_list = True 
+    if request.method == 'POST':
+        form = ListForm(request.user, type_type_filter='WorkBreakDownStructure', data=request.POST)
+        if form.is_valid():
+            form.instance.user = request.user
+            form.instance.parent = None
+            new_list = False
+            form.save()
+            new_list_id = form.instance.id
+            ref_type_id = form.instance.type
+            mapping_wbs.list = form.instance
+            mapping_wbs.save()
+            print(f">>> === list form valid === <<<")
+        else:
+            print(f">>> === list form invalid {form} {form.errors} === <<<")
+    # step3: create an entry for the type based on selection
+    
+    # if this is the first time, there is a round-trip for the wbs creation
+   
+    
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'organization_wbs_page',
+        'page': 'organization_wbs_page',
+        'user': user,
+        'organization': organization,
+        'is_org_admin': org_admin,
+        'new_wbs': new_wbs,
+        'new_list': new_list,
+        'list': list,
+        'mapping_wbs': mapping_wbs,
+        'form': form,
+    }       
+    template_file = f"{app_name}/_org/organization/organization_wbs_page.html"
+    return render(request, template_file, context)
 ############################################################ >> Starting links
 
 def welcome(request):
@@ -472,7 +626,7 @@ def help(request):
     }       
     template_file = f"{app_name}/_org/help.html"
     return render(request, template_file, context)
-
+@login_required
 def cafe(request):
     # take inputs
     # process inputs
@@ -485,6 +639,7 @@ def cafe(request):
     }       
     template_file = f"{app_name}/_cafe/cafe.html"
     return render(request, template_file, context)
+@login_required
 def vsm(request):
     # take inputs
     # process inputs
@@ -676,11 +831,18 @@ def logout_page(request):
 
 # edit User profile
 @login_required
-def edit_profile(request):
+def edit_profile(request):    
+    user = request.user
     profile = AWProfile.objects.get(user=request.user)
-    form = ProfileForm(instance=profile)
+    if user.is_superuser:
+        form = SuperUserProfileForm(instance=profile)
+    else:
+        form = ProfileForm(instance=profile)
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=profile)
+        if user.is_superuser:
+            form = SuperUserProfileForm(request.POST, instance=profile)
+        else:
+            form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
             # Redirect to the profile page or wherever appropriate

@@ -36,7 +36,8 @@ def type_home(request):
              context['error'] = "Form is Invalid"
              print(f">>> === FORM INVALID ERROR {form} === <<<")
         
-    context = {'page': 'type_home', 'objects': objects, 'objects_count': objects_count}
+    context = {'page': 'type_home', 'objects': objects, 'objects_count': objects_count, 
+               'form': form, 'active_tab': 'type_home',}
     template_url = f"{app_base_ref}/basics/type/type_home.html"
     return render(request, template_url, context)
 

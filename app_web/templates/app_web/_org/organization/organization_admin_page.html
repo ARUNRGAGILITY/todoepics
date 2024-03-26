@@ -1,0 +1,40 @@
+{% extends "../../_1base/bootstrap_base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}CBA/Organization{% endblock title %} 
+{% block content %} 
+
+  
+<!-- BEGIN: PAGE -->
+<div class="container-fluid">
+    {% include "./organization_navigation_links.html" %}
+    {% include "./organization_links.html" %}
+
+
+    <div class="row">
+        <div class="col col-md-3">
+            <a href="{% url 'organization_wbs_page' organization.id %}">
+                Work Breakdown Structure (WBS)
+            </a>
+        </div>
+        <div class="col col-md-3">
+            Templates
+        </div>
+        <div class="col col-md-3">
+            Teams
+        </div>
+        <div class="col col-md-3">
+            Members
+        </div>
+        <div class="col col-md-3">
+           Groups
+        </div>
+        <div class="col col-md-3">
+            Delivery Structure
+        </div>
+    </div>
+
+
+</div>
+<!-- END: PAGE --> 
+{% endblock content %}

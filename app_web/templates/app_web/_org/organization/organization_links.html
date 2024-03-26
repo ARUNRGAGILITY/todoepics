@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="col col-md-12">
+        <b>Organization: {{organization}}</b>
+        &nbsp;|&nbsp;
+        <a href="">Big Picture</a>
+        &nbsp;|&nbsp;
+        <a href="">Reference Architecture</a>
+        {% if is_org_admin %}
+            &nbsp;|&nbsp;
+            <a href="{% url 'organization_admin_page' organization.id %}">Administration</a>
+        {% else %}
+            <b>Administration</b>
+        {% endif %}
+    </div>
+</div>

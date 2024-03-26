@@ -7,6 +7,11 @@ from .models import *
 from django.contrib import admin
 from django.apps import apps
 
+# mapping wbs
+class MappingWBSAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'organization', 'list',  'active', 'deleted')
+admin.site.register(MappingWBS, MappingWBSAdmin)
+
 # current/future state DTC
 class CurrentStateDTCAdmin(admin.ModelAdmin):
     list_display = ('dtc', 'name', 'description', 'snapshot', 'active', 'deleted') 

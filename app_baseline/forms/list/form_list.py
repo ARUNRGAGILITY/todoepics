@@ -12,6 +12,10 @@ class CustomTreeNodeChoiceField(TreeNodeChoiceField):
 class ListForm(forms.ModelForm):
 
     def __init__(self, user, current_parent_id=None, *args, **kwargs):
+        
+        type_type_filter = kwargs.pop('type_type_filter', 'General') # TYPETYPE
+        type_type = TypeType.objects.get(title=type_type_filter, active=True)
+
         super(ListForm, self).__init__(*args, **kwargs)
         self.user = user
         self.current_parent_id = current_parent_id
@@ -31,7 +35,8 @@ class ListForm(forms.ModelForm):
         if current_parent_id:
             current_instance = List.objects.get(active=True, id=current_parent_id)
             if current_instance.type:
-                mapping_details = Type.objects.get(active=True, id=current_instance.type.id)
+                mapping_details = Type.objects.get(active=True, id=current_instance.type.id,
+                                                   type_type=type_type.id)
                 mapping_childrens = mapping_details.children()
                 self.fields['type'] = CustomTreeNodeChoiceField(
                     queryset=mapping_childrens,
@@ -43,7 +48,7 @@ class ListForm(forms.ModelForm):
                 
         else:
             self.fields['type'] = CustomTreeNodeChoiceField(
-            queryset=Type.objects.filter(active=True, parent=None).order_by('position'),
+            queryset=Type.objects.filter(active=True, parent=None, type_type=type_type.id).order_by('position'),
             label='Select a Type',
             empty_label='--Select type --'
             )

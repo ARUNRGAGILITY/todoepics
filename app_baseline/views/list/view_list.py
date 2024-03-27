@@ -391,21 +391,6 @@ def ajax_update_list_item(request):
     return JsonResponse({'success': False})
 
 
-# create app_web_entry
-## IMPORTANT1
-@login_required(login_url='login')
-def rename_app_web_wbs(request, list, title):
-    type_str = str(list.type)
-    if type_str in my_wbs:
-        wbs_model = type_str.replace(" ", "")
-        Model = apps.get_model('app_web', wbs_model)  # Update 'your_app_name'
-        obj = None       
-        obj = Model.objects.get(corresponding_mptt_id=list)
-        setattr(obj, "name", title)
-        obj.save()
-    else:
-        print(f">>> === | RENAME APP WBS ELSE| === <<<")
-
 
 @login_required(login_url='login')
 def ajax_rename_list_item(request):
@@ -419,8 +404,7 @@ def ajax_rename_list_item(request):
             # Update the fields
             object.title = title
             object.save()
-            print(f">>> === (saved) AJAX RENAME LIST ITEM {title} === <<<")
-            rename_app_web_wbs(request, object, title)
+
             # end of card movement update
             return JsonResponse({'success': True})
         except List.DoesNotExist:

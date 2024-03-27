@@ -158,8 +158,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vBASE_PRODUCT_V1.0.8'
-BUILD_DESCRIPTION = 'make CafeWBS work with ID and return to list_js_tree_id'
+BUILD_VERSION = 'vBASE_PRODUCT_V1.0.8a'
+BUILD_DESCRIPTION = 'fix rename issue: make CafeWBS work with ID and return to list_js_tree_id'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 CODING_AI = "codingagi1"

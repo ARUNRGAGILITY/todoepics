@@ -133,6 +133,8 @@ urlpatterns = [
     path('organization_page/<int:id>/', views.organization_page, name="organization_page"),
     path('organization_admin_page/<int:id>/', views.organization_admin_page, name="organization_admin_page"),
     path('organization_wbs_page/<int:id>/', views.organization_wbs_page, name="organization_wbs_page"),
+    path('organization_big_picture/<int:id>/', views.organization_big_picture, name="organization_big_picture"),
+    path('organization_ref_arch/<int:id>/', views.organization_ref_arch, name="organization_ref_arch"),
 ]
 
 urlpatterns += urls_base.urlpatterns_base

@@ -158,8 +158,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vBASE_PRODUCT_V1.0.5'
-BUILD_DESCRIPTION = 'updated WBS entries for organization _g1_'
+BUILD_VERSION = 'vBASE_PRODUCT_V1.0.6'
+BUILD_DESCRIPTION = 'updated WBS JSTREE matching _g1_ add, rename, delete'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 CODING_AI = "codingagi1"

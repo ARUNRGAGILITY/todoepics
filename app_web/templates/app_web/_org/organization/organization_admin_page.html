@@ -6,31 +6,151 @@
 
   
 <!-- BEGIN: PAGE -->
+<style>
+    .box1 {
+    border: 1px solid #ccc; /* Add a border to the box */
+    border-radius: 8px; /* Optional: rounds the corners of the box */
+    margin: 20px; /* Adds some space around the box */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: adds a subtle shadow */
+    display: flex;
+    flex-direction: column; /* Ensures vertical stacking */
+    }
+
+    .header1, .body1, .footer1 {
+        padding: 10px; /* Adds padding inside each section for spacing */
+    }
+
+    .body1 {
+        text-align: center; /* Center-aligns content in the body */
+    }
+
+    .body1 img {
+        max-width: 100%; /* Ensures the image does not overflow its container */
+        height: auto; /* Maintains the aspect ratio of the image */
+    }
+
+    .footer1 {
+        font-size: 12px;
+        margin-top: auto; /* Pushes the footer to the bottom of the box */
+        background-color: #f5f5f5; /* Optional: adds a background color to the footer */
+        border-top: 1px solid #ccc; /* Optional: adds a subtle top border to the footer */
+    }
+
+</style>
+
 <div class="container-fluid">
     {% include "./organization_navigation_links.html" %}
     {% include "./organization_links.html" %}
 
-
+    <div class="row pt-1">
+        <div class="col col-md-12">
+            <p>Create WBS, Delivery Structure, Teams/Groups/Members for your organizations</p>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col col-md-3">
+            <div class="box1">
+                <div class="header1">
+                    WBS
+                </div>
+                <div class="body1">
+                    <img src="{% static 'img/new_icons/basetype.png' %}" alt="">
+                    <br>
+                    <a href="{% url 'organization_wbs_page' organization.id %}">
+                        Work Breakdown Structure (WBS)
+                    </a>
+                </div>
+                <div class="footer1">
+                    Breakdown your work into smaller value chunks.
+                </div>
+            </div>            
+        </div>
+        <div class="col col-md-3">
+            <div class="box1">
+                <div class="header1">
+                    Templates
+                </div>
+                <div class="body1">
+                    <img src="{% static 'img/new_icons/file.png' %}" alt="">
+                    <br>
+                    <a href="{% url 'type_home' %}">
+                        Templates
+                    </a>
+                </div>
+                <div class="footer1">
+                    Organize your structure, flow, deliverables
+                </div>
+            </div>
+        </div>
+        <div class="col col-md-3">
+            <div class="box1">
+                <div class="header1">
+                    Teams
+                </div>
+                <div class="body1">
+                    <img src="{% static 'img/new_icons/discuss.png' %}" alt="">
+                    <br>
+                    <a href="{% url 'organization_wbs_page' organization.id %}">
+                        Teams
+                    </a>
+                </div>
+                <div class="footer1">
+                    Create Teams for your organization.
+                </div>
+            </div>
+        </div>
+        <div class="col col-md-3">
+            <div class="box1">
+                <div class="header1">
+                    Members
+                </div>
+                <div class="body1">
+                    <img src="{% static 'img/new_icons/person.png' %}" alt="">
+                    <br>
+                    <a href="{% url 'organization_wbs_page' organization.id %}">
+                        Members
+                    </a>
+                </div>
+                <div class="footer1">
+                    Create Members for your organization.
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col col-md-3">
-            <a href="{% url 'organization_wbs_page' organization.id %}">
-                Work Breakdown Structure (WBS)
-            </a>
+            <div class="box1">
+                <div class="header1">
+                    Groups
+                </div>
+                <div class="body1">
+                    <img src="{% static 'img/new_icons/community_of_practices.png' %}" alt="">
+                    <br>
+                    <a href="{% url 'organization_wbs_page' organization.id %}">
+                        Groups
+                    </a>
+                </div>
+                <div class="footer1">
+                    Create Groups for your organization.
+                </div>
+            </div>
         </div>
         <div class="col col-md-3">
-            Templates
-        </div>
-        <div class="col col-md-3">
-            Teams
-        </div>
-        <div class="col col-md-3">
-            Members
-        </div>
-        <div class="col col-md-3">
-           Groups
-        </div>
-        <div class="col col-md-3">
-            Delivery Structure
+            <div class="box1">
+                <div class="header1">
+                    Delivery Structure
+                </div>
+                <div class="body1">
+                    <img src="{% static 'img/new_icons/flowchart.png' %}" alt="">
+                    <br>
+                    <a href="{% url 'type_home'  %}">
+                        Delivery Structure
+                    </a>
+                </div>
+                <div class="footer1">
+                    Create Delivery Structure for your organization.
+                </div>
+            </div>
         </div>
     </div>
 

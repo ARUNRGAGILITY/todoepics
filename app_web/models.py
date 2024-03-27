@@ -56,7 +56,8 @@ class ProjectAdmins(BaseModel1):
 # STRATEGIC THEME
 ##################################################################
 class StrategicTheme(BaseModel1):
-
+    corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, default=1,
+                                              related_name='app_web_strategic_themes', null=True, blank=True)
     def __str__(self):
         return self.name
 
@@ -92,31 +93,64 @@ class TypeChoices(models.TextChoices):
     BUSINESS = 'BU', _('Business')
     
 class Epic(BaseModel1):
-    theme = models.ForeignKey(StrategicTheme, related_name='epics', on_delete=models.CASCADE)
+    corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
+                                              related_name='app_web_epics',null=True, blank=True)
+    strategictheme = models.ForeignKey(StrategicTheme, related_name='epics', on_delete=models.CASCADE)
     type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.BUSINESS)
 
     def __str__(self):
         return self.name
     
+    @classmethod
+    def get_parent_model(cls):
+        return 'StrategicTheme'
+    
 # Separate models for Feature and Capability
 class Feature(BaseModel1):
+    corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
+                                              related_name='app_web_features', null=True, blank=True)
     epic = models.ForeignKey(Epic, related_name='features', on_delete=models.CASCADE)
     type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.BUSINESS)
     
     def __str__(self):
         return self.name
+    
+    @classmethod
+    def get_parent_model(cls):
+        return 'Epic'
 
 class Capability(BaseModel1):
+    corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
+                                              related_name='app_web_capabilities', null=True, blank=True)
     epic = models.ForeignKey(Epic, related_name='capabilities', on_delete=models.CASCADE)
     type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.BUSINESS)
 
     def __str__(self):
         return self.name
     
+    @classmethod
+    def get_parent_model(cls):
+        return 'Epic'
+
+class Component(BaseModel1):
+    corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
+                                              related_name='app_web_components',null=True, blank=True)
+    epic = models.ForeignKey(Epic, related_name='components', on_delete=models.CASCADE)
+    type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.BUSINESS)
+
+    def __str__(self):
+        return self.name
+    
+    @classmethod
+    def get_parent_model(cls):
+        return 'Epic'
 # Separate models for User Story and Spike
 class UserStory(BaseModel1):
-    parent_feature = models.ForeignKey(Feature, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
-    parent_capability = models.ForeignKey(Capability, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
+    corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
+                                              related_name='app_web_user_stories', null=True, blank=True)
+    feature = models.ForeignKey(Feature, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
+    capability = models.ForeignKey(Capability, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
+    component = models.ForeignKey(Component, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
     # Additional fields specific to User Stories
 
     def save(self, *args, **kwargs):
@@ -126,10 +160,17 @@ class UserStory(BaseModel1):
         
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_parent_model(cls):
+        return 'Feature/Capability/Component'
         
 class Spike(BaseModel1):
-    parent_feature = models.ForeignKey(Feature, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
-    parent_capability = models.ForeignKey(Capability, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
+    corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
+                                              related_name='app_web_spikes', null=True, blank=True)
+    feature = models.ForeignKey(Feature, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
+    capability = models.ForeignKey(Capability, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
+    component = models.ForeignKey(Component, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
     # Additional fields specific to Spikes
     
     def save(self, *args, **kwargs):
@@ -139,16 +180,25 @@ class Spike(BaseModel1):
         
     def __str__(self):
         return self.name
+    
+    @classmethod
+    def get_parent_model(cls):
+        return 'Feature/Capability/Component'
 
 class Task(BaseModel1):
     # Assuming Tasks can belong to both User Stories and Spikes
-    parent_story = models.ForeignKey(UserStory, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
-    parent_spike = models.ForeignKey(Spike, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
+    corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
+                                              related_name='app_web_tasks',null=True, blank=True)
+    userstory = models.ForeignKey(UserStory, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
+    spike = models.ForeignKey(Spike, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
     # Additional fields specific to Tasks
     
     def __str__(self):
         return self.name
 
+    @classmethod
+    def get_parent_model(cls):
+        return 'UserStory/Spike'
 
 ##################################################################
 # VALUESTREAM

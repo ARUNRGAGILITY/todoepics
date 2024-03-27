@@ -241,6 +241,43 @@ def my_organization_admin_page(request):
     template_file = f"{app_name}/_2user_org/my_organizations_page.html"
     return render(request, template_file, context)
 
+@login_required
+def organization_big_picture(request, id):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    organization = get_object_or_404(Organization, pk=id)
+    org_admin = is_org_admin(user, organization)
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'organization_big_picture',
+        'page': 'organization_big_picture',
+        'user': user,
+        'organization': organization,
+        'is_org_admin': org_admin,
+    }       
+    template_file = f"{app_name}/_org/organization/organization_big_picture.html"
+    return render(request, template_file, context)
+
+@login_required
+def organization_ref_arch(request, id):
+    # take inputs
+    # process inputs
+    user = None
+    user = request.user   
+    organization = get_object_or_404(Organization, pk=id)
+    org_admin = is_org_admin(user, organization)
+    # send outputs (info, template, request)
+    context = {
+        'parent_page': 'organization_ref_arch',
+        'page': 'organization_ref_arch',
+        'user': user,
+        'organization': organization,
+        'is_org_admin': org_admin,
+    }       
+    template_file = f"{app_name}/_org/organization/organization_ref_arch.html"
+    return render(request, template_file, context)
 
 @login_required
 def my_authorized_organizations(request):
@@ -1420,19 +1457,40 @@ def st_detail(request, theme_id):
     return render(request, template_file, context)
 
 # cafe_wbs
+# def cafe_wbs(request):
+#     themes = StrategicTheme.objects.prefetch_related(
+#         'epics__features',
+#         'epics__capabilities',
+#         'epics__components',
+#         'epics__features__user_stories',
+#         'epics__features__spikes',
+#         'epics__capabilities__user_stories',
+#         'epics__capabilities__spikes',
+#         'epics__features__user_stories__tasks',
+#         'epics__features__spikes__tasks',
+#         'epics__capabilities__spikes__tasks'
+#     ).filter(active=True)
+#     context = {'themes': themes, 'quarters': ['Q1', 'Q2', 'Q3', 'Q4']}
+#     template_file = f"{app_name}/_cafe/mgmt/cafe_wbs.html"
+#     return render(request, template_file, context)
+
 def cafe_wbs(request):
-    themes = StrategicTheme.objects.prefetch_related(
-        'epics__features',
-        'epics__capabilities',
-        'epics__features__user_stories',
-        'epics__capabilities__spikes',
-        'epics__features__user_stories__tasks',
-        'epics__capabilities__spikes__tasks'
-    ).filter(active=True)
+    themes = StrategicTheme.objects.filter(active=True).prefetch_related(
+        Prefetch('epics', queryset=Epic.objects.filter(active=True)),
+        Prefetch('epics__features', queryset=Feature.objects.filter(active=True)),
+        Prefetch('epics__capabilities', queryset=Capability.objects.filter(active=True)),
+        Prefetch('epics__components', queryset=Component.objects.filter(active=True)),
+        Prefetch('epics__features__user_stories', queryset=UserStory.objects.filter(active=True)),
+        Prefetch('epics__features__spikes', queryset=Spike.objects.filter(active=True)),
+        Prefetch('epics__capabilities__user_stories', queryset=UserStory.objects.filter(active=True)),
+        Prefetch('epics__capabilities__spikes', queryset=Spike.objects.filter(active=True)),
+        Prefetch('epics__features__user_stories__tasks', queryset=Task.objects.filter(active=True)),
+        Prefetch('epics__features__spikes__tasks', queryset=Task.objects.filter(active=True)),
+        Prefetch('epics__capabilities__spikes__tasks', queryset=Task.objects.filter(active=True))
+    )
     context = {'themes': themes, 'quarters': ['Q1', 'Q2', 'Q3', 'Q4']}
     template_file = f"{app_name}/_cafe/mgmt/cafe_wbs.html"
     return render(request, template_file, context)
-
 
 # delete ovs
 @login_required(login_url='login')

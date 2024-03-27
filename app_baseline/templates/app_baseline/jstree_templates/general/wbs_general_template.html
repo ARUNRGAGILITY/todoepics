@@ -47,10 +47,10 @@
         {% csrf_token %}
       <table class="table table-bordered">
          <tr>
-          <td colspan="1"  width="10%"><b>Summary:</b> </td>
+          <td colspan="1"  width="10%"><b>Summary:</b> of {{object.type}} </td>
           <td colspan="3">
             <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
-            class="title"  data-model="List" 
+            class="title"  data-model="List" data-wbs="{{object.type}}"
             data-field="title"  data-id="{{object.id}}">{% if object.title != None %}{{object.title}}{% endif %}</div>         
           </td>
         </tr>
@@ -58,7 +58,7 @@
           <td colspan="1" width="10%"><b>Description:</b> </td>
           <td colspan="3">
             <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
-            class="title"  data-model="List" 
+            class="title"  data-model="List" data-wbs="{{object.type}}"
             data-field="description"  data-id="{{object.id}}">{% if object.description != None %}{{object.description}}{% endif %}</div>         
           </td>
         </tr>
@@ -79,6 +79,7 @@
   $('.editable-div').on('blur', function () {
     var $element = $(this);
     var model = $element.data('model');
+    var wbs = $element.data('wbs');
     var field = $element.data('field');
     var dev_id = $element.data('dev-id');
     //var value = $element.text().trim();
@@ -94,6 +95,7 @@
         url: '{% url "ajax_update_tree_field" %}',  // Update with the URL of your view
         data: {
             'model': model,
+            'wbs': wbs,
             'field': field,
             'value': value,
             'id': id,

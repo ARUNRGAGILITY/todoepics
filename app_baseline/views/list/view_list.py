@@ -16,6 +16,8 @@ from ...decorators.authz.decoraton_v1_authz import *
 from app_web.models import *
 # which app is being referred
 app_base_ref = base_app_ref
+my_wbs = ["Strategic Theme", "Epic", "Feature", "Capability", "Component", "Spike", "User Story", "Task", ]
+parent_wbs = ["Epic", "Feature", "Capability", "Component", "Spike", "User Story",  ]
 
 @login_required(login_url='login')
 def permission_settings(request, list_id):
@@ -388,6 +390,23 @@ def ajax_update_list_item(request):
     
     return JsonResponse({'success': False})
 
+
+# create app_web_entry
+## IMPORTANT1
+@login_required(login_url='login')
+def rename_app_web_wbs(request, list, title):
+    type_str = str(list.type)
+    if type_str in my_wbs:
+        wbs_model = type_str.replace(" ", "")
+        Model = apps.get_model('app_web', wbs_model)  # Update 'your_app_name'
+        obj = None       
+        obj = Model.objects.get(corresponding_mptt_id=list)
+        setattr(obj, "name", title)
+        obj.save()
+    else:
+        print(f">>> === | RENAME APP WBS ELSE| === <<<")
+
+
 @login_required(login_url='login')
 def ajax_rename_list_item(request):
     if request.method == 'POST':
@@ -401,6 +420,7 @@ def ajax_rename_list_item(request):
             object.title = title
             object.save()
             print(f">>> === (saved) AJAX RENAME LIST ITEM {title} === <<<")
+            rename_app_web_wbs(request, object, title)
             # end of card movement update
             return JsonResponse({'success': True})
         except List.DoesNotExist:
@@ -852,6 +872,33 @@ def ajax_move_node(request):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
 
+# create app_web_entry
+## IMPORTANT1
+@login_required(login_url='login')
+def create_app_web_wbs(request, list, type, title):
+    type_str = str(type)
+    if type_str in my_wbs:
+        wbs_model = type_str.replace(" ", "")
+        if type_str in parent_wbs:
+            Model = apps.get_model('app_web', wbs_model)  
+            parent_model_str = Model.get_parent_model()
+            ParentModel = apps.get_model('app_web', parent_model_str)
+            print(f">>> === PARENT MODEL STR {parent_model_str} === <<<")
+            parent_list_id = list.parent.id
+            Parent = ParentModel.objects.get(corresponding_mptt_id=parent_list_id)
+            obj = None
+            obj = Model(name=wbs_model, corresponding_mptt_id=list)  
+            print(f">>> === obj, parent_model_str, parent.id === <<<", obj, parent_model_str, Parent.id)
+            setattr(obj, parent_model_str.lower(), Parent)
+            obj.save()
+        else:  
+            Model = apps.get_model('app_web', wbs_model)  
+            obj = None
+            obj = Model.objects.create(name=wbs_model, corresponding_mptt_id=list)  
+            obj.save()
+
+        
+
 # adding new node via context menu
 @login_required(login_url='login')
 def ajax_add_node(request):
@@ -860,7 +907,7 @@ def ajax_add_node(request):
     type_id = request.GET.get('type_id')
     type = request.GET.get('type')
     # Initialize other fields from request
-    #print(f">>> === ADD NODE PARENT ID : {parent_id} TITLE, TYPEID, TYPE {title}, {type_id}, {type} === <<<")
+    print(f">>> === ADD NODE PARENT ID : {parent_id} TITLE, TYPEID, TYPE {title}, {type_id}, {type} === <<<")
     get_type = None
     title_text = None
     if type_id != None:
@@ -874,13 +921,28 @@ def ajax_add_node(request):
             title="new_text_view",
             type=get_type,
         )
-        #print(f">>> === *** CREATE NODE {new_node.id} on parent {parent_node}**** === <<<")
+        print(f">>> === *** CREATE NODE {new_node.id} on parent {parent_node} |TYPE:{get_type}| **** === <<<")
+        create_app_web_wbs(request, new_node, type, title)        
+        
         return JsonResponse({'status': 'success', 'node_id': new_node.id, 'type_title': title_text,})
     except Exception as e:
         print(f"628: Exception encountered: {e}")
         return JsonResponse({'status': 'error', 'message': str(e)})
 
-
+@login_required(login_url='login')
+def delete_wbs_node(request, list_id):
+    list = List.objects.get(id=list_id)
+    type_str = str(list.type)
+    if type_str in my_wbs:
+        wbs_model = type_str.replace(" ", "")
+        Model = apps.get_model('app_web', wbs_model)
+        obj = None
+        obj = Model.objects.get(corresponding_mptt_id=list)
+        obj.active=False
+        obj.deleted=True
+        print(f">>> === DELETE-WBS: list_id,list,type_str,Model=>{list_id},{list},{type_str},{Model} === <<<")
+        obj.save()
+    
 @login_required(login_url='login')
 def ajax_delete_node(request):    
     if request.method == 'POST':
@@ -888,6 +950,7 @@ def ajax_delete_node(request):
      
         try:            
             List.objects.filter(id=object_id).update(active=False)
+            delete_wbs_node(request,object_id)
             return JsonResponse({'success': True})
         except List.DoesNotExist:
             pass
@@ -976,12 +1039,12 @@ def list_js_tree_id(request, list_id):
     objects_count = objects.count()
     
     # get the organization from the list id
-    print(f">>> === LIST ID {list_id} {object}=== <<<")
+    print(f">>> === LIST ID {list_id} {object} type: {object.type} === <<<")
     root_object = None
     mapping_wbs = MappingWBS.objects.filter(list_id=object.id).first()
     if mapping_wbs == None:
         root_object = object.get_root()
-        print(f">>> === ROOT ||| {root_object}=== <<<")
+        print(f">>> === ROOT ||| {root_object} type: {object.type}=== <<<")
     permitted_nodes = get_permitted_nodes_for_user(request, objects)
     objects = permitted_nodes
     objects_count = permitted_nodes.count()
@@ -998,15 +1061,29 @@ def list_js_tree_id(request, list_id):
 @login_required(login_url='login')
 def ajax_update_tree_field(request):
     model_name = request.POST.get('model')
+    wbs_model_name = request.POST.get('wbs')
     field_name = request.POST.get('field')
     value = request.POST.get('value')
     idx = request.POST.get('id')
     object_id = request.POST.get('object_id')
-    print(f">>> === AJAX UPDATE DTC FIELD === <<<")
+    print(f">>> === AJAX UPDATE DTC FIELD {model_name} === <<<")
     Model = apps.get_model('app_baseline', model_name)  # Update 'your_app_name'
     obj = None
     obj = Model.objects.get(id=idx)
     setattr(obj, field_name, value)
     obj.save()
+    
+    if wbs_model_name in my_wbs:
+        print(f">>> === |||| CHECKING WBS MODEL NAME {wbs_model_name} |||| === <<<")
+        wbs_model = wbs_model_name.replace(" ", "")
+        Model = apps.get_model('app_web', wbs_model)  # Update 'your_app_name'
+        print(f">>> === AJAX check -- {Model} === <<<")
+        obj = None
+        obj = Model.objects.get(id=idx)
+        if field_name == 'title':
+            field_name = 'name'
+        setattr(obj, field_name, value)
+        print(f">>> === AJAX UPDATE DTC FIELD AW field_name, value: {field_name}, {value} === <<<")
+        obj.save()
 
     return JsonResponse({'success': True})

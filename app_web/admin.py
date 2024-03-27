@@ -72,7 +72,7 @@ class StrategicThemeAdmin(admin.ModelAdmin):
 class TaskInline(admin.TabularInline):  # You can also use admin.StackedInline for a different layout
     model = Task
     extra = 1  # Specifies the number of blank forms to display by default
-    fk_name = 'parent_story'  # This is n
+    fk_name = 'userstory'  # This is n
     
 @admin.register(UserStory)
 class UserStoryAdmin(admin.ModelAdmin):
@@ -80,8 +80,8 @@ class UserStoryAdmin(admin.ModelAdmin):
     inlines = [TaskInline]
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'parent_story', 'parent_spike',)
-    list_filter = ('parent_story', 'parent_spike', )
+    list_display = ('name', 'description', 'userstory', 'spike',)
+    list_filter = ('userstory', 'spike', )
     search_fields = ('name', 'description')
 
 admin.site.register(Task, TaskAdmin)

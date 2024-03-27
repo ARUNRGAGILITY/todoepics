@@ -67,7 +67,7 @@ class EpicInline(admin.TabularInline):  # You can also use admin.StackedInline f
     extra = 1  # Specifies the number of blank forms to display by default
 @admin.register(StrategicTheme)
 class StrategicThemeAdmin(admin.ModelAdmin):
-    inlines = [EpicInline]
+    inlines = []
 
 class TaskInline(admin.TabularInline):  # You can also use admin.StackedInline for a different layout
     model = Task
@@ -77,11 +77,10 @@ class TaskInline(admin.TabularInline):  # You can also use admin.StackedInline f
 @admin.register(UserStory)
 class UserStoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'description']  # Customize as needed
-    inlines = [TaskInline]
+    inlines = []
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'userstory', 'spike',)
-    list_filter = ('userstory', 'spike', )
+    list_display = ('name', 'description', )
     search_fields = ('name', 'description')
 
 admin.site.register(Task, TaskAdmin)

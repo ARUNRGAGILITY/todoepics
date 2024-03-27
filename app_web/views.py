@@ -1484,28 +1484,47 @@ def build_hierarchy(start_nodes):
         node_str = node.type.title.replace(" ", "")
         if node_str == 'StrategicTheme':
             hierarchy[node_str] = {'title': node.title, 'Epics': []}
-            for child in node.get_children():
-                print(f">>> === >>>>>>>>>>>> {child} {child.title} {child.type.title}=== <<<")
-                if child.type.title == 'Epic':
-                    epic_dict = {'title': child.title, 'Features': []}
-                    for feature in child.get_children():
-                        feature_dict = {'title': feature.title, 'UserStories': []}
-                        for story in feature.get_children():
-                            story_dict = {'title': story.title, 'Tasks': []}
-                            for task in story.get_children():
-                                task_dict = {'title': task.title}
-                                story_dict['Tasks'].append(task_dict)
-                            feature_dict['UserStories'].append(story_dict)
-                        epic_dict['Features'].append(feature_dict)
-                    hierarchy[node_str]['Epics'].append(epic_dict)
+            for epic in node.get_children().filter(active=True):
+                epic_dict = {'title': epic.title, 'Features': [], 'Capabilities': [], 'Components': []}
+                for child in epic.get_children().filter(active=True):
+                    print(f"Child: {child} {child.title} {child.type.title}")
+                    child_dict = {'title': child.title, 'UserStories': []}
+                    for story in child.get_children().filter(active=True):
+                        story_dict = {'title': story.title, 'Tasks': []}
+                        for task in story.get_children().filter(active=True):
+                            task_dict = {'title': task.title}
+                            story_dict['Tasks'].append(task_dict)
+                        child_dict['UserStories'].append(story_dict)
+                    print(f"Child dict: {child_dict}")
+                    cap_str = str(child.type.title )
+                    if cap_str.strip() == 'Feature':
+                        epic_dict['Features'].append(child_dict)
+                    elif cap_str.strip() == 'Capability':
+                        epic_dict['Capabilities'].append(child_dict)  # Check if capabilities are correctly appended
+                        print(f">>>Capabilities: {epic_dict['Capabilities']}")
+                    elif cap_str.strip() == 'Component':
+                        epic_dict['Components'].append(child_dict)
+                hierarchy[node_str]['Epics'].append(epic_dict)
     
     return hierarchy
 
+
+
+
 # In your view
-def cafe_wbs(request):
+def cafe_wbs1(request):
     start_nodes = List.objects.filter(id=65, active=True)
     hierarchy = build_hierarchy(start_nodes)
     context = {'hierarchy': hierarchy}
+    template_file = f"{app_name}/_cafe/mgmt/cafe_wbs.html"
+    return render(request, template_file, context)
+
+# In your view
+def cafe_wbs(request, id):
+    start_nodes = List.objects.filter(id=id, active=True)
+    list = List.objects.get(id=id)
+    hierarchy = build_hierarchy(start_nodes)
+    context = {'hierarchy': hierarchy, 'list': list}
     template_file = f"{app_name}/_cafe/mgmt/cafe_wbs.html"
     return render(request, template_file, context)
 

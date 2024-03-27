@@ -62,7 +62,7 @@ class StrategicTheme(BaseModel1):
         return self.name
 
 class Objective(BaseModel1):
-    theme = models.ForeignKey(StrategicTheme, related_name='objectives', on_delete=models.CASCADE)
+    #theme = models.ForeignKey(StrategicTheme, related_name='objectives', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
 
     def __str__(self):
@@ -95,7 +95,7 @@ class TypeChoices(models.TextChoices):
 class Epic(BaseModel1):
     corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
                                               related_name='app_web_epics',null=True, blank=True)
-    strategictheme = models.ForeignKey(StrategicTheme, related_name='epics', on_delete=models.CASCADE)
+    #strategictheme = models.ForeignKey(StrategicTheme, related_name='epics', on_delete=models.CASCADE)
     type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.BUSINESS)
 
     def __str__(self):
@@ -109,7 +109,7 @@ class Epic(BaseModel1):
 class Feature(BaseModel1):
     corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
                                               related_name='app_web_features', null=True, blank=True)
-    epic = models.ForeignKey(Epic, related_name='features', on_delete=models.CASCADE)
+    #epic = models.ForeignKey(Epic, related_name='features', on_delete=models.CASCADE)
     type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.BUSINESS)
     
     def __str__(self):
@@ -122,7 +122,7 @@ class Feature(BaseModel1):
 class Capability(BaseModel1):
     corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
                                               related_name='app_web_capabilities', null=True, blank=True)
-    epic = models.ForeignKey(Epic, related_name='capabilities', on_delete=models.CASCADE)
+    #epic = models.ForeignKey(Epic, related_name='capabilities', on_delete=models.CASCADE)
     type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.BUSINESS)
 
     def __str__(self):
@@ -135,7 +135,7 @@ class Capability(BaseModel1):
 class Component(BaseModel1):
     corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
                                               related_name='app_web_components',null=True, blank=True)
-    epic = models.ForeignKey(Epic, related_name='components', on_delete=models.CASCADE)
+    #epic = models.ForeignKey(Epic, related_name='components', on_delete=models.CASCADE)
     type = models.CharField(max_length=2, choices=TypeChoices.choices, default=TypeChoices.BUSINESS)
 
     def __str__(self):
@@ -148,9 +148,9 @@ class Component(BaseModel1):
 class UserStory(BaseModel1):
     corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
                                               related_name='app_web_user_stories', null=True, blank=True)
-    feature = models.ForeignKey(Feature, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
-    capability = models.ForeignKey(Capability, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
-    component = models.ForeignKey(Component, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
+    #feature = models.ForeignKey(Feature, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
+    #capability = models.ForeignKey(Capability, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
+    #component = models.ForeignKey(Component, on_delete=models.CASCADE, related_name='user_stories', null=True, blank=True)
     # Additional fields specific to User Stories
 
     def save(self, *args, **kwargs):
@@ -168,9 +168,9 @@ class UserStory(BaseModel1):
 class Spike(BaseModel1):
     corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
                                               related_name='app_web_spikes', null=True, blank=True)
-    feature = models.ForeignKey(Feature, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
-    capability = models.ForeignKey(Capability, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
-    component = models.ForeignKey(Component, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
+    #feature = models.ForeignKey(Feature, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
+    #capability = models.ForeignKey(Capability, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
+    #component = models.ForeignKey(Component, on_delete=models.CASCADE, related_name='spikes', null=True, blank=True)
     # Additional fields specific to Spikes
     
     def save(self, *args, **kwargs):
@@ -189,8 +189,8 @@ class Task(BaseModel1):
     # Assuming Tasks can belong to both User Stories and Spikes
     corresponding_mptt_id = models.ForeignKey('app_baseline.List', on_delete=models.CASCADE, 
                                               related_name='app_web_tasks',null=True, blank=True)
-    userstory = models.ForeignKey(UserStory, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
-    spike = models.ForeignKey(Spike, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
+    #userstory = models.ForeignKey(UserStory, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
+    #spike = models.ForeignKey(Spike, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
     # Additional fields specific to Tasks
     
     def __str__(self):

@@ -47,7 +47,13 @@
         {% csrf_token %}
       <table class="table table-bordered">
          <tr>
-          <td colspan="1"  width="10%"><b>Summary:</b> of {{object.type}} </td>
+          <td colspan="1"  width="10%"><b>Summary:</b> of {{object.type.title}}
+            <br>
+            {% if object.type.title == "Strategic Theme" %}
+            <br>       
+            <a href="{% url 'cafe_wbs' object.id %}">Traceability Matrics</a>
+            {% endif %}
+          </td>
           <td colspan="3">
             <div  class="editable-div" contenteditable="true" data-placeholder="Enter text here..." 
             class="title"  data-model="List" data-wbs="{{object.type}}"

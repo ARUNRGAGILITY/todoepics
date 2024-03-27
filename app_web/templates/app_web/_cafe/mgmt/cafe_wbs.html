@@ -1,56 +1,167 @@
+{% extends 'app_web/_1base/bootstrap_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}WBS/HTree{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+{% include 'app_baseline/common/__excel_table_css.html' %}
 <!-- {{hierarchy}} -->
-<table width="100%" border="1">
-    <tbody>
-        <tr>
-            <td>
-                <b>Strategic Theme</b>
-            </td>
-            <td>
-                <b>Epics</b>
-            </td>
-            <td>
-                <b>Feature/Capability/Component</b>
-            </td>
-            <td>
-                <b>User Story / Spike</b>
-            </td>
-            <td>
-                <b>Task</b>
-            </td>
-        </tr>
-        <!-- Assuming hierarchy is structured and available as per your format -->
-        <tr>
-            <td>{{ hierarchy.StrategicTheme.title }}</td>
-            <!-- Placeholder cells for alignment -->
-            {% for epic in hierarchy.StrategicTheme.Epics %}
-                {% if forloop.first %}
-                    <td>{{ epic.title }}</td>
-                {% else %}
-                    </tr><tr><td></td><td>{{ epic.title }}</td>
-                {% endif %}
-                {% for feature in epic.Features %}
-                    {% if forloop.first %}
-                        <td>{{ feature.title }}</td>
-                    {% else %}
-                        </tr><tr><td></td><td></td><td>{{ feature.title }}</td>
-                    {% endif %}
-                    {% for user_story in feature.UserStories %}
-                        {% if forloop.first %}
-                            <td>{{ user_story.title }}</td>
-                        {% else %}
-                            </tr><tr><td></td><td></td><td></td><td>{{ user_story.title }}</td>
-                        {% endif %}
-                        {% for task in user_story.Tasks %}
+<div class="container-fluid">
+
+    <!-- Header for the CAFFE WBS -->
+    <div class="row">
+        <div class="col col-md-5">
+            <a href="/list_js_tree_id/{{list.parent.id}}">{{list.parent.title}}</a>
+        </div>
+        <div class="col col-md-7">
+    
+        </div>
+        </div>
+
+
+    <div class="row">
+        <div class="col col-md-12">
+            <table class="excel_table" width="60%">
+                <tbody>
+                    <tr class="excel_tr">
+                        <td>
+                            <b>Strategic Theme</b>
+                        </td>
+                        <td>
+                            <b>Epics</b>
+                        </td>
+                        <td>
+                            <b>Feature/Capability/Component</b>
+                        </td>
+                        <td>
+                            <b>User Story / Spike</b>
+                        </td>
+                        <td>
+                            <b>Task</b>
+                        </td>
+                    </tr>
+            
+            
+            
+            
+                    <!-- Assuming hierarchy is structured and available as per your format -->
+                    <tr class="excel_tr">
+                        <td>{{ hierarchy.StrategicTheme.title }}</td>
+                        <!-- Placeholder cells for alignment -->
+                        {% for epic in hierarchy.StrategicTheme.Epics %}
                             {% if forloop.first %}
-                                <td>{{ task.title }}</td>
+                                <td>{{ epic.title }}</td>
                             {% else %}
-                                </tr><tr><td></td><td></td><td></td><td></td><td>{{ task.title }}</td>
+                                </tr><tr><td></td><td>{{ epic.title }}</td>
                             {% endif %}
+                            {% for feature in epic.Features %}
+                                {% if forloop.first %}
+                                    <td><b>Feature: </b>{{ feature.title }}</td>
+                                {% else %}
+                                    </tr><tr><td></td><td></td><td><b>Feature: </b>{{ feature.title }}</td>
+                                {% endif %}
+                                {% for user_story in feature.UserStories %}
+                                    {% if forloop.first %}
+                                        <td>{{ user_story.title }}</td>
+                                    {% else %}
+                                        </tr><tr><td></td><td></td><td></td><td>{{ user_story.title }}</td>
+                                    {% endif %}
+                                    {% for task in user_story.Tasks %}
+                                        {% if forloop.first %}
+                                            <td>{{ task.title }}</td>
+                                        {% else %}
+                                            </tr><tr><td></td><td></td><td></td><td></td><td>{{ task.title }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                {% endfor %}
-            {% endfor %}
-        </tr>
-    </tbody>
-</table>
+                    </tr>
+            
+            
+            
+            
+                    <!-- Assuming hierarchy is structured and available as per your format -->
+                    <tr class="excel_tr">
+                        <td></td>
+                        <!-- Placeholder cells for alignment -->
+                        {% for epic in hierarchy.StrategicTheme.Epics %}
+                            {% if forloop.first %}
+                                <td></td>
+                            {% else %}
+                                </tr><tr><td></td><td></td>
+                            {% endif %}
+                            {% for component in epic.Components %}
+                                {% if forloop.first %}
+                                    <td><b>Component: </b>{{ component.title }}</td>
+                                {% else %}
+                                    </tr><tr><td></td><td></td><td><b>Component: </b>{{ component.title }}</td>
+                                {% endif %}
+                                {% for user_story in component.UserStories %}
+                                    {% if forloop.first %}
+                                        <td>{{ user_story.title }}</td>
+                                    {% else %}
+                                        </tr><tr><td></td><td></td><td></td><td>{{ user_story.title }}</td>
+                                    {% endif %}
+                                    {% for task in user_story.Tasks %}
+                                        {% if forloop.first %}
+                                            <td>{{ task.title }}</td>
+                                        {% else %}
+                                            </tr><tr><td></td><td></td><td></td><td></td><td>{{ task.title }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    </tr>
+            
+            
+                    
+                    <!-- Assuming hierarchy is structured and available as per your format -->
+                    <tr class="excel_tr">
+                        <td></td>
+                        <!-- Placeholder cells for alignment -->
+                        {% for epic in hierarchy.StrategicTheme.Epics %}
+                            {% if forloop.first %}
+                                <td></td>
+                            {% else %}
+                                </tr><tr><td></td><td></td>
+                            {% endif %}
+                            {% for capability in epic.Capabilities %}
+                                {% if forloop.first %}
+                                    <td><b>Capability: </b>
+                                        {{ capability.title }}</td>
+                                {% else %}
+                                    </tr><tr><td></td><td></td><td>
+                                        <b>Capability: </b>
+                                        {{ capability.title }}</td>
+                                {% endif %}
+                                {% for user_story in capability.UserStories %}
+                                    {% if forloop.first %}
+                                        <td>{{ user_story.title }}</td>
+                                    {% else %}
+                                        </tr><tr><td></td><td></td><td></td><td>{{ user_story.title }}</td>
+                                    {% endif %}
+                                    {% for task in user_story.Tasks %}
+                                        {% if forloop.first %}
+                                            <td>{{ task.title }}</td>
+                                        {% else %}
+                                            </tr><tr><td></td><td></td><td></td><td></td><td>{{ task.title }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    </tr>
+            
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% else%}
+  {% include './_2user/guest_user.html' %}
+{% endif %}
+{% endblock content %}
 

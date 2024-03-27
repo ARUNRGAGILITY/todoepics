@@ -872,33 +872,6 @@ def ajax_move_node(request):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
 
-# create app_web_entry
-## IMPORTANT1
-@login_required(login_url='login')
-def create_app_web_wbs(request, list, type, title):
-    type_str = str(type)
-    if type_str in my_wbs:
-        wbs_model = type_str.replace(" ", "")
-        if type_str in parent_wbs:
-            Model = apps.get_model('app_web', wbs_model)  
-            parent_model_str = Model.get_parent_model()
-            ParentModel = apps.get_model('app_web', parent_model_str)
-            print(f">>> === PARENT MODEL STR {parent_model_str} === <<<")
-            parent_list_id = list.parent.id
-            Parent = ParentModel.objects.get(corresponding_mptt_id=parent_list_id)
-            obj = None
-            obj = Model(name=wbs_model, corresponding_mptt_id=list)  
-            print(f">>> === obj, parent_model_str, parent.id === <<<", obj, parent_model_str, Parent.id)
-            setattr(obj, parent_model_str.lower(), Parent)
-            obj.save()
-        else:  
-            Model = apps.get_model('app_web', wbs_model)  
-            obj = None
-            obj = Model.objects.create(name=wbs_model, corresponding_mptt_id=list)  
-            obj.save()
-
-        
-
 # adding new node via context menu
 @login_required(login_url='login')
 def ajax_add_node(request):
@@ -921,27 +894,13 @@ def ajax_add_node(request):
             title="new_text_view",
             type=get_type,
         )
-        print(f">>> === *** CREATE NODE {new_node.id} on parent {parent_node} |TYPE:{get_type}| **** === <<<")
-        create_app_web_wbs(request, new_node, type, title)        
         
         return JsonResponse({'status': 'success', 'node_id': new_node.id, 'type_title': title_text,})
     except Exception as e:
         print(f"628: Exception encountered: {e}")
         return JsonResponse({'status': 'error', 'message': str(e)})
 
-@login_required(login_url='login')
-def delete_wbs_node(request, list_id):
-    list = List.objects.get(id=list_id)
-    type_str = str(list.type)
-    if type_str in my_wbs:
-        wbs_model = type_str.replace(" ", "")
-        Model = apps.get_model('app_web', wbs_model)
-        obj = None
-        obj = Model.objects.get(corresponding_mptt_id=list)
-        obj.active=False
-        obj.deleted=True
-        print(f">>> === DELETE-WBS: list_id,list,type_str,Model=>{list_id},{list},{type_str},{Model} === <<<")
-        obj.save()
+
     
 @login_required(login_url='login')
 def ajax_delete_node(request):    
@@ -950,12 +909,12 @@ def ajax_delete_node(request):
      
         try:            
             List.objects.filter(id=object_id).update(active=False)
-            delete_wbs_node(request,object_id)
             return JsonResponse({'success': True})
         except List.DoesNotExist:
             pass
     
     return JsonResponse({'success': False})
+
 
 @login_required(login_url='login')
 def ajax_copy_node(request):    
@@ -964,7 +923,8 @@ def ajax_copy_node(request):
      
         try:      
             node = List.objects.get(id=object_id)      
-            clone_node = List.objects.create(title=node.title, type=node.type, parent=node.parent, user=request.user)
+            clone_node = List.objects.create(title=node.title, type=node.type, 
+                                             parent=node.parent, user=request.user)
             return JsonResponse({'status': 'success', 'node_id': clone_node.id, 'node_text': clone_node.title})
         except List.DoesNotExist:
             pass

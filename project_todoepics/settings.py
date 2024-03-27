@@ -158,8 +158,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vBASE_PRODUCT_V1.0.6'
-BUILD_DESCRIPTION = 'updated WBS JSTREE matching _g1_ add, rename, delete'
+BUILD_VERSION = 'vBASE_PRODUCT_V1.0.7'
+BUILD_DESCRIPTION = 'remove the Separate hierarchy in WBS linked to List MPTT, horizontal tree working poc'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 CODING_AI = "codingagi1"

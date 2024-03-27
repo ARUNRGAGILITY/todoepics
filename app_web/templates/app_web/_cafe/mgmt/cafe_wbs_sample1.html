@@ -1,0 +1,51 @@
+<table border="1">
+    <thead>
+        <tr>
+            <th>Strategic Theme</th>
+            <th>Epic</th>
+            <th>Feature/Capability/Component</th>
+            <th>User Story/Spike</th>
+            <th>Task</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Assuming 'hierarchy' is passed to the template context as shown -->
+        <tr>
+            <td>{{ hierarchy.StrategicTheme.name }}</td>
+            <td colspan="4"></td>
+        </tr>
+        {% for epic in hierarchy.StrategicTheme.Epics %}
+        <tr>
+            <td></td> <!-- Leave Strategic Theme column empty for epics -->
+            <td>{{ epic.name }}</td>
+            <td colspan="3"></td>
+        </tr>
+        {% for feature in epic.Features %}
+        <tr>
+            <td></td>
+            <td></td> <!-- Leave Epic column empty for features -->
+            <td>{{ feature.name }}</td>
+            <td colspan="2"></td>
+        </tr>
+        {% for user_story in feature.UserStories %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td> <!-- Leave Feature column empty for user stories -->
+            <td>{{ user_story.name }}</td>
+            <td></td>
+        </tr>
+        {% for task in user_story.Tasks %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td> <!-- Leave User Story column empty for tasks -->
+            <td>{{ task.name }}</td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+        {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>

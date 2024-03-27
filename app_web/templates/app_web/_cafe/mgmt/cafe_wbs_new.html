@@ -1,0 +1,25 @@
+{% block content %}
+{{table_rows}}
+<table border="1">
+    <thead>
+        <tr>
+            <th>Strategic Theme</th>
+            <th>Epic</th>
+            <th>Feature/Capability/Component</th>
+            <th>User Story/Spike</th>
+            <th>Task</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in table_rows %}
+        <tr>
+            <td>{{ row.StrategicTheme|default:'' }}</td>
+            <td>{{ row.Epic|default:'' }}</td>
+            <td>{{ row.Feature|default:'' }}{{ row.Capability|default:'' }}{{ row.Component|default:'' }}</td>
+            <td>{{ row.UserStory|default:'' }}{{ row.Spike|default:'' }}</td>
+            <td>{{ row.Task|default:'' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

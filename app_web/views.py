@@ -1474,23 +1474,42 @@ def st_detail(request, theme_id):
 #     template_file = f"{app_name}/_cafe/mgmt/cafe_wbs.html"
 #     return render(request, template_file, context)
 
+# cafe_wbs
+def build_hierarchy(start_nodes):
+    """Build a nested dictionary representing the hierarchy starting from Strategic Themes."""
+    hierarchy = {}
+    
+    for node in start_nodes:
+        print(f">>> === >>>>>>>>>>>> {node} {node.title} {node.type.title}=== <<<")
+        node_str = node.type.title.replace(" ", "")
+        if node_str == 'StrategicTheme':
+            hierarchy[node_str] = {'title': node.title, 'Epics': []}
+            for child in node.get_children():
+                print(f">>> === >>>>>>>>>>>> {child} {child.title} {child.type.title}=== <<<")
+                if child.type.title == 'Epic':
+                    epic_dict = {'title': child.title, 'Features': []}
+                    for feature in child.get_children():
+                        feature_dict = {'title': feature.title, 'UserStories': []}
+                        for story in feature.get_children():
+                            story_dict = {'title': story.title, 'Tasks': []}
+                            for task in story.get_children():
+                                task_dict = {'title': task.title}
+                                story_dict['Tasks'].append(task_dict)
+                            feature_dict['UserStories'].append(story_dict)
+                        epic_dict['Features'].append(feature_dict)
+                    hierarchy[node_str]['Epics'].append(epic_dict)
+    
+    return hierarchy
+
+# In your view
 def cafe_wbs(request):
-    themes = StrategicTheme.objects.filter(active=True).prefetch_related(
-        Prefetch('epics', queryset=Epic.objects.filter(active=True)),
-        Prefetch('epics__features', queryset=Feature.objects.filter(active=True)),
-        Prefetch('epics__capabilities', queryset=Capability.objects.filter(active=True)),
-        Prefetch('epics__components', queryset=Component.objects.filter(active=True)),
-        Prefetch('epics__features__user_stories', queryset=UserStory.objects.filter(active=True)),
-        Prefetch('epics__features__spikes', queryset=Spike.objects.filter(active=True)),
-        Prefetch('epics__capabilities__user_stories', queryset=UserStory.objects.filter(active=True)),
-        Prefetch('epics__capabilities__spikes', queryset=Spike.objects.filter(active=True)),
-        Prefetch('epics__features__user_stories__tasks', queryset=Task.objects.filter(active=True)),
-        Prefetch('epics__features__spikes__tasks', queryset=Task.objects.filter(active=True)),
-        Prefetch('epics__capabilities__spikes__tasks', queryset=Task.objects.filter(active=True))
-    )
-    context = {'themes': themes, 'quarters': ['Q1', 'Q2', 'Q3', 'Q4']}
+    start_nodes = List.objects.filter(id=65, active=True)
+    hierarchy = build_hierarchy(start_nodes)
+    context = {'hierarchy': hierarchy}
     template_file = f"{app_name}/_cafe/mgmt/cafe_wbs.html"
     return render(request, template_file, context)
+
+
 
 # delete ovs
 @login_required(login_url='login')

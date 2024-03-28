@@ -158,8 +158,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vkanban2.0.2_added'
-BUILD_DESCRIPTION = 'added the kanban latest mvp to todoepics'
+BUILD_VERSION = 'vmain_kanban2.0.2'
+BUILD_DESCRIPTION = 'merged'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 CODING_AI = "codingagi1"

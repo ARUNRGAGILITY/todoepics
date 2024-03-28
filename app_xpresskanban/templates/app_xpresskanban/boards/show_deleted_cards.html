@@ -1,0 +1,361 @@
+{% extends "base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}{{value_type}} Show Deleted Cards{% endblock title %} 
+
+{% block content %}
+<style>
+  .excel_table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .excel_th, .excel_td {
+    border: 1px solid black;
+    padding: 1px;
+    text-align: left;
+    font-size: 10pt;
+  }
+
+  .excel_th {
+    background-color: #f2f2f2;
+  }
+  .align_right {
+    text-align: end;
+  }
+  .align_center {
+    text-align: center;
+  }
+  .align_left {
+    text-align: start;
+  }
+  .excel_tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+
+{% if user.is_authenticated %}
+<!-- -->
+{% include './_include_top_menus.html' %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-7">
+      <b class="h6">Table View {{object.title}} :: {{item.title}}</b>&nbsp;
+      <font size="-1" color="grey">{{newtodolist_count}} Card(s)</font>
+      <form action="" method="POST">
+        {% csrf_token %}
+        <b>Work Item:</b>&nbsp;
+        <input type="text" name="title" id="id_title" size="45"/>
+        &nbsp;
+        <input type="submit" name="action" value="Add">
+        &nbsp;
+        <input type="submit" name="action" value="Search/Clear">
+        &nbsp;
+        <div id="saved"></div>
+      </form>
+    </div>
+    <div class="col-md-5">
+      
+      <div class="d-flex justify-content-end align-items-center">       
+        <a href="{% url 'kanban_board' value_type object.id item.id %}">
+          Kanban Board View</a>
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+          <a href="{% url 'view_item' value_type object.id item.id %}">
+              View Board Details</a>
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+         <a href="{% url 'edit_item' value_type object.id item.id %}">
+          Edit Board Details</a>
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+          <a href="{% url 'delete_item' value_type object.id item.id %}">
+              Delete Board</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-12">
+      <table class="excel_table">
+        <thead class="excel_th">
+            <tr class="bg-warning">
+                <th colspan="9">
+                    Restore :: Deleted Cards
+                </th>
+            </tr>
+        </thead>
+        <form action="{% url 'bulk_restore_deleted_cards' value_type object.id item.id %}" name="" method="POST">
+          {% csrf_token %}
+        <thead>
+        <tr>
+          <th class="excel_th" width="2%">
+            &nbsp;<span class="drag-handle">&#9776;</span>
+          </th>
+          <th class="excel_th" width="2%">
+            &nbsp;<input type="checkbox" name="select_all" id="select_all" onclick='checkUncheck(this)'>
+          </th>
+          <th class="excel_th align_right" width="3%">
+            #&nbsp;
+          </th>
+          <th class="excel_th">
+            &nbsp;Cards
+          </th>
+          <th class="excel_th">
+            &nbsp;Description
+          </th>
+          <th class="excel_th">
+            &nbsp;Progress
+          </th>
+          
+          <th class="excel_th">
+            &nbsp;Swimlane
+          </th>
+          <th class="excel_th" width="4%">
+            &nbsp;Done
+          </th>
+          <th class="excel_th">
+            &nbsp;Action&nbsp;&nbsp;
+            <br>          
+              Display:&nbsp;&nbsp;
+              <select name="pagination" id="paginationselect">
+                  <option value="none">-Select-</option>
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="all">All</option>
+              </select>
+              &nbsp;&nbsp;
+              <b>Bulk:</b>&nbsp;&nbsp;
+              <select name="bulk_project_ops" id="bulk_project_ops" onchange="this.form.submit()">
+                  <option value="none">-Select-</option>
+                  <option value="bulk_restore">Restore</option>                
+                  <option value="bulk_not_done">Not Done</option>
+                  <option value="bulk_delete_permanently">Delete</option>
+              </select>
+          </th>
+        </thead>
+        </tr>
+        <tbody id="sortable" class="sortable-tbody">
+          {% for todo in paginated_items %}
+          <tr>          
+            <tr id="{{todo.id}}_{{ forloop.counter }}" class="sortable-row" 
+                style='background-color: white;'>
+              <td class="excel_td" width="2%" class="handle">
+                &nbsp;&#9776;
+              </td>
+              <td class="excel_td" contenteditable="false">
+                  &nbsp;<input type="checkbox" name="restore_project_box" id="{{todo.id}}" value="{{todo.id}}">
+              </td>
+              <td class="excel_td align_right" width="3%" contenteditable="false">
+                {% if paginated_items.start_index %}
+                {{ paginated_items.start_index|add:forloop.counter0 }}
+                {% else %}
+                {{ forloop.counter }}
+                {% endif %}
+                &nbsp;
+              </td>
+              <td class="excel_td editable-title" width="30%" contenteditable="true" name="title" >&nbsp;{{todo.title}}</td>
+              <td class="excel_td editable-description" contenteditable="true" name="description">&nbsp;{{todo.description}}</td>
+              <td class="excel_td" width="10%">&nbsp;
+                <select name="column" id="column" contenteditable="true">
+                  {% if board_columns %}
+                  {% for column in board_columns %}
+                  <option value="{{column.id}}"
+                    {% if todo.column.id == column.id %}selected{% endif%}
+                  >{{column.title}}</option>
+                  {% endfor %}               
+                  {% endif %} 
+                </select>
+              </td>
+              
+              <td class="excel_td" width="10%">&nbsp;
+                <select name="swimlane" id="swimlane" contenteditable="true">
+                  <option value="">--Select--</option>
+                  {% if swimlane %}
+                  {% for lane in swimlane %}
+                  <option value="{{lane.id}}"
+                    {% if todo.swimlane.id == lane.id %}selected{% endif%}
+                  >{{lane.title}}</option>
+                  {% endfor %}               
+                  {% endif %} 
+                </select>
+              </td>
+              <td class="excel_td"  width="4%">
+                &nbsp;&nbsp;
+                <input type="checkbox" class="done_checkbox" name="done" id="done" name="done" value="{{todo.id}}"
+                {% if todo.done %}checked{% endif %}>
+                
+              </td>
+              <td class="excel_td" width="20%" contenteditable="false">
+                &nbsp;
+                <a href="{% url 'edit_card' value_type object.id item.id todo.id %}">Edit</a>&nbsp;&nbsp;
+                <a href="{% url 'view_card' value_type object.id item.id todo.id %}">View</a>&nbsp;&nbsp;
+                <a href="{% url 'delete_card' value_type object.id item.id todo.id %}">Delete</a>&nbsp;&nbsp;
+                <a href="{% url 'copy_card' value_type object.id item.id todo.id %}">Copy</a>&nbsp;&nbsp;
+                <a href="{% url 'clone_card' value_type object.id item.id todo.id %}">Clone</a>&nbsp;&nbsp;
+              </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        </form>                     
+      </table>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- Display the pagination links -->
+<div class="container">
+  <div class="row">
+      <div class="col-md-12 d-flex justify-content-center py-2">
+          <div class="pagination">
+              <span class="step-links">
+                {% if paginated_items.has_previous %}
+                  <a href="?page=1&pagination={{pagination}}">&laquo; first</a>
+                  <a href="?page={{ paginated_items.previous_page_number }}&pagination={{pagination}}">previous</a>
+                {% endif %}
+              
+                {% if pagination_on %} 
+                <span class="current">
+                  Page {{ paginated_items.number }} of {{ paginated_items.paginator.num_pages }}.
+                </span>
+                {% endif %}
+            
+                {% if paginated_items.has_next %}
+                  <a href="?page={{ paginated_items.next_page_number }}&pagination={{pagination}}">next</a>
+                  <a href="?page={{ paginated_items.paginator.num_pages }}&pagination={{pagination}}">last &raquo;</a>
+                {% endif %}
+              </span>
+            </div>
+      </div>
+  </div>
+</div>
+<script>
+  inputBox = document.getElementById("id_title");
+  inputBox.focus();
+  function checkUncheck(checkBox) {
+      get = document.getElementsByName('restore_project_box');
+      for(var i=0; i<get.length; i++) {
+          get[i].checked = checkBox.checked;
+      }
+  }
+  // prevent default submit 
+  document.getElementById("id_title").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault(); // Prevent form submission
+        // Perform custom action here, such as triggering search
+        // For example: performSearch();
+    }
+});
+  // pagination select
+  document.addEventListener("DOMContentLoaded", function () {
+    const redirectSelect = document.getElementById("paginationselect");
+    redirectSelect.addEventListener("change", function () {
+      const selectedValue = redirectSelect.value;
+      
+      // Redirect the user based on the selected value
+      if (selectedValue === "5") {
+        window.location.href = "{% url 'table_view' value_type object.id item.id %}?page=1&pagination=5";
+      } else if (selectedValue === "10") {
+        window.location.href = "{% url 'table_view' value_type object.id item.id %}?page=1&pagination=10";
+      } else if (selectedValue === "15") {
+        window.location.href = "{% url 'table_view' value_type object.id item.id %}?page=1&pagination=15";
+      } else if (selectedValue === "25") {
+        window.location.href = "{% url 'table_view' value_type object.id item.id %}?page=1&pagination=25";
+      } else if (selectedValue === "50") {
+        window.location.href = "{% url 'table_view' value_type object.id item.id %}?page=1&pagination=50";
+      } else if (selectedValue === "100") {
+        window.location.href = "{% url 'table_view' value_type object.id item.id %}?page=1&pagination=100";
+      } else if (selectedValue === "all") {
+        window.location.href = "{% url 'table_view' value_type object.id item.id %}?page=1&pagination=all";
+      } 
+      // Add more conditions for other options as needed
+    });
+  });
+  </script>
+
+  <!-- Inside your template -->
+<script>
+ 
+  $(document).ready(function () {
+    $('select[name="column"]').on('change', function () {
+        updateTodo($(this));
+    });
+    $('select[name="swimlane"]').on('change', function () {
+        updateTodo($(this));
+    });
+
+    $(".done_checkbox").click(function (event) {
+      updateTodo($(this));
+    });
+
+    $('.excel_td').on('blur', function () {
+        updateTodo($(this));
+    });
+
+    function updateTodo($element) {
+        var $tr = $element.closest('tr');
+        var todo_id = $tr.attr('id').split('_')[0];  // Extract todo_id from the ID
+        var title = $tr.find('[name="title"]').text().trim();
+        var description = $tr.find('[name="description"]').text().trim();
+        var column_id = $tr.find('select[name="column"]').val();  // Extract the selected option's value
+        var done = $tr.find('#done').prop('checked');  // Convert checkbox value to boolean
+        var swimlane_id = $tr.find('select[name="swimlane"]').val();
+        $.ajax({
+              type: 'POST',
+              url: '{% url "ajaxupdate_card" %}',
+              data: {
+                  todo_id: todo_id,
+                  title: title,
+                  description: description,
+                  column: column_id,
+                  swimlane: swimlane_id,
+                  done: done,
+                  csrfmiddlewaretoken: '{{ csrf_token }}'
+              },
+              success: function(response) {
+                  if (response.success) {
+                      $('#saved').fadeIn().delay(1000).fadeOut();
+                  }
+              }
+          });
+    }
+});
+</script>
+
+<script>
+  $(".excel_table").find("tbody").sortable({
+    items: "> tr",
+    appendTo: "parent",
+    cancel: "[contenteditable]",
+    update: function(event, ui) {
+            var serialOrder = $('#sortable').sortable('serialize');
+            var arrayOrder = $('#sortable').sortable('toArray');
+            //alert(arrayOrder);
+            $.ajax({
+              url: '/kanban/ajax_sorted_kanban_board',
+              type: 'POST',
+              data : {
+                'csrfmiddlewaretoken': "{{ csrf_token }}",
+                'sorted_list_data': JSON.stringify(arrayOrder),
+                'value_type': '{{value_type}}',
+                'pk': {{object.id}},
+                'board_id': {{item.id}},
+              },
+              dataType: 'json',
+              success: function(data) {
+                console.log(data);
+              }
+            })
+          }
+  });
+  </script>
+<!-- -->
+{% include '5.footer.html' %}
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

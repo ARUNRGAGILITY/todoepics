@@ -1,0 +1,40 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}User Mgmt Details Page{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    {% include 'role_based_templates/user_mgmt/__user_mgmt_menu.html' %}
+    <div class="row">
+        <div class="col-md-12">
+            <b>User Details :: {{user}}</b> &nbsp;&nbsp;<a href="{% url 'user_mgmt_update' user.pk %}">Edit</a>
+
+            <table class="table table-bordered">
+                <tr>
+                    <th colspan="2">User Details of {{user.username}}</th>
+                </tr>
+                <tr>
+                    <td>UserID:</td><td>{{user.id}}</td>
+                </tr>
+                <tr>
+                    <td>User Email:</td><td>{{user.email}}</td>
+                </tr>
+                <tr>
+                    <td>UserName:</td><td>{{user.username}}</td>
+                </tr>
+                <tr>
+                    <td>User FirstName:</td><td>{{user.first_name}}</td>
+                </tr>
+                <tr>
+                    <td>User LastName:</td><td>{{user.last_name}}</td>
+                </tr>
+                <tr>
+                    <td>User Group/Role:</td><td>{{ user.groups.all|join:', ' }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Copy {{value_type}} Details{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <h6>Copied/Cloned {{value_type}} Details</h6>
+        </div>
+        <div class="col-md-9 d-flex justify-content-end">
+            <a href="{% url 'view_value' value_type object.id %}">View Src {{value_type}}</a>&nbsp;&nbsp;
+            <a href="{% url 'view_value' value_type new_project.id %}">View Cloned {{value_type}}</a>&nbsp;&nbsp;
+            <a href="{% url 'list_values' value_type %}">{{value_type}} List</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <b>{{value_type}} ID {{object.id}} is successfully cloned as {{new_project.id}} as {{new_project.title}}</b>
+        </div>
+    </div>
+</div>  
+{% include '5.footer.html' %}
+{% endblock content %}

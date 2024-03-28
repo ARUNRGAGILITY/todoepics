@@ -1,0 +1,72 @@
+<!-- user_registration_form.html -->
+<form method="post">
+    {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-3">
+                <label for="{{ form.username.id_for_label }}">Username:</label>
+            </div>
+            <div class="col-md-3">
+                {{ form.username }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label for="{{ form.first_name.id_for_label }}">FirstName:</label>
+            </div>
+            <div class="col-md-3">
+                {{ form.first_name }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label for="{{ form.last_name.id_for_label }}">LastName:</label>
+            </div>
+            <div class="col-md-3">
+                {{ form.last_name }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label for="{{ form.email.id_for_label }}">Email:</label>
+            </div>
+            <div class="col-md-3">
+                {{ form.email }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label for="{{ form.password1.id_for_label }}">Password1:</label>
+            </div>
+            <div class="col-md-3">
+                <input type="password" name="password1" id="id_password1">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label for="{{ form.password2.id_for_label }}">Password2:</label>
+            </div>
+            <div class="col-md-3">
+               <input type="password" name="password2" id="id_password2">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <label for="{{ form.RegistrationCode.id_for_label }}">Registration Code:</label>
+            </div>
+            <div class="col-md-3">
+                {{ form.RegistrationCode }}
+            </div>
+        </div>
+        <!-- Add similar rows for other fields -->
+        <div class="row">
+            <div class="col-md-3">
+                <label for="{{ form.groups.id_for_label }}">Groups:</label>
+            </div>
+            <div class="col-md-3">
+                {{ form.groups }}
+            </div>
+        </div>
+        <button type="submit">Add User</button>
+    </form>
+    

@@ -1,0 +1,41 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Create {{value_type}} Charter{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container">   
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <b class="h4">Enter {{value_type}} Charter details</b> <i>in Markdown syntax</i>
+                            <br>
+                            <br>
+                            {{ form }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <br>
+                <input type='submit' value="Save {{value_type|capfirst}} Charter"/>
+                <br>
+                <br>
+                <a href="{% url 'list_values' value_type %}">List {{value_type|capfirst}}(s)</a>
+            </div>
+        </div>        
+        <div class="row">
+            <div class="col-md-12">
+               {{form.media}}
+            </div>
+        </div>
+    </form>
+</div>
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

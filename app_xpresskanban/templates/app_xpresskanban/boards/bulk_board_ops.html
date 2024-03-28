@@ -1,0 +1,24 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}{{value_type}} Board {% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <a href="{% url 'list_values' value_type  %}">List of Board {{value_type}}s</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'list_values' value_type %}">List of {{value_type}}s</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <h5>Bulk Operations on {{value_type}} Board(s)</h5>
+            {% for id in selected_project_ids %}
+                <b>{{value_type}} / {{page}} ID: {{id}}</b><br>
+            {% endfor %}
+            <p>has been {{bulk_ops}}.</p>
+        </div>
+    </div>
+</div>
+{% endblock content %}

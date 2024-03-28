@@ -1,0 +1,314 @@
+{% extends "base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Home{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+{% if user.is_authenticated %}
+  <style>
+    /* general drop down position try */
+/* Style for the dropdown button */
+.dropbtn1 {
+  background-color: yellow;
+  color: #333;
+  padding: 0px;
+  height: 2px;
+  width: 2px;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+}
+.dropdown1 {
+  position: relative;
+  top: 0;
+  right: 0;
+  padding-right: 140px;
+}
+/* Dropdown container (hidden by default) */
+.dropdown-content1 {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 150px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+/* Links inside the dropdown */
+.dropdown-content1 a {
+  padding: 8px 10px;
+  text-decoration: none;
+  display: block;
+  color: #333;
+}
+
+/* Change color on hover */
+.dropdown-content1 a:hover {
+  background-color: #f1f1f1;
+}
+/* Add a drop arrow (caret) to the button */
+.dropbtn1::after {
+  content: "\25BC"; /* Unicode character for a down arrow */
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+  #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  #sortable li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+$( function() {
+  id_title = document.getElementById('id_title');
+  id_title.focus();
+
+
+  var sortableList = $('#sortable');
+  $(".kanban_board_table").find("tbody").sortable({
+            items: "> tr",
+            appendTo: "parent",
+            cancel: "[contenteditable]",
+            update: function(event, ui) {
+        var serialOrder = $('#sortable').sortable('serialize');
+        var arrayOrder = $('#sortable').sortable('toArray');
+        //alert(arrayOrder);
+        $.ajax({
+          url: '/kanban/sorted_board_columns/{{value_type}}/{{object.id}}/{{item.id}}',
+          type: 'POST',
+          data : {
+            'csrfmiddlewaretoken': "{{ csrf_token }}",
+            'sorted_list_data': JSON.stringify(arrayOrder)
+          },
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+          }
+        });
+         $(this).find('tr').each(function(i){
+            $(this).children('td:second').text(i+1);
+        });
+      }
+
+  });
+  $( "#sortable" ).sortable();
+  $( "#sortable" ).disableSelection();
+} );
+</script>
+
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row mx-0 my-1">
+        <div class="col-md-12 mx-0 d-flex justify-content-start" style="background-color: lightblue;">
+        <a href="{% url 'home' %}">Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'kanban_home' %}">Kanban Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'list_values' value_type %}">{{value_type}}s List</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'value_homepage' value_type object.id %}">{{object}} Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'boards_home' value_type object.id %}">{{object}}'s Kanban Boards</a>        
+        &nbsp;/&nbsp;
+        <b>{{item}} &nbsp;</b>   Kanban Board     
+        </div>
+      </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-start align-items-center">
+            <table class="table ">
+                <tr>
+                    <td width="5%"><b>{{value_type}}:</b></td><td width="20%">{{object}}</td>
+                    <td width="5%"><b>Board:</b></td><td width="20%">{{item}}</td>
+                    <td width="50%">
+                      <div class="dropdown1">
+                        <button class="dropbtn1">View</button>
+                        <div class="dropdown-content1">
+                        <a href="/">Home</a>
+                        <a href="{% url 'kanban_home' %}">Kanban Home</a>
+                        <a href="{% url 'boards_home' value_type object.id %}">Boards Home</a>
+                        <hr>
+                        <a href="{% url 'table_view' value_type object.id item.id %}">Kanban: Table View</a>
+                        <a href="{% url 'kanban_board' value_type object.id item.id %}">Kanban: Click View</a>
+                        <a href="{% url 'visual_board_dandd' value_type object.id item.id %}">Kanban: Visual Drag and Drop View</a>
+                        <hr>
+                        <a href="{% url 'kanban_board_columns' value_type object.id item.id %}">Board's: Columns</a>
+                        <a href="{% url 'kanban_swimlanes' value_type object.id item.id %}">Board's: Swimlanes</a>
+                        </div>
+                      </div>
+                        <div class="d-flex justify-content-end align-items-center">       
+                          <a href="{% url 'visual_board_dandd' value_type object.id item.id %}">Kanban: Visual Drag and Drop View</a>                    
+                          &nbsp;&nbsp;|&nbsp;&nbsp;
+                           <a href="{% url 'edit_item' value_type object.id item.id %}">
+                            Edit Board Details</a>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;
+                            <a href="{% url 'delete_item' value_type object.id item.id %}">
+                                Delete Board</a>
+                         
+                            &nbsp;&nbsp; | &nbsp;&nbsp; 
+                            <a href="{% url 'kanban_swimlanes' value_type object.id item.id %}">Swimlanes</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>       
+    </div>
+
+</div>
+  <div class="container-fluid py-1">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="container-fluid-width ">
+          <div class="row">
+            <div class="col-md-10 d-flex justify-content-start">
+              <form method='POST' action=''>
+                {% if form.errors %}
+                  <div class="alert alert-danger">
+                    {{form.errors}}
+                  </div>
+                {% endif %}
+                {% csrf_token %}
+                <b>Column Name:</b>&nbsp;&nbsp; 
+                 {{ form.title }}   &nbsp;&nbsp;   
+                 <b>WIP Limit: </b>
+                    <select name="wip_limit" id="id_wip_limit">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>   
+                <input type='submit' name='submit' value='Add Column'/>
+              </form>
+            </div>
+            <div class="col-md-2 d-flex justify-content-end">
+              Total: {{newtodolist_count}} Item(s)
+              &nbsp;
+              <div id="saved"></div>
+            </div>
+          </div>
+        </div>
+       
+          <form name="todoform" method="POST" action="">
+          <table  id="outline" class="table table-bordered kanban_board_table" >
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">&nbsp;&#9776;</th>
+                        <th>#</th>
+                        <th>Column Name</th>
+                        <th>Buffer Column</th>
+                        <th>WIP Limit</th>
+                        <th>CycleTime-Column</th>
+                        <th>Policies</th>
+                        <th>Entry Criteria</th>
+                        <th>Exit Criteria</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id='sortable'>
+                  {% for todo in newtodolist %}
+                  <tr id="{{todo.id}}_{{ forloop.counter }}" class="ui-state-default" style='background-color: white;'>
+                  
+                  <td width="2%" style="text-align: center;">&nbsp;&#9776;</td> 
+                  <td width="2%" align="right">{{ forloop.counter }}</td>                      
+                  <!-- <td rowspan="{{ todo.boardbuffercolumns_set.count }}">{{ todo.title }}</td>
+                  {% for buffer_column in column.boardbuffercolumn_set.all %}
+                    <td>{{ buffer_column.title }}</td>
+                  {% endfor %} -->
+                  <td width="15%" contenteditable="false">
+                    {{ todo.title }}
+                  </td>
+                  <td width="20%" contenteditable="false">
+                      {% for buffer_column in todo.boardbuffercolumns_set.all %}
+                        {% if buffer_column.active == True %}
+                        {{ buffer_column.title }}, wip={{ buffer_column.wip_limit }} <br> 
+                        {% endif %}       
+                      {% endfor %}
+                  </td>
+                  <td width="5%" contenteditable="false">
+                  {{todo.wip_limit}}
+                  </td>
+                  <td width="2%" contenteditable="false">
+                    <input type="checkbox" class="done_checkbox" name="cycle_time_column" 
+                    id="cycle_time_column"
+                      value="{{todo.id}}" {% if todo.cycle_time_column == True %}checked{% endif %}>
+                    </td>
+                  <td width="10%" contenteditable="false">{{todo.policies}}</td>
+                  <td contenteditable="false">{{todo.entry_criteria}}</td>
+                  <td contenteditable="false">{{todo.exit_criteria}}</td>
+                   <td width="25%" contenteditable="false">
+                        <a href="{% url 'edit_column' value_type object.id item.id todo.id %}">Edit</a>
+                        &nbsp;&nbsp;  &nbsp;&nbsp; 
+                        <a href="{% url 'delete_column' value_type object.id item.id todo.id %}">Delete</a>
+                        &nbsp;&nbsp;  &nbsp;&nbsp; 
+                        <a href="{% url 'kanban_board_buffer_columns' value_type object.id item.id todo.id %}">Add Buffer Column</a>
+                   </td>
+                 
+                </tr>
+                  {% endfor %}
+                </tbody>
+          </table>
+          </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    // update the cycletime checkbox
+    $(document).ready(function () {
+    $(".done_checkbox").click(function (event) {
+       updateAjaxData($(this));
+     });
+     function updateAjaxData($element) {
+      var $tr = $element.closest('tr');
+       var todo_id = $tr.attr('id').split('_')[0];  // Extract todo_id from the ID
+       var cycle_time_column = $tr.find('#cycle_time_column').prop('checked');  // Convert checkbox value to boolean
+       $.ajax({
+             type: 'POST',
+             url: '{% url "ajaxupdate_column" %}',
+             data: {
+                 todo_id: todo_id,
+                 cycle_time_column: cycle_time_column,
+                 csrfmiddlewaretoken: '{{ csrf_token }}'
+             },
+             success: function(response) {
+                 if (response.success) {
+                     $('#saved').fadeIn().delay(1000).fadeOut();
+                 }
+             }
+         });
+     }
+    });
+  </script>
+  
+<script>
+  //
+  // general drop down
+  //
+
+  $(document).ready(function() {
+    // Toggle the dropdown menu when the button is clicked
+    $(".dropbtn1").click(function() {
+      $(this).next(".dropdown-content1").toggle();
+    });
+  
+    // Hide the dropdown menu when clicking outside of it
+    $(document).click(function(event) {
+      if (!$(event.target).closest(".dropdown1").length) {
+        $(".dropdown-content1").hide();
+      }
+    });
+  });
+  </script>
+  {% include '5.footer.html' %}
+{% else%}
+  {% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

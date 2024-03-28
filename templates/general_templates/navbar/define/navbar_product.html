@@ -1,0 +1,242 @@
+{% extends "base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Projects{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+{% include '../../../1.toplevel.html' %}
+{% include '../../../2.navbar.html' %}
+<style>
+    #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+    #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+    #sortable li span { position: absolute; margin-left: -1.3em; }
+    </style>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+$( function() {
+  // on load hide the datetime details and show when checkbox selected
+  $('td:nth-child(6),th:nth-child(6)').hide();
+  $('td:nth-child(7),th:nth-child(7)').hide();
+  $('td:nth-child(8),th:nth-child(8)').hide();
+  $('td:nth-child(9),th:nth-child(9)').hide();
+  $('td:nth-child(10),th:nth-child(10)').hide();
+  $('td:nth-child(11),th:nth-child(11)').hide();
+  $('td:nth-child(12),th:nth-child(12)').hide();
+  $('td:nth-child(13),th:nth-child(13)').hide();
+  $(".show_hide_details").click(function (event) {
+        var checkbox_data = $(this).attr('id');
+        var checkbox_this = $(this);
+        if ($(this).prop('checked')==true){ 
+          //alert("show");
+
+            $('td:nth-child(6),th:nth-child(6)').show();
+            $('td:nth-child(7),th:nth-child(7)').show();
+            $('td:nth-child(8),th:nth-child(8)').show();
+            $('td:nth-child(9),th:nth-child(9)').show();
+            $('td:nth-child(10),th:nth-child(10)').show();
+            $('td:nth-child(11),th:nth-child(11)').show();
+            $('td:nth-child(12),th:nth-child(12)').show();
+        } else {
+
+            $('td:nth-child(6),th:nth-child(6)').hide();
+            $('td:nth-child(7),th:nth-child(7)').hide();
+            $('td:nth-child(8),th:nth-child(8)').hide();
+            $('td:nth-child(9),th:nth-child(9)').hide();
+            $('td:nth-child(10),th:nth-child(10)').hide();
+            $('td:nth-child(11),th:nth-child(11)').hide();
+            $('td:nth-child(12),th:nth-child(12)').hide();
+        }
+  });
+  // sorted list  
+  $( "#sortable" ).sortable({
+      stop: function(event, ui) {
+        var serialOrder = $('#sortable').sortable('serialize');
+        var arrayOrder = $('#sortable').sortable('toArray');
+        $.ajax({
+          url: '/web/sorted_product',
+          type: 'POST',
+          data : {
+            'csrfmiddlewaretoken': "{{ csrf_token }}",
+            'sorted_list_data': JSON.stringify(arrayOrder)
+          },
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+          }
+        });
+         $(this).find('tr').each(function(i){
+            $(this).children('td:second').text(i+1);
+        });
+      }
+  });
+  $( "#sortable" ).sortable();
+  $( "#sortable" ).disableSelection();
+});
+</script>
+
+<form action="{% url 'ops_product' %}" name="" method="POST">
+{% csrf_token %}
+<div class="container-fluid ">
+    <div class="row mx-0 my-1">
+        <div class="col-md-12 mx-0 d-flex justify-content-start" style="background-color: lightblue;">
+        <b>Product Page</b>    
+        </div>
+    </div>
+    <div class="row mx-0 my-1">
+        <div class="col-md-6 d-flex justify-content-start  align-items-center">
+            <b>Product List</b>
+            &nbsp;&nbsp;           
+            <input type="checkbox" name='show_hide' class='show_hide_details'>&nbsp;&nbsp;<font size='-2'>Show Details</font>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end align-items-center">
+            <b>Display:</b>&nbsp;&nbsp;
+            <select name="pagination" id="paginationselect">
+                <option value="none">-Select-</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="all">All</option>
+            </select>
+            &nbsp;&nbsp;
+            <b>Bulk:</b>&nbsp;&nbsp;
+            <select name="bulk_product_ops" id="bulk_product_ops" onchange="this.form.submit()">
+                <option value="none">-Select-</option>
+                <option value="bulk_delete">Delete</option>
+                <option value="bulk_done">Done</option>
+            </select>
+            &nbsp;&nbsp;
+            <a href="{% url 'add_product' %}" class="btn btn-success">Add New Product</a>
+            &nbsp;&nbsp;
+            <a href="{% url 'restore_products' %}">
+                Restore
+            </a>
+            &nbsp;&nbsp;
+        </div>
+    </div>
+    <div class="container-fluid-width ">
+        <div class="row">
+            <div class="col-md-12">
+                <table  id="outline" class="table is-bordered" bgcolor="lightgreen" border="1">
+                    <tr>
+                        <th>
+                            <input type="checkbox" name="select_all" id="select_all" onclick='checkUncheck(this)'>
+                        </th>
+                        <th>#</th>
+                        <th>ID</th>
+                        <th>Product Name</th>
+                        <th>Description</th>
+    
+                        <th>Type</th>
+                        <th>Priority</th>
+                        <th>State</th>
+                        <th>Start Date</th>
+    
+                        <th>End Date</th>
+                        <th>Progress</th>
+                        <th>Done</th>
+                        <th>Note</th>  
+    
+                        <th>Action</th>
+                    </tr>
+                    <tbody id="sortable">
+                    {% for todo in paginated_items %}
+                    <tr id="{{todo.id}}_{{ forloop.counter }}" class="ui-state-default" style='background-color: white;'>
+                        <td id="test">
+                            <input type="checkbox" name="product_box" id="selected_product_ids" value="{{todo.id}}">
+                        </td>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{todo.id}}</td>
+                        <td>{{todo.title}}</td>
+                        <td>{{todo.description}}</td>
+                        <td>{{todo.product_type}}</td>
+                        <td>{{todo.product_priority}}</td>
+                        <td>{{todo.product_state}}</td>
+                        <td>{{todo.start_date}}</td>
+                        <td>{{todo.end_date}}</td>
+                        <td>{{todo.progress}}</td>
+                        <td>{{todo.done}}</td>
+                        <td>{{todo.current_state}}</td>                    
+                        <td>
+                            <a href="{% url 'product_homepage' todo.id %}">Details</a>&nbsp;
+                            <a href="{% url 'view_product' todo.id %}">View</a>&nbsp;
+                            <a href="{% url 'edit_product' todo.id %}">Edit</a>&nbsp;
+                            <a href="{% url 'delete_product' todo.id %}">Delete</a>&nbsp;
+                            <a href="{% url 'copy_product' todo.id %}">Copy</a>&nbsp;
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>                
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+
+<!-- Display the pagination links -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center py-2">
+            <div class="pagination">
+                <span class="step-links">
+                  {% if paginated_items.has_previous %}
+                    <a href="?page=1&pagination={{pagination}}">&laquo; first</a>
+                    <a href="?page={{ paginated_items.previous_page_number }}&pagination={{pagination}}">previous</a>
+                  {% endif %}
+                
+                  {% if pagination_on %} 
+                  <span class="current">
+                    Page {{ paginated_items.number }} of {{ paginated_items.paginator.num_pages }}.
+                  </span>
+                  {% endif %}
+              
+                  {% if paginated_items.has_next %}
+                    <a href="?page={{ paginated_items.next_page_number }}&pagination={{pagination}}">next</a>
+                    <a href="?page={{ paginated_items.paginator.num_pages }}&pagination={{pagination}}">last &raquo;</a>
+                  {% endif %}
+                </span>
+              </div>
+        </div>
+    </div>
+</div>
+<script>
+    function checkUncheck(checkBox) {
+        get = document.getElementsByName('product_box');
+        for(var i=0; i<get.length; i++) {
+            get[i].checked = checkBox.checked;
+        }
+    }
+    // pagination select
+    document.addEventListener("DOMContentLoaded", function () {
+      const redirectSelect = document.getElementById("paginationselect");
+      redirectSelect.addEventListener("change", function () {
+        const selectedValue = redirectSelect.value;        
+        // Redirect the user based on the selected value
+        if (selectedValue === "5") {
+          window.location.href = "{% url 'navbar_product' %}?page=1&pagination=5";
+        } else if (selectedValue === "10") {
+          window.location.href = "{% url 'navbar_product' %}?page=1&pagination=10";
+        } else if (selectedValue === "15") {
+          window.location.href = "{% url 'navbar_product' %}?page=1&pagination=15";
+        } else if (selectedValue === "25") {
+          window.location.href = "{% url 'navbar_product' %}?page=1&pagination=25";
+        } else if (selectedValue === "50") {
+          window.location.href = "{% url 'navbar_product' %}?page=1&pagination=50";
+        } else if (selectedValue === "100") {
+          window.location.href = "{% url 'navbar_product' %}?page=1&pagination=100";
+        } else if (selectedValue === "all") {
+          window.location.href = "{% url 'navbar_product' %}?page=1&pagination=all";
+        } 
+        // Add more conditions for other options as needed
+      });
+    });
+    </script>
+{% else%}
+    {% include 'GUEST_USER.html' %}
+{% endif %}
+{% include '5.footer.html' %}
+{% endblock content %}

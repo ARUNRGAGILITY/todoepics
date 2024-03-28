@@ -1,0 +1,33 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Delete VSM{% endblock title %} 
+{% block content %}
+{% include '../../../../1.toplevel.html' %}
+{% include '../../../../2.navbar.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h5>Delete VSM</h5>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <form action="" method='POST' class='form'>
+                {% csrf_token %}
+                <div class="form__group">
+                <p>Do you want to delete this VSM <b>{{product}}</b>?</p>
+                </div>
+                <div class="for__group">
+                <input type="submit" value='Confirm Delete' class='btn btn-danger'>
+                &nbsp;&nbsp;
+                <a href="{% url 'navbar_vsm' %}" class='btn btn-warning'>Cancel</a>
+                </div>
+                </form>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+{% endblock content %}

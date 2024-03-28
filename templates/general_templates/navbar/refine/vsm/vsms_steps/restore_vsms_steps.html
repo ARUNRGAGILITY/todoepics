@@ -1,0 +1,139 @@
+{% extends "base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Restore VSMS Steps{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+{% include '1.toplevel.html' %}
+{% include '2.navbar.html' %}
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+$( function() {
+  // on load hide the datetime details and show when checkbox selected
+
+  $('td:nth-child(6),th:nth-child(6)').hide();
+  $('td:nth-child(7),th:nth-child(7)').hide();
+  $('td:nth-child(8),th:nth-child(8)').hide();
+  $('td:nth-child(9),th:nth-child(9)').hide();
+  $('td:nth-child(10),th:nth-child(10)').hide();
+  $('td:nth-child(11),th:nth-child(11)').hide();
+  $('td:nth-child(12),th:nth-child(12)').hide();
+  $('td:nth-child(13),th:nth-child(13)').hide();
+  $(".show_hide_details").click(function (event) {
+        var checkbox_data = $(this).attr('id');
+        var checkbox_this = $(this);
+        if ($(this).prop('checked')==true){ 
+          //alert("show");
+            $('td:nth-child(5),th:nth-child(5)').show();
+            $('td:nth-child(6),th:nth-child(6)').show();
+            $('td:nth-child(7),th:nth-child(7)').show();
+            $('td:nth-child(8),th:nth-child(8)').show();
+            $('td:nth-child(9),th:nth-child(9)').show();
+            $('td:nth-child(10),th:nth-child(10)').show();
+            $('td:nth-child(11),th:nth-child(11)').show();
+            $('td:nth-child(12),th:nth-child(12)').show();
+        } else {
+            $('td:nth-child(5),th:nth-child(5)').hide();
+            $('td:nth-child(6),th:nth-child(6)').hide();
+            $('td:nth-child(7),th:nth-child(7)').hide();
+            $('td:nth-child(8),th:nth-child(8)').hide();
+            $('td:nth-child(9),th:nth-child(9)').hide();
+            $('td:nth-child(10),th:nth-child(10)').hide();
+            $('td:nth-child(11),th:nth-child(11)').hide();
+            $('td:nth-child(12),th:nth-child(12)').hide();
+        }
+  });
+});
+</script>
+
+<form action="{% url 'bulk_restore_deleted_vsms' %}" name="" method="POST">
+{% csrf_token %}
+<div class="container-fluid">   
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-start">
+            <b>VSMS Steps Restore Page</b>
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <div class="col-md-4 py-1">
+            <b>Restore deleted VSMS Step(s)</b>
+            &nbsp;&nbsp;           
+            <input type="checkbox" name='show_hide' class='show_hide_details'>&nbsp;&nbsp;<font size='-2'>Show Details</font>
+        </div>
+        <div class="col-md-8 py-1 d-flex justify-content-end align-items-center">
+            Total: {{newtodolist_count}} VSM(s)&nbsp;&nbsp;
+           
+            <b>Display:</b>&nbsp;&nbsp;
+            <select name="pagination" id="pagination" onchange="this.form.submit()">
+                <option value="none">-Select-</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="150">150</option>
+                <option value="200">200</option>
+                <option value="all">All</option>
+            </select>
+            &nbsp;&nbsp;
+            <b>Bulk:</b>&nbsp;&nbsp;
+            <select name="bulk_vsm_ops" id="bulk_vsm_ops" onchange="this.form.submit()">
+                <option value="none">-Select-</option>
+                <option value="bulk_restore">Restore</option>
+                <option value="bulk_not_done">Not Done</option>
+                <option value="bulk_delete_permanently">Delete</option>
+            </select>&nbsp;&nbsp;
+            <a href="{% url 'navbar_vsm' %}">List VSMs</a>
+            &nbsp;&nbsp;
+            <a href="{% url 'add_vsm' %}" class="btn btn-success">Add New VSM</a>
+            &nbsp;&nbsp;          
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <tr>
+                    <th>
+                        <input type="checkbox" name="product_box" id="{{product.id}}" onclick='checkUncheck(this)'>
+                    </th>
+                    <th>#</th>
+                    <th>ID</th>
+                    <th>Organization VSM Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+                {% for todo in newtodolist %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="restore_product_box" id="{{todo.id}}" value="{{todo.id}}">
+                    </td>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{todo.id}}</td>
+                    <td>{{todo.title}}</td>
+                    <td>{{todo.work_item_type}}</td>
+                    <td>{{todo.description}}</td>                
+                    <td>
+                        <a href="{% url 'view_vsm' todo.id %}">View</a>&nbsp;
+                        <a href="{% url 'edit_vsm' todo.id %}">Edit</a>&nbsp;
+                        <a href="{% url 'restore_vsm' todo.id %}">Restore</a>&nbsp;
+                        <a href="{% url 'copy_vsm' todo.id %}">Copy</a>&nbsp;
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+</form>
+<script>
+function checkUncheck(checkBox) {
+    get = document.getElementsByName('restore_product_box');
+    for(var i=0; i<get.length; i++) {
+        get[i].checked = checkBox.checked;
+    }
+}
+</script>
+{% else%}
+  {% include 'GUEST_USER.html' %}
+{% endif %}
+{% include '5.footer.html' %}
+{% endblock content %}

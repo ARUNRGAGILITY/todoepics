@@ -1,0 +1,23 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Dev Product{% endblock title %} 
+{% block content %}
+{% include '../../../../1.toplevel.html' %}
+{% include '../../../../2.navbar.html' %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <a href="{% url 'navbar_project' %}">List of Projects</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <h5>Bulk Operations :: Restore Deleted Project(s)</h5>
+            {% for id in selected_project_ids %}
+                <b>Project ID: {{id}}</b><br>
+            {% endfor %}
+            <p>has been marked {{bulk_ops}}.</p>
+        </div>
+    </div>
+</div>
+{% endblock content %}

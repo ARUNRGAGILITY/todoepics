@@ -1,0 +1,20 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Group Mgmt Edit Page{% endblock title %} 
+{% block content %}
+
+<div class="container-fluid">
+    {% include '1.mvp_header.html' %}
+    {% include 'role_based_templates/group_mgmt/__group_mgmt_menu.html' %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Edit Group</h2>
+            <form action="" method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="submit" name="edit_group" value="Edit Group">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

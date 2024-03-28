@@ -1,0 +1,162 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}User Home Page{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 d-flex justify-content-center align-items-center">
+            <h1>Welcome to Xpress Kanban</h1>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center">
+            Kanban Home
+            &nbsp;&nbsp;|&nbsp;&nbsp;    
+            <a href="{% url 'list_values' 'Organization' %}">Organization</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;            
+            <a href="{% url 'user_mgmt_home'  %}">User/Group Management</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Templates            
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Measure/Metrics
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Kanban Settings
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            User Settings
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-5 text-center">
+            <br>
+            <img width='' height='' 
+            src="{% static 'img/kanban_img2.png' %}" class="" alt="Kanban" class=""> 
+            <br>
+            <img width='' height='' 
+            src="{% static 'img/kanban_img5.png' %}" class="" alt="Kanban" class=""> 
+        </div>
+        
+        <div class="col-md-5">
+            <br>
+            <p>
+                <b>Kanban</b> is a Lean approach to modern flow-based value delivery, which can maximize the value creation 
+                and minimize delays holistically in your organization.
+                <br><br>
+                <b>Xpress Kanban </b> is an Open-software implementation of Lean/Kanban approach. 
+                <br><br>
+                <b>Choose to create your Project/Product/Service/Solution/Value-Stream:</b>
+                <table class="table bordered">
+                    <tr>
+                        <th>Delivery Model</th>
+                        <th>Create</th>
+                        <th>List</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            Lead and Manage in real-time Projects 
+                        </td>
+                        <td>
+                            <a href="{% url 'add_object' 'Project' %}" 
+                            class="btn btn-sm btn-primary text-white">Create Project</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'list_values' 'Project' %}" 
+                            class="btn btn-sm btn-primary text-white">List Projects</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Deliver value by managing product flow  
+                        </td>
+                        <td>
+                            <a href="{% url 'add_object' 'Product' %}" 
+                            class="btn btn-sm btn-primary text-white">Create Product</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'list_values' 'Product' %}" 
+                            class="btn btn-sm btn-primary text-white">List Products</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Deliver high-quality services via Kanban Systems  
+                        </td>
+                        <td>
+                            <a href="{% url 'add_object' 'Service' %}" 
+                            class="btn btn-sm btn-primary text-white">Create Service</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'list_values' 'Service' %}" 
+                            class="btn btn-sm btn-primary text-white">List Services</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Develop and Deliver continuously Solutions that has consumer appreciated, market-fit and fit-for-purpose 
+                        </td>
+                        <td>
+                            <a href="{% url 'add_object' 'Solution' %}" 
+                            class="btn btn-sm btn-primary text-white">Create Solution</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'list_values' 'Solution' %}" 
+                            class="btn btn-sm btn-primary text-white">List Solutions</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Continuously improve Value of the Organization by Value Stream Visualization with Connnected Kanban 
+                        </td>
+                        <td>
+                            <a href="{% url 'add_object' 'ValueStream' %}" 
+                            class="btn btn-sm btn-primary text-white">Create ValueStream</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'list_values' 'ValueStream' %}" 
+                            class="btn btn-sm btn-primary text-white">List ValueStreams</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Add an Organization or Client as a Business Context 
+                            for your Delivery Organization
+                        </td>
+                        <td>
+                            <a href="{% url 'add_object' 'Organization' %}" 
+                            class="btn btn-sm btn-primary text-white">Create Organization</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'list_values' 'Organization' %}" 
+                            class="btn btn-sm btn-primary text-white">List Organizations</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Add an Organization or Client as a Business Context 
+                            for your Delivery Organization
+                        </td>
+                        <td>
+                            <a href="{% url 'add_object' 'Team' %}" 
+                            class="btn btn-sm btn-primary text-white">Create Team</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'list_values' 'Team' %}" 
+                            class="btn btn-sm btn-primary text-white">List Teams</a>
+                        </td>
+                    </tr>
+                </table>
+                
+               
+            </p>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</div>
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

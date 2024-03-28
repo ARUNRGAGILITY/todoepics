@@ -1,0 +1,25 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Add Project{% endblock title %} 
+{% block content %}
+{% include '../../../../1.toplevel.html' %}
+{% include '../../../../2.navbar.html' %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <h6>Copied/Cloned Project Details</h6>
+        </div>
+        <div class="col-md-9 d-flex justify-content-end">
+            <a href="{% url 'view_project' project.id %}">View Src Project</a>&nbsp;&nbsp;
+            <a href="{% url 'view_project' new_project.id %}">View Cloned Project</a>&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Project List</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <b>Project ID {{project.id}} is successfully cloned as {{new_project.id}} as {{new_project.title}}</b>
+        </div>
+    </div>
+</div>  
+{% include '../../../../5.footer.html' %}
+{% endblock content %}

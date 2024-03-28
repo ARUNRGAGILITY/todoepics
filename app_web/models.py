@@ -8,6 +8,7 @@ from django.conf import settings  # Assuming your User model comes from settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils.translation import gettext_lazy as _
 from django.db.models import JSONField 
+TreeForeignKey = models.ForeignKey
 
 ################# SAFe #####################
 class BaseModel1(models.Model):
@@ -33,6 +34,7 @@ class SAFeType(BaseModel1):
     def __str__(self):
         return self.name
 class Organization(BaseModel1):
+    work_item_type = TreeForeignKey('app_xpresskanban.TYPE_HSDB', on_delete=models.SET_NULL, null=True, blank=True, related_name="xpress_org_witype1")
     org_type = models.ForeignKey(SAFeType, on_delete=models.CASCADE, related_name="organizations")
 
     def __str__(self):

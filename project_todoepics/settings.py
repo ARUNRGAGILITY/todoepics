@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'app_todoepics',
     # onbranch/MVP_BASE
     'app_baseline',
-
+    'app_xpresskanban',
 ]
 
 MIDDLEWARE = [
@@ -158,8 +158,8 @@ LOGGING = {
 ### End logging
 
 ## CUSTOMIZATION
-BUILD_VERSION = 'vBASE_PRODUCT_V1.0.9'
-BUILD_DESCRIPTION = 'Organization / SAFe type display big picture WBS fixed'
+BUILD_VERSION = 'vkanban2.0.2_added'
+BUILD_DESCRIPTION = 'added the kanban latest mvp to todoepics'
 ## TEMPLATE DISPLAY
 SITE_TITLE = "AgileTIA"
 CODING_AI = "codingagi1"

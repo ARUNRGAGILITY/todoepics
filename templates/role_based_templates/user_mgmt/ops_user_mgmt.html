@@ -1,0 +1,72 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}User Mgmt Home Page{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    {% include 'role_based_templates/user_mgmt/__user_mgmt_menu.html' %}
+    <div class="row">
+        <div class="col-md-12">
+            <b>User Mgmt :: Bulk Operations for Users</b>  
+        </div>
+    </div>
+    <form action="{% url 'bulk_ops_user_mgmt' %}" method="POST">
+        {% csrf_token %}
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-start align-items-center">
+   
+            <table class="table table bordered w-100">
+                <tr>
+                    <th>Selected User(s)</th>
+                    {% if bulk_obj_ops == "bulk_move" or bulk_obj_ops == "bulk_remove" %}<th>Operation</th>{% endif %}
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td>
+                        {% for user in selected_objects %}
+                        <b>User ID: {{user.id}}, {{user.username}}</b><br>
+                        <input type="hidden" name="obj_box" id="selected_object_ids" value="{{user.pk}}"/>
+                        {% endfor %}
+                    </td>
+                    {% if bulk_obj_ops == "bulk_move" or bulk_obj_ops == "bulk_remove" %}
+                    <td>
+                        <h5>Select the Group</h5>
+                        <select name="selected_group" id="selected_group">
+                        {% for group in groups %}
+                            <option value="{{group}}">{{group}}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                    {% endif %}
+                    <td>
+                        
+                        {% if bulk_obj_ops == "bulk_move" %}
+                            <input type="hidden" name="bulk_obj_ops" value="bulk_move">
+                            <input type="submit" name="move_to_group" id="move_to_group" value="Move to Group">
+                        {% endif %}
+                        {% if bulk_obj_ops == "bulk_remove" %}
+                        <input type="hidden" name="bulk_obj_ops" value="bulk_remove">
+                        <input type="submit" name="remove_to_group" id="remove_to_group" value="Remove from Group">
+                        {% endif %}
+                        {% if bulk_obj_ops == "bulk_delete" %}
+                        <input type="hidden" name="bulk_obj_ops" value="bulk_delete">
+                        <input type="submit" name="delete_user" id="delete_user" value="Delete User">
+                        {% endif %}
+                        {% if bulk_obj_ops == "bulk_restore" %}
+                        <input type="hidden" name="bulk_obj_ops" value="bulk_restore">
+                        <input type="submit" name="restore_user" id="restore_user" value="Restore User">
+                        {% endif %}
+                        {% if bulk_obj_ops == "bulk_delete_permanently" %}
+                        <input type="hidden" name="bulk_obj_ops" value="bulk_delete_permanently">
+                        <input type="submit" name="delete_user_permanently" id="delete_user_permanently" value="Permanently Delete User">
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        
+            
+        </div>
+    </div>
+</form>
+</div>
+{% endblock content %}

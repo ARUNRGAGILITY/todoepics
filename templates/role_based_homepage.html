@@ -1,0 +1,55 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}User Home Page{% endblock title %} 
+{% block content %}
+
+{% if user.is_authenticated %}  
+<div class="container-fluid">
+  {% include '1.xpress_header.html' %}
+  <div class="row">
+    <div class="col-md-12">
+      {% if user.groups.all %}
+      {% for group in user.groups.all %}
+        {% if group.name == 'team_member' %}
+          <!-- Dashboard content for team members -->
+          <b>Welcome, Team Member!</b>
+          <!-- Display team member-specific content -->
+        {% elif group.name == 'scrum_master' %}
+          <!-- Dashboard content for scrum masters -->
+          <b>Welcome, Scrum Master!</b>
+          <!-- Display scrum master-specific content -->
+        {% elif group.name == 'product_owner' %}
+          <!-- Dashboard content for product owners -->
+          <b>Welcome, Product Owner!</b>
+          <!-- Display product owner-specific content -->
+        {% elif group.name == 'site_admin' or group.name == 'admin' %}
+          <!-- Dashboard content for product owners -->
+          <b>Welcome, Site Admin!</b>
+          {% include 'role_based_templates/site_admin.html' %}
+          <!-- Display product owner-specific content -->
+        {% elif group.name == 'project_admin' %}
+          <!-- Dashboard content for product owners -->
+          <b>Welcome, Project Admin!</b>
+          <!-- Display product owner-specific content -->
+        {% else %}
+          <!-- Default dashboard content for other groups -->
+          <b>Welcome, {{ user.username }}!</b>
+          <!-- Display default content for other groups -->
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <!-- Default dashboard content for users without groups -->
+      <b>Welcome, {{ user.username }}!</b>
+      <!-- Display default content for users without groups -->
+    {% endif %}
+      
+    </div>
+  </div>
+</div>
+
+{% else%}
+  {% include 'GUEST_USER.html' %}
+{% endif %}
+
+
+{% endblock content %}

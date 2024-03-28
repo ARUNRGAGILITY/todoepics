@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-md-2 ">
+        <b class="logo_part1">XPRESS</b>&nbsp;<b class="logo_part2">SCRUM</b><br>
+        <i class="logo_caption">Applying Scrum Effectively!</i>
+    </div>
+    <div class="col-md-10 d-flex justify-content-end align-items-center">
+        <a href="" class=" nav-link">Home</a>      
+        
+    {% if user.is_authenticated %}
+    <ul class="navbar-nav ">
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        {{ user.username }}
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <li><a class="dropdown-item" href="{% url 'todolist_home' %}">My Todo List</a></li>
+        <hr>
+        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+        <li><a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a></li>
+        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </li>
+    </ul>             
+    {% endif %}    
+    </div>
+</div>

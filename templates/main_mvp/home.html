@@ -1,0 +1,10 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Main MVP Home Page{% endblock title %} 
+{% block content %}
+Main MVP Home Page
+<a href="{% url 'user_mgmt_home' %}">User Mgmt</a>
+&nbsp;&nbsp;
+<a href="{% url 'group_mgmt_home' %}">Group Mgmt</a>
+&nbsp;&nbsp;
+{% endblock content %}

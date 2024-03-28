@@ -1,0 +1,42 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}{{value_type}} Add Page{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    <div class="row my-2">
+        <div class="col-md-12 d-flex justify-content-start">
+            <a href="/">Home</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;  
+            <a href="{% url 'kanban_home' %}">Kanban Home</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;    
+            <a href="{% url 'list_values' 'Organization' %}">Organization</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;            
+            <a href="{% url 'user_mgmt_home'  %}">User/Group Management</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Templates            
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Measure/Metrics
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Kanban Settings
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            User Settings
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% if value_type == 'Organization' %}
+                {% include 'app_xpresskanban/_value_org.html' %}
+            {% elif value_type == 'Team' %}
+                {% include 'app_xpresskanban/_value_team.html' %}
+            {% else %}
+                {% include 'app_xpresskanban/_value_ppssvs.html' %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

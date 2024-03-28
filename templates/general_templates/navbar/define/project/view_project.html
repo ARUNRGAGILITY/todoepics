@@ -1,0 +1,148 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Add Project{% endblock title %} 
+{% block content %}
+{% include '../../../../1.toplevel.html' %}
+{% include '../../../../2.navbar.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9 d-flex justify-content-start align-items-center">
+            <b>View Project Details</b>
+        </div>
+        <div class="col-md-3 d-flex justify-content-end align-items-center">
+            <a href="{% url 'edit_project' project.id %}">Edit Project</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Project List</a>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-*">
+            <table class="table is-bordered is-paddingless is-marginless mt-0 mb-0">
+                <tr>
+                    <td>
+                        <b>Project ID</b>
+                    </td>
+                    <td>
+                        {{project.id}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Name</b>
+                    </td>
+                    <td>
+                        {{project.title}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Description</b>
+                    </td>
+                    <td>
+                        {{project.description}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Project Type</b>
+                    </td>
+                    <td>
+                        {{project.project_type}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Project State</b>
+                    </td>
+                    <td>
+                        {{project.project_state}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Project Priority</b>
+                    </td>
+                    <td>
+                        {{project.project_priority}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Backlog Template</b>
+                    </td>
+                    <td>
+                        {{project.work_item_type}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Start Date</b>
+                    </td>
+                    <td>
+                        {{project.start_date}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>End Date</b>
+                    </td>
+                    <td>
+                        {{project.end_date}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Note</b>
+                    </td>
+                    <td>
+                        {{project.current_state}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Progress</b>
+                    </td>
+                    <td>
+                        {{project.progress}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Created At</b>
+                    </td>
+                    <td>
+                        {{project.created_at}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Updated At</b>
+                    </td>
+                    <td>
+                        {{project.updated_at}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Completed At</b>
+                    </td>
+                    <td>
+                        {{project.completed_at}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Duration (hours)</b>
+                    </td>
+                    <td>
+                        {{project.duration_in_hours}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% include '../../../../5.footer.html' %}
+{% endblock content %}

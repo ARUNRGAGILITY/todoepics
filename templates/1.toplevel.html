@@ -1,0 +1,248 @@
+{% load static %}
+<div class="container-fluid-width mt-0 mb-1 border-bottom">
+  <div class="navbar navbar-expand-lg navbar-light navbar-custom  ">
+    <div class="container-fluid mt-0 mb-0">
+      <a href="/" class="">
+        <img width='100px' height='60px' 
+          src="{% static 'img/daa_logo1.svg' %}" class="" alt="" class=""> 
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a href="{% url 'navbar_home' %}" class="nav-link navlink_color ">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="/todolist/" class="nav-link navlink_color ">To Do List</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'my_planner' %}" class="nav-link navlink_color ">Planner</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'mvp_homepage' %}" class="nav-link navlink_color ">MVP</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="" class="nav-link dropdown-toggle navlink_color " data-bs-toggle="dropdown">
+              Define</a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="{% url 'navbar_project' %}" class="dropdown-item">Project</a>
+              </li>
+              <li>
+                <a href="{% url 'navbar_product' %}" class="dropdown-item">Product</a>
+              </li>
+              <li>
+                <a href="{% url 'navbar_service' %}" class="dropdown-item">Service</a>
+              </li>
+              <li>
+                <a href="{% url 'navbar_solution' %}" class="dropdown-item">Solution</a>
+              </li>
+              <li>
+                <a href="todolist/" class="dropdown-item">Organization</a>
+              </li>
+              <li>
+                <a href="{% url 'typelist_home' %}" class="dropdown-item">Work Item Types</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Teams</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">User Accounts</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="" class="nav-link dropdown-toggle navlink_color " data-bs-toggle="dropdown">
+              Refine</a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="{% url 'navbar_vsm' %}" class="dropdown-item">Value Stream Mapping</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Impact Mapping</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Story Mapping</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Journey Mapping</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Lean Thinking Canvas</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Transformation Canvas</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Business Model</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="" class="nav-link dropdown-toggle navlink_color " data-bs-toggle="dropdown">
+              Prioritize</a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="" class="dropdown-item">Economic WSJF</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Kano Model</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Buy a Feature</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Ranking</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="" class="nav-link dropdown-toggle navlink_color " data-bs-toggle="dropdown">
+              Visualize</a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="" class="dropdown-item">General Big Picture</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Specific Big Picture</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">CI/CD Pipeline</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Measures &amp; Metrics</a>
+              </li>
+              <li>
+                <a href="" class="dropdown-item">Reports</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="" class="nav-link dropdown-toggle navlink_color " data-bs-toggle="dropdown">
+              Plan-Do-Check-Act</a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="http://www.google.com" class="dropdown-item">Organization Level</a>
+              </li>
+              <li>
+                <a href="http://yahoo.com" class="dropdown-item">Delivery Level &raquo;</a>
+
+                <!-- submenu -->
+                <ul class="dropdown-menu submenu">
+                  <li>
+                    <a href="http://yahoo.com" class="dropdown-item">Portfolio&raquo;</a>
+                    <ul class="dropdown-menu submenu">
+                      <li>
+                        <a href="http://yahoo.com" class="dropdown-item">Program</a>
+                      </li>
+                      <li>
+                        <a href="http://microsoft.com" class="dropdown-item">Project</a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="http://linkedin.com" class="dropdown-item">DEF Organization Map &raquo;</a>
+                    <ul class="dropdown-menu submenu">
+                      <li>
+                        <a href="http://yahoo.com" class="dropdown-item">DEF: ValueStreamMap</a>
+                      </li>
+                      <li>
+                        <a href="http://microsoft.com" class="dropdown-item">DEF: StoryMap</a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li> 
+        </ul>
+
+        
+
+        <ul class="navbar-nav ms-auto">
+          {% if user.is_authenticated %}
+          <ul class="navbar-nav ">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              User: {{ user.username }}
+            </a>
+            <ul class="dropdown-menu right_menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="{% url 'todolist_home' %}">My Todo List</a></li>
+              <hr>
+              <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+              <li><a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a></li>
+              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+          </li>
+          </ul>             
+          {% endif %}    
+          <li class="nav-item dropdown">
+            <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+              <img 
+              src="{% static 'img/book.svg' %}" class="" alt="" class=""> 
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'navbar_learn_agile' %}" class="dropdown-item">Agile</a></li>
+              <li><a href="{% url 'navbar_learn_lean' %}" class="dropdown-item">Lean</a></li>
+              <li><a href="{% url 'navbar_learn_systems' %}" class="dropdown-item">Systems</a></li>
+              <li><a href="" class="dropdown-item">Training &raquo;</a>
+                <ul class="dropdown-menu submenu submenu-left">
+                  <li><a href="{% url 'navbar_learn_agileintro' %}" class="dropdown-item">Agile Introduction</a></li>
+                  <li><a href="" class="dropdown-item">Agile Foundations</a></li>
+                  <li><a href="" class="dropdown-item">DevOps</a></li>
+                  <li><a href="" class="dropdown-item">CI/CD Pipeline</a></li>
+                  <li><a href="" class="dropdown-item">Agile Practices &raquo;</a>
+                    <ul class="dropdown-menu submenu submenu-left">
+                      <li><a href="" class="dropdown-item">Scrum</a></li>
+                      <li><a href="" class="dropdown-item">Kanban</a></li>
+                      <li><a href="" class="dropdown-item">XP</a></li>
+                      <li><a href="" class="dropdown-item">Customized Agile Practices</a></li>
+                      <li><a href="" class="dropdown-item">Scaling Agile Practices</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>             
+      
+          <li class="nav-item dropdown">
+            <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+              <img 
+              src="{% static 'img/setting.svg' %}" class="" alt="" class=""> 
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="" class="dropdown-item">My Settings</a></li>
+              <li><a href="" class="dropdown-item">General Settings</a></li>
+              <li><a href="" class="dropdown-item">Display Preferences</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+              <img 
+              src="{% static 'img/doc.svg' %}" class="" alt="" class=""> 
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="" class="dropdown-item">My Docs</a></li>
+              <li><a href="" class="dropdown-item">Team Docs</a></li>
+              <li><a href="" class="dropdown-item">Project Docs</a></li>
+              <li><a href="" class="dropdown-item">Organization Docs &raquo;</a>
+                <ul class="dropdown-menu submenu submenu-left">
+                  <li><a href="" class="dropdown-item">General Shared Docs</a></li>
+                  <li><a href="" class="dropdown-item">My Shared Docs</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+       
+          <li class="nav-item ">
+            <a href="" class="nav-link">Help</a>
+          </li>
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+</div>

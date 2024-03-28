@@ -1,0 +1,75 @@
+{% extends "base.html" %} 
+{% load static %}
+{% load markdown_extras  %}
+{% load custom_tags %}
+
+{% block title %}View {{value_type}}{% endblock title %} 
+{% block content %}
+
+<style>
+    .editable-content {
+      border: 1px solid #ccc;
+      padding: 5px;
+    }
+    .fixed-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background-color: white ;
+        color: black;
+        padding: 10px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .main-content {
+        padding-top: 60px;
+    }
+  </style>
+   
+        <div class="container">   
+            <header class="fixed-header">   
+            <div class="row">           
+                <div class="col-md-7 d-flex justify-content-start align-items-center">
+                    <b>{{value_type}}:: <font color="purple">{{object}} </font> Home Page</b>
+                </div>
+                <div class="col-md-5 d-flex justify-content-end align-items-center">
+                    {{user}}
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="{% url 'create_charter' value_type object.id %}">Edit Charter</a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="{% url 'edit_value' value_type object.id %}">Edit {{value_type}}</a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="{% url 'list_values' value_type %}">{{value_type}} List</a>
+                </div>                
+            </div>
+            </header>
+        </div>
+    
+   <main class="main-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                {{value_type}} {{object.title}}              
+                <div class="markdown-content">
+                    {% if vision.vision == None %}
+                    Please enter the charter details, by clicking on the 'Edit Charter' 
+                    <a href="{% url 'create_charter' value_type object.id %}">Edit Charter</a>
+                    Link.
+                    {% else %}
+                    {{ vision.vision|markdown|safe }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <b class="h5">Quick Links</b>
+                <br>
+                <a href="{% url 'boards_home' value_type object.id %}"> 
+                    {{value_type}} Kanban Board(s)</a>
+            </div>
+            
+        </div>
+    </div>    
+   </main>
+{% include '5.footer.html' %}
+{% endblock content %}

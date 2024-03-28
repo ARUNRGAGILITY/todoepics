@@ -1,0 +1,26 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Copy VSMS Steps{% endblock title %} 
+{% block content %}
+{% include '1.toplevel.html' %}
+{% include '2.navbar.html' %}
+<div class="container-fluid">
+    <div class="row bg-light">
+        <div class="col-md-3">
+            <h6>Copied/Cloned VSMS Step Details</h6>
+        </div>
+        <div class="col-md-9 d-flex justify-content-end">
+            <a href="{% url 'view_vsms_steps' object.id %}">View Src VSMS Step</a>&nbsp;&nbsp;
+            <a href="{% url 'view_vsms_steps' new_object.id %}">View Cloned VSMS Step</a>&nbsp;&nbsp;
+            <a href="{% url 'main_vsms_steps' vsm_id %}">VSMS Steps List</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center">
+            <b>VSM ID {{object.id}} is successfully cloned as {{new_object.id}} 
+                as {{new_object.title}}</b>
+        </div>
+    </div>
+</div>  
+{% include '5.footer.html' %}
+{% endblock content %}

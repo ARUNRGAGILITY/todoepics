@@ -1,0 +1,102 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Edit {{value_type}} {{object}} {{item}} Board {% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<form action="" method='POST' class='form'>
+{% csrf_token %}
+<div class="container-fluid">
+    <div class="row mx-0 my-1">
+        <div class="col-md-12 mx-0 d-flex justify-content-start" style="background-color: lightblue;">
+        <a href="{% url 'home' %}">Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'kanban_home' %}">Kanban Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'list_values' value_type %}">{{value_type}}s List</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'value_homepage' value_type object.id %}">{{object}} Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'boards_home' value_type object.id %}">{{object}}'s Kanban Boards</a>        
+        &nbsp;/&nbsp;
+        <b>{{item}} &nbsp;</b>   Kanban Board     
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 d-flex justify-content-start align-items-center">
+            <table class="table ">
+                <tr>
+                    <td width="5%"><b>{{value_type}}:</b></td><td width="20%">{{object}}</td>
+                    <td width="5%"><b>Board:</b></td><td width="20%">{{item}}</td>
+                    <td width="50%">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <a href="{% url 'kanban_board' value_type object.id item.id %}">
+                                Go To Board</a>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;
+                           <a href="{% url 'view_item' value_type object.id item.id %}">
+                            View Board</a>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;
+                            <a href="{% url 'delete_item' value_type object.id item.id %}">
+                                Delete Board</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>       
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-start mx-auto">
+                <b class="h4">Edit Column Details: {{item}}</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-center mx-auto">
+                <table class="table table-bordered"  width="100%">
+                    <tr>
+                        <td width="20%" class="text-end"><b>Title</b></td>
+                        <td width="80%" colspan="4">
+                            {{form.title}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="20%" class="text-end"><b>Description</b></td>
+                        <td width="80%" colspan="4">
+                            {{form.description}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="20%" class="text-end"><b>WIP Limit</b></td>
+                        <td width="80%" colspan="4">
+                            {{form.wip_limit}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="20%" class="text-end"><b>Policies</b></td>
+                        <td width="80%" colspan="4">
+                            {{form.policies}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="20%" class="text-end"><b>Entry Criteria</b></td>
+                        <td width="80%" colspan="4">
+                            {{form.entry_criteria}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="20%" class="text-end"><b>Exit Criteria</b></td>
+                        <td width="80%" colspan="4">
+                            {{form.exit_criteria}}
+                        </td>
+                    </tr>
+                   
+                    <tr>
+                        <td width="100%" colspan="5" style="text-align: center;">
+                            <input type="submit" name="Edit {{item}} Board">
+                        </td>
+                    </tr>                   
+                </table>               
+            </div>           
+    </div>
+</div>
+{% include '5.footer.html' %}
+{% endblock content %}

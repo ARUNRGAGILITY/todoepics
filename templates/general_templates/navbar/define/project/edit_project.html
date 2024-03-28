@@ -1,0 +1,37 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Edit Project{% endblock title %} 
+{% block content %}
+{% include '../../../../1.toplevel.html' %}
+{% include '../../../../2.navbar.html' %}
+<form action="" method='POST' class='form'>
+{% csrf_token %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9 d-flex justify-content-start align-items-center">
+            <h6>Edit Project Details</h6>
+        </div>
+        <div class="col-md-3 d-flex justify-content-end align-items-center">
+            <a href="{% url 'view_project' project.id %}">View Project</a>&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Project List</a>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            Project ID: &nbsp;<b>{{project.id}}</b>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            {{form.as_p}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <input type="submit" name="Edit Project">
+        </div>
+    </div>
+</div>
+{% include '../../../../5.footer.html' %}
+{% endblock content %}

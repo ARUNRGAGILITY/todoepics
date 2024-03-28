@@ -1,0 +1,25 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Global Configure{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <b>Configure Templates for Organization and Deliveries</b>
+            <br>
+            <b>Configure Type</b>
+            <br>
+            <a href="">Type</a>
+            <b>Configure State</b>
+            <br>
+            <b>Configure Priority</b>
+            <br>
+        </div>
+    </div>
+</div>
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,719 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load time_filters %}
+{% block title %}View {{value_type}} {{object}} {{item}} Board{% endblock title %}
+{% block content %}
+
+{% if user.is_authenticated %}
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="http://code.jquery.com/resources/demos/style.css">
+  <style>
+    /* Your existing CSS styles here */
+    
+  /* Set a minimum height for sortable lists */
+  .connectedSortable {
+    min-height: 200px; /* Set a reasonable minimum height for the drop zone */
+    /* Other styling properties */
+  }
+  .red-cell {
+       background: yellow; /* Or some other color */
+  }
+   .on { background-color:white; color: black; }
+   .off {color: transparent; }
+   .current { background-color:green; color: white; }
+   .post_it_card {
+    position: relative;
+    height: 40px;
+    margin: 1px;
+    padding: 4px;
+    background-color: yellow;
+    color: black;
+    font-size: 10px;
+   }
+   
+.post_it_card:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-width: 8px 8px 0 0;
+  border-style: solid;
+  border-color: #658E15 #fff;
+}
+   .column_class {
+    min-width: 20px;
+    text-align: center;
+   }
+
+  @keyframes blink {
+  0%, 100% {
+    border: 2px solid transparent; /* Set the border style */
+  }
+  50% {
+    border: 6px solid red; /* Set the border style */
+  }
+}
+#zoomableDiv {
+  transform-origin: top left;
+}
+.blink-border {
+  animation: blink 1s infinite; /* Apply the animation */
+}
+.sl_no {
+  text-align: end;
+}
+.card_title {
+  padding-left: 10px;
+}
+tr .no-border {
+    border-bottom: 2px solid white; /* Remove the bottom border */
+}
+.vertical_text_show {
+    /* Set the background color to red */
+    /* Set the color of the text to white */
+    color: white;
+
+    /* Display the text vertically */
+    writing-mode: vertical-rl;
+
+    /* Rotate the text by 180 degrees to make it upside down */
+    transform: rotate(180deg);
+
+    /* Adjust the height of the td to match the content */
+    height: auto;
+
+    /* Optionally, set padding to control spacing between text and td boundaries */
+    margin: 5px;
+   /* Ensure the div occupies the full td */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-right-radius: 10px; /* Adjust the radius as needed */
+  border-bottom-right-radius: 10px; /* Adjust the radius as needed */
+}
+
+    /* SCROLLING OPTION */
+    /* Add a class for sticky header */
+    .table-container {
+            overflow: auto;
+            max-height: 300px; /* Set a maximum height for the table */
+        }
+
+        /* Style for the table */
+        .stable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+       /* Style for the first set of headers */
+       .header1 th {
+            background-color: lightyellow;
+            position: sticky;
+            height: 130px;
+            top: 0;
+            z-index: 2;
+        }
+
+        /* Style for the second set of headers */
+        .header2 th {
+            background-color: #F0F0F0;
+            position: sticky;
+            top: 130px; /* Adjust the top value to match the height of the first set of headers */
+            z-index: 2;
+        }
+
+        /* Style for the table body */
+        .stable td, th {
+            padding: 1px;
+            border: 1px solid lightgrey;
+            
+        }
+ 
+      .scrolling-table tbody {
+            display: block;
+            overflow-y: scroll;
+            max-height: 250px; /* Set a max height for the tbody */
+        }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    $( function() {
+      var sortableList = $('#sortable');
+      $(".kanban_board_table").find("tbody").sortable({
+            items: "> tr",
+            appendTo: "parent",
+            cancel: "[contenteditable]",
+            update: function(event, ui) {
+            var serialOrder = $('#sortable').sortable('serialize');
+            var arrayOrder = $('#sortable').sortable('toArray');
+            //alert(arrayOrder);
+            $.ajax({
+              url: '/kanban/ajax_sorted_kanban_board',
+              type: 'POST',
+              data : {
+                'csrfmiddlewaretoken': "{{ csrf_token }}",
+                'sorted_list_data': JSON.stringify(arrayOrder),
+                'value_type': '{{value_type}}',
+                'pk': {{object.id}},
+                'board_id': {{item.id}},
+              },
+              dataType: 'json',
+              success: function(data) {
+                console.log(data);
+              }
+            })
+          }
+      });
+      $( "#sortable" ).sortable();
+      $( "#sortable" ).disableSelection();
+    } );
+    </script>
+
+
+</head>
+<body>
+  <div class="container-fluid">
+    {% include './_include_top_menus.html' %}
+    <!-- top level menus-->
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-start align-items-center mx-0">
+          <table class="table">
+              <tr>
+                  <td width="5%"><b>{{value_type}}:</b></td><td width="20%">{{object}}</td>
+                  <td width="5%"><b>Board:</b></td><td width="20%">{{item}}</td>
+                  <td width="50%">
+                      <div class="d-flex justify-content-end align-items-center">
+                         <a href="{% url 'table_view' value_type object.id item.id %}">
+                          Table View</a>
+                          &nbsp;&nbsp;|&nbsp;&nbsp;
+                          <a href="{% url 'view_item' value_type object.id item.id %}">
+                              View Board Details</a>
+                          &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <a href="{% url 'edit_item' value_type object.id item.id %}">
+                          Edit Board Details</a>
+                          &nbsp;&nbsp;|&nbsp;&nbsp;
+                          <a href="{% url 'board_settings' value_type object.id item.id %}">                          
+                            Board Settings</a>
+                          &nbsp;&nbsp;|&nbsp;&nbsp;
+                          <a href="{% url 'delete_item' value_type object.id item.id %}">
+                              Delete Board</a>
+                      </div>
+                  </td>
+              </tr>
+          </table>
+      </div>  
+      <!-- Forms input -->
+      <div class="row my-1">
+        <div class="col-md-7">
+            <form method='POST' action=''>            
+              {% csrf_token %}
+              <b>Work Item:</b>
+              <input type="text" name="title" id="id_title" size="45"/>    
+              <input type="submit" name="action" value="Add">            
+            </form>
+          </div>
+          <div class="col-md-5 d-flex justify-content-end">  
+              <button onclick="zoomIn()">Zoom In</button>&nbsp;&nbsp; 
+              <button onclick="zoomOut()">Zoom Out</button>
+              &nbsp;&nbsp; | &nbsp;&nbsp; 
+            Total: {{newtodolist_count}} Topic(s)
+            &nbsp;&nbsp; | &nbsp;&nbsp; 
+            <a href="{% url 'kanban_board_columns' value_type object.id item.id %}">Columns</a>
+            &nbsp;&nbsp; | &nbsp;&nbsp; 
+            <a href="{% url 'kanban_swimlanes' value_type object.id item.id %}">Swimlanes</a>
+          </div>
+        </div>         
+      </div>
+      <!-- Kanban board ZOOM & data display -->
+      <div  id="zoomableDiv" class=" d-flex justify-content-start align-items-top">
+      <div class="data_display">
+      <!-- BEGIN: Kanban board BOARD display -->
+      <table width="" id="kanban_board" class="kanban_board_table table-container">
+        <thead>
+          <tr >
+            <th width="4%"></th>
+            <th width="2%"></th>    
+            <th class="column_class" width="20%">
+            </th>             
+            {% if board_columns %}
+            {% for column in board_columns %}
+            <th id="sortable{{ column.id }}" data-columnid="{{column.id}}" 
+            style="align-items: end;"               
+              
+            class="column_class"   
+            contenteditable="false"              
+            >
+            {% if column.wip_limit > 0 %}
+            <font size="-1" color="red">{{column.wip_limit}}</font>
+            {% else %}               
+            {% endif %}           
+            </th>  
+            {% endfor %}
+            {% endif %}
+          </tr>
+          
+        </thead>
+        <thead>
+          <tr >
+            <th width="4%"></th>
+            <th width="2%"></th>    
+            <th class="column_class" width="20%">
+            </th>             
+            {% if board_columns %}
+            {% for column in board_columns %}
+            <th id="sortable{{ column.id }}" data-columnid="{{column.id}}" 
+            style="align-items: end;"               
+            {% if column.wip_limit > 0 %}
+              {% for column_id, card_count in card_count_details.items %}
+                {% if column_id == column.id %}
+                  {% if card_count > column.wip_limit %}
+                  class="column_class blink-border" 
+                  {% endif %}
+                {% endif %}
+              {% endfor %}               
+            {% endif %}                
+            class="column_class"   
+            contenteditable="false"              
+            >
+            {% if column.wip_limit > 0 %}            
+            {% for column_id, card_count in card_count_details.items %}
+              {% if column_id == column.id %}
+              {% if card_count > column.wip_limit %}
+              <font size="-2" color="red">Suggestion: Reduce WIP</font><br>
+                <font size="-2" color="red"> {{card_count}}&nbsp;/</font> 
+              {% elif card_count < column.wip_limit %}
+                <font size="-2" color="purple">{{card_count}}&nbsp;/</font>   
+              {% else %}
+              <font size="-2" color="green">{{card_count}}&nbsp;/</font>  
+              {% endif %}
+              {% endif %}              
+            {% endfor %}
+            <font size="-2" color="green">{{column.wip_limit}}</font>  
+            {% else %}               
+            {% endif %}
+            {% for column_id, card_count in card_count_details.items %}
+            {% if column_id == column.id %}
+            {% if column.wip_limit > 0 %}
+            
+            {% else %}
+            {% if card_count > 0 %}
+            <font size="-2" color="grey">{{card_count}}</font> 
+            {% endif %}
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+            </th>  
+            {% endfor %}
+            {% endif %}
+          </tr>          
+        </thead>
+        <thead class="header1">
+          <tr style="border-bottom: 4px solid lightgrey;">           
+            <th 
+            style="padding: 5px; border-right: 4px solid lightgrey; margin-right: 2px;"
+            width="4%"></th>
+            <th 
+            style="padding: 5px; border-right: 4px solid lightgrey; margin-right: 2px; text-align: end;"
+            width="2%">#  </th>    
+            <th class="column_class"
+            style="padding: 5px; border-right: 4px solid lightgrey; margin-right: 2px;"
+            width="20%"
+            contenteditable="false"      
+            >&nbsp;Cards             
+            </th>             
+            {% if board_columns %}
+            {% for column in board_columns %}
+            {% if column.cycle_time_column %} 
+            <th id="sortable{{ column.id }}" data-columnid="{{column.id}}"
+            style="padding: 5px; border-right: 4px solid lightgrey;border-bottom: 4px solid purple; margin-right: 2px;"            
+            class="column_class" 
+            {% else %}
+            <th id="sortable{{ column.id }}" data-columnid="{{column.id}}"
+            style="padding: 5px; border-right: 4px solid lightgrey; border-bottom: 4px solid red; margin-right: 2px;"            
+            class="column_class" 
+            {% endif %}
+           
+            >
+            {{column.title}}
+            </th>  
+            {% endfor %}
+            {% endif %}
+          </tr>              
+        </thead>
+        <thead class="header2">
+          <tr style="border-bottom: 4px solid lightgrey;">
+
+            <th 
+            style="padding: 5px; border-right: 4px solid lightgrey; margin-right: 2px;"
+            width="4%"></th>
+            <th 
+            style="padding: 5px; border-right: 4px solid lightgrey; margin-right: 2px;"
+            width="2%">  </th>    
+            <th class="column_class"
+            style="padding: 5px; border-right: 4px solid lightgrey; margin-right: 2px;"
+            width="20%">
+            <font color="">&nbsp;</font>
+            </th>             
+            {% if board_columns %}
+            {% for column in board_columns %}
+            <th id="sortable{{ column.id }}" data-columnid="{{column.id}}" 
+            style="padding: 5px; border-right: 4px solid lightgrey; margin-right: 2px;"
+            
+            class="column_class" 
+            contenteditable="false"    
+            >            
+            </th>  
+            {% endfor %}
+            {% endif %}
+          </tr>              
+        </thead>
+        <!-- this is the card display of rows -->
+        <tbody id="sortable" class="scrolling-table">
+        <form name="todoform" method="POST" action="">
+          {% csrf_token %}
+          {% for swimlane, cards in grouped_cards.items %}  
+          {% if cards|length > 0 %}          
+          <tr class="board" id="{{card.id}}_{{parent_counter}}" style="border-bottom: 2px dotted lightblue;">
+            <td rowspan="{{cards|length}}" style="border-bottom: 2px dotted lightgrey;" class="non-sortable">
+              <div class="vertical_text_show h5"
+                {% if swimlane.color %}
+                style="background-color: {{swimlane.color}};"
+                {% else %}
+                style="background-color: yellow; color: blue;"
+                {% endif %}
+              >
+                {% if only_none_swimlane == False %}
+                  {% if swimlane == None %} 
+                    &nbsp; &nbsp;&nbsp;  General  &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; 
+                  {% else %}
+                    &nbsp; &nbsp;&nbsp; {{ swimlane }} &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;
+                  {% endif %}
+                {% endif %}
+              </div>
+            </td>
+            <!-- prep for td cards -->
+            {% for card in cards %}  
+            {% if forloop.first %}
+            <td width="2%" 
+            style="padding: 5px; border-left: 4px solid lightgrey;border-right: 4px solid lightgrey;
+             border-bottom: 2px dotted lightgrey;margin-right: 2px; text-align: end;'
+             ">
+            {{forloop.counter}}&nbsp;</td>
+            {% else %} 
+            {% if swimlane|lower == 'expedite' and forloop.counter > 1 %} 
+            <td width="2%" 
+            style="padding: 5px; border-left: 4px solid lightgrey;border-right: 4px solid lightgrey;
+             border-bottom: 2px dotted lightgrey;margin-right: 2px; text-align: end;'
+             ">
+            <b><font color="red">{{forloop.counter}}</font></b>&nbsp;</td>
+            {% else %} 
+            <td width="2%" 
+            style="padding: 5px; border-left: 4px solid lightgrey;border-right: 4px solid lightgrey;
+             border-bottom: 2px dotted lightgrey;margin-right: 2px; text-align: end;'
+             ">
+            {{forloop.counter}}&nbsp;</td>
+            {% endif %}
+            {% endif %}
+            <td class="column" id="sortable{{ column.id }}" data-wip-limit="{{ column.wip_limit }}"
+            style="padding: 5px; border-right: 4px solid lightgrey;border-bottom: 2px dotted lightgrey; margin-right: 2px;"
+            id="{{column.id}}_{{card.id}}"
+            contenteditable="false"      
+            >
+            <div class="card_title">
+              <a href="{% url 'edit_card' value_type object.id item.id card.id %}">{{card.title}}</a>
+              
+            </div>
+            </td>
+            {% if board_columns %}
+                {% for column in board_columns %}
+                <td class="all_cell" data-columnid="{{column.id}}"
+                style="padding: 5px; border-right: 4px solid lightgrey; border-bottom: 2px dotted lightgrey;margin-right: 2px;"
+                  id='{{column.id}}_{{card.id}}' {% if card.column.title == column.title %}class='on'{% endif %}
+                  contenteditable="false"    >
+                  {% if card.column.title == column.title %} 
+                  <div class="post_it_card">
+                    {% if  board_columns|length > 10%}
+                    {{ card.title|slice:":8"|default_if_none:"" }}
+                    {% else %}
+                    {{ card.title|slice:":25"|default_if_none:"" }}
+                    {% endif %}
+                    {% if card.title|length > 40 %}...{% endif %}
+                    <!-- card publishing 
+                    CRT:{{card.created_at}}, CUT: {{card.update_at}}, CCT: {{card.completed_at}}
+                    -->
+                  </div>
+                  {% endif %}
+                </td>                
+                {% endfor %}              
+              {% endif %}
+            </tr>   
+            <tr class="board" id="{{card.id}}_{{forloop.counter}}" style="border-bottom: 2px dotted lightgrey;">
+              {% if forloop.last %}
+                </tr>
+              {% endif %}
+            {% endfor %}   
+            <!-- prep for td cards -->
+            {% endif %}     
+          {% endfor %}            
+        </form>
+        <!-- this is the footer/policies row -->
+         <tr style="border-top: 4px solid lightgrey;">
+            <td width="6%" colspan="2"
+            style="padding: 5px; border-right: 4px solid lightgrey; margin-right: 2px;"
+              >
+              <b>Policies:</b>
+            </td>
+            <td 
+            style="padding: 5px; border-right: 4px solid lightgrey; margin-right: 2px;"
+            width="20%">&nbsp; <br>
+            <font color="">&nbsp;</font>
+            </td>             
+            {% if board_columns %}
+            {% for column in board_columns %}
+            <td 
+            style="padding: 5px; border-right: 4px solid lightgrey; margin-right: 2px;"
+            class="" contenteditable="false"    >
+            <br>
+              <font color="grey" size="-2">
+              {% for column_id, policy in column_policy_details.items %}             
+                {% if column_id == column.id %}
+                  {{policy|safe}}
+                {% endif %}
+              {% endfor %}
+              </font>
+            </td>  
+            {% endfor %}
+            {% endif %}
+          </tr>             
+        </tbody>
+        </table>
+      <!-- BEGIN: Kanban board BOARD display -->
+      <div class="row">
+        <div class="col-md-12">
+          <!-- KANBAN board MAIN TABLE -->
+         
+        <!-- ENDL KANBAN board MAIN TABLE -->
+        </div>
+      </div>
+      <!-- END: Kanban board BOARD display -->
+      </div>
+      </div>
+      <!-- Kanban board Metrics display -->
+      <div id="metrics">
+        <div class="row">
+          <div class="col-md-12">
+            <p>Average Cycle Time: {{ average_cycle_time|format_time }}</p>
+            <p>Average Lead Time: {{ average_lead_time|format_time }}</p>
+            <p>Average Throughput (last 14days): {{throughput_last_14_days}}</p>
+            <p>Average WIP (last 14days): {{average_wip|floatformat:2}}</p>           
+          </div>
+        </div>
+      <!-- Kanban board metrics display table -->
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table" width="100%">
+            <thead>
+                <tr>
+                  <th colspan="1">#</th>
+                    <th>Card</th>
+                    {% for column in board_columns_details %}
+                        <th>{{ column.title }}</th>
+                    {% endfor %}
+                    <th>Total Time spent</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for card in newtodolist %}
+                    <tr>
+                      <td colspan="1">
+                        {{forloop.counter}}
+                      </td>
+                        <td>{{ card.title }}</td>
+                        {% for column_actual in board_columns_details %}
+                            <td>
+                              {% for column, time_value in card.time_spent_by_column.items %}
+                                {% if column_actual.title == column.title %}
+                                {{ time_value|format_time|default:"" }}
+                                {% endif %}
+                              {% endfor %}
+                              </td>
+                        {% endfor %}
+                        <td width="" style="min-width: fit-content;">{{ card.total_time_spent|format_time }}</td>
+                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>              
+        </div>
+      </div>
+      <!-- Kanban board metrics display cfd -->
+      <div class="row">
+        <div class="col-md-12">
+          {% if cfd_display == True %}               
+            <!--
+
+                CFD DEMO
+               
+            -->
+            <div>
+              <!-- <img width="80%" height="80%"
+              src="{% static 'img/cfg_plot.png' %}" class="" alt="Kanban" class=""> -->
+          
+            </div>
+            <div style="width: 80%; margin: auto;">
+              <canvas id="cfdChart" width="400" height="200"></canvas>
+          </div>
+      
+            <script>
+              // Sample CFD data for 14 days
+              const cfdData = {{ cfdData|safe }};
+      
+              // Get the canvas element and create a chart context
+              const cfdCanvas = document.getElementById('cfdChart').getContext('2d');
+              
+
+              // Create an empty array to hold the dataset objects
+              const datasets = [];
+
+              // Get the list of columns dynamically from the first data point
+              const firstDataPoint = cfdData[0];
+              const columns = Object.keys(firstDataPoint).filter(key => key !== 'date'); // Exclude 'date' column
+
+              // Iterate through the columns and create datasets
+              columns.forEach(column => {
+                  datasets.push({
+                      label: column,
+                      data: cfdData.map(dataPoint => dataPoint[column]), // Use the column as the property
+                      borderColor: getRandomColor(), // Replace this with the appropriate color logic
+                      backgroundColor: getRandomColor(0.2), // Replace this with the appropriate color logic
+                      fill: 'origin', // Fill area to 'origin'
+                  });
+              });
+
+              // Create the CFD chart as an area graph
+              const cfdChart = new Chart(cfdCanvas, {
+                  type: 'line',
+                  data: {
+                      labels: cfdData.map(dataPoint => dataPoint.date),
+                      datasets: datasets, // Use the dynamically generated datasets
+                  },
+              });
+
+              // Function to generate random colors
+              function getRandomColor(opacity = 1) {
+                  const letters = '0123456789ABCDEF';
+                  let color = '#';
+                  for (let i = 0; i < 6; i++) {
+                      color += letters[Math.floor(Math.random() * 16)];
+                  }
+                  return color + Math.round(opacity * 255).toString(16);
+              }
+
+
+          </script>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    </div>
+
+<script type="text/javascript">
+      $(document).ready(function() {
+        var genericHelpMessage = "Click on this cell to move the Card";
+        $(".all_cell").hover(
+          function() {
+            $(this).attr("title", genericHelpMessage);
+          },
+          function() {
+            $(this).removeAttr("title");
+          }
+        );
+      });
+
+      var item_board_states = [
+              {% for column in board_columns %}
+                "{{ column.id }}"{% if not forloop.last %},{% endif %}
+              {% endfor %}
+            ];
+        $(document).on("click", ".board td.all_cell", function(e) {
+          var item_state = $(this).attr("id");
+          //console.log(item_state);      
+          var clickedRow = $(this).closest("tr"); // Get the closest <tr> element
+          var selectedText = clickedRow.find(".on").text();
+          //alert(selectedText);
+          $(this).addClass("on").siblings().removeClass("on"); // first time    
+          setTimeout(function() {
+                location.reload();
+              }, 50); // 1000 milliseconds = 1 second
+          // WIP limit calculations (first time)
+            // Find the corresponding th element and get its column ID
+          var correspondingTh = $(this).closest("table").find("th").eq($(this).index());
+          var columnId = correspondingTh.data("columnid");
+
+        // subsequent time
+        $("td").click(function(){
+            $(this).addClass("on").siblings().removeClass("on");
+            // Reload the page after a short delay (adjust the delay time as needed)
+            setTimeout(function() {
+              location.reload();
+            }, 50); // 1000 milliseconds = 1 second
+          });         
+
+        $.ajax({
+          url: '/kanban/ajax_board_updated',
+          type: 'POST',
+          data : {
+            'csrfmiddlewaretoken': "{{ csrf_token }}",
+            'item_state': JSON.stringify(item_state),
+            'value_type': '{{value_type}}',
+            'pk': {{object.id}},
+            'board_id': {{item.id}},
+          },
+          dataType: 'json',
+          success: function(response) {
+            console.log(response);
+            $("#"+columnId+"_cards_count").text(response.cards_count);
+          },
+          error: function(error) {
+            error_msg = "Error: "+error;
+          }
+        });
+  });
+</script>
+<script>
+// focus on the input box
+inputBox = document.getElementById("id_title");
+//inputBox.focus();
+// prevent default submit 
+document.getElementById("id_title").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault(); // Prevent form submission
+        // Perform custom action here, such as triggering search
+        // For example: performSearch();
+    }
+});
+const zoomableDiv = document.getElementById('zoomableDiv');
+let currentScale = 0.7; // Initial scale
+function zoomIn() {
+  document.getElementById("metrics").style.display = "none";
+  currentScale += 0.1;
+  zoomableDiv.style.transform = `scale(${currentScale})`;
+}
+function zoomOut() {
+  document.getElementById("metrics").style.display = "none";
+  currentScale -= 0.1;
+  if (currentScale < 0.1) {
+      currentScale = 0.1; // Set a minimum scale
+  }
+  zoomableDiv.style.transform = `scale(${currentScale})`;
+}
+</script>
+{% include '5.footer.html' %}
+{% else%}
+  {% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

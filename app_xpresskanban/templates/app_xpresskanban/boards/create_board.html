@@ -1,0 +1,73 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}{{value_type}} :: Create Board{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 d-flex justify-content-center align-items-center">
+            <b class="h1">{{value_type|capfirst}} Home Page</b>&nbsp;&nbsp;
+            &nbsp;&nbsp;<a href="{% url 'kanban_home' %}">Kanban Home</a>
+            &nbsp;&nbsp;
+            &nbsp;&nbsp;<a href="/">Home</a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>   
+    <div class="row">
+        <div class="col-md-12">
+            <b class="h2">Create Board for {{value_type}}</b>
+            &nbsp;&nbsp;
+            &nbsp;&nbsp;
+            &nbsp;&nbsp;
+            <a href="{% url 'list_values' value_type %}">List {{value_type|capfirst}}(s)</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form action="" method='POST' class='form'>
+                {% csrf_token %}     
+                <input type="hidden" name="{{value_type|lower}}" id="{{pk}}">       
+                <div class="container-fluid mx-2">
+                    <div class="row">
+                        <div class="col-md-12 d-flex justify-content-start align-items-center">
+                            <p class="has-text-weight-bold mt-2 mb-0">Add {{value_type|capfirst}} Board</p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 d-flex justify-content-start align-items-center">
+                            <b>Enter {{value_type|capfirst}} Board Details</b>
+                        </div>
+                    </div>  
+                    <div class="row py-1">
+                        <div class="col-md-1 d-flex justify-content-start align-items-center">
+                            {{ form.title.label_tag }} 
+                        </div>
+                        <div class="col-md-11 d-flex justify-content-start align-items-cente">
+                            <input type="text" name="title" size="40" value="">
+                        </div>
+                    </div>      
+                    <div class="row py-1">
+                        <div class="col-md-1 d-flex justify-content-start align-items-center">
+                            {{ form.description.label_tag }}
+                        </div>
+                        <div class="col-md-11 d-flex justify-content-start align-items-center">
+                            <textarea name="description" id="description" cols="43" rows="6"></textarea>
+                        </div>
+                    </div> 
+                  
+                    <div class="row py-1">
+                        <div class="col-md-12 d-flex justify-content-start align-items-center">
+                            <input type='submit' value="Add {{value_type|capfirst}}'s Board"/>
+                        </div>
+                    </div>
+                
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

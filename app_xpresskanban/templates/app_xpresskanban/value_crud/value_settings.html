@@ -1,0 +1,168 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Settings:: {{value_type}} {{object}}  {% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<style>
+    .excel_table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .excel_th, .excel_td {
+    border: 1px solid black;
+    padding: 1px;
+    text-align: left;
+    font-size: 10pt;
+  }
+
+  .excel_th {
+    background-color: #f2f2f2;
+  }
+</style>
+
+<div class="container-fluid">
+    <div class="row mx-0 my-1">
+        <div class="col-md-12 mx-0 d-flex justify-content-start" style="background-color: lightblue;">
+        <a href="{% url 'home' %}">Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'kanban_home' %}">Kanban Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'list_values' value_type %}">{{value_type}}s List</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'value_homepage' value_type object.id %}">{{object}} Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'boards_home' value_type object.id %}">{{object}}'s Kanban Boards</a>        
+        &nbsp;/&nbsp;
+        <b>{{item}} &nbsp;</b>   Kanban Board     
+        </div>       
+      </div>
+      <div class="row">
+        <div class="col-md-6 d-flex justify-content-start align-items-center">
+           <b>{{value_type}}:</b>&nbsp;&nbsp;{{object}} Settings           
+        </div>
+        <div class="col-md-6 d-flex justify-content-end align-items-center">
+            <ul class="navbar-nav ">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{value_type}} Related Links
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li>
+                         <a href="{% url 'list_values' value_type  %}"
+                            class="dropdown-item">
+                                List {{value_type}} </a>
+                    </li>                             
+                    </ul>
+                </li>
+                </ul>        
+        </div>       
+    </div>  
+    <!-- form to add members -->
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <table class="excel_table">
+                    <tr class="excel_tr">
+                        <th class="excel_th" colspan="2">
+                            {{value_type}} Access Settings 
+                        </th>
+                    </tr>
+                    <tr style="vertical-align: top;">
+                        <td colspan="1" class="exce_td">
+                            <b>Add {{value_type}} View Membership:</b><font size="1"> &nbsp;&nbsp; username,username,username</font>
+                            <br>
+                            <input type="text" size="60" name="view_membership" value="" id="id_member">        
+                        </td>
+                       
+                    </tr>
+                    <tr style="vertical-align: top;">
+                        <td colspan="1" class="exce_td">
+                            <b>Add {{value_type}} Edit Membership:</b><font size="1"> &nbsp;&nbsp; username,username,username</font>
+                            <br>
+                            <input type="text" size="60" name="edit_membership" value="" id="id_member">        
+                        </td>
+                       
+                    </tr>
+                    <tr style="vertical-align: top;">
+                        <td colspan="1" class="exce_td">
+                            <b>Add {{value_type}} Admin Membership:</b><font size="1"> &nbsp;&nbsp; username,username,username</font>
+                            <br>
+                            <input type="text" size="60" name="admin_membership" value="" id="id_member">        
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="excel_td">
+                            <input type="submit" name="Add Membership">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+            <div class="col-md-6">
+                <table class="excel_table">
+                    <tr class="excel_tr">
+                        <th class="excel_th" colspan="2">
+                            {{value_type}} Access Settings 
+                        </th>
+                    </tr>
+                    <tr style="vertical-align: top;">
+                      
+                        <td colspan="1" class="exce_td">
+                            <b>Existing {{value_type}} Viewers:</b><font size="1"> &nbsp;&nbsp; Remove by click x</font>
+                            <br>
+                            {% for display_user in users_in_view_group %}                   
+                            <form action="{% url 'val_remove_user_from_group' value_type object.id %}" method="POST">
+                                {% csrf_token %}
+                                {{display_user}} &nbsp;&nbsp; 
+                                <input type="hidden" name="remove_user_id" value="{{display_user.id}}">
+                                <input type="hidden" name="from_user_group" value="{{value_type}}_{{object.id}}_view">
+                                <input type="submit" name="X" value="X" style="display: inline-block; margin: 0; padding: 0; border: none; background: none; color: red; font-size: bold; font-family: inherit;">
+
+                            </form>
+                        {% endfor %}         
+                        </td>
+                    </tr>
+                    <tr style="vertical-align: top;">
+                        
+                        <td colspan="1" class="exce_td">
+                            <b>Existing {{value_type}} Editors:</b><font size="1"> &nbsp;&nbsp; Remove by click x</font>
+                            <br>
+                            {% for display_user in users_in_edit_group %}
+                                <form action="{% url 'val_remove_user_from_group' value_type object.id  %}" method="POST">
+                                    {% csrf_token %}
+                                    {{display_user}} &nbsp;&nbsp; 
+                                    <input type="hidden" name="remove_user_id" value="{{display_user.id}}">
+                                    <input type="hidden" name="from_user_group" value="{{value_type}}_{{object.id}}_edit">
+                                    <input type="submit" name="X" value="X" style="display: inline-block; margin: 0; padding: 0; border: none; background: none; color: red; font-size: bold; font-family: inherit;">
+
+                                </form>                    
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr style="vertical-align: top;">
+                       
+                        <td colspan="1" class="exce_td">
+                            <b>Existing {{value_type}} Admins:</b><font size="1"> &nbsp;&nbsp; Remove by click x</font>
+                            <br>
+                            {% for display_user in users_in_admin_group %}
+                                <form action="{% url 'val_remove_user_from_group' value_type object.id  %}" method="POST">
+                                    {% csrf_token %}
+                                    {{display_user}} &nbsp;&nbsp; 
+                                    <input type="hidden" name="remove_user_id" value="{{display_user.id}}">
+                                    <input type="hidden" name="from_user_group" value="{{value_type}}_{{object.id}}_admin">
+                                    <input type="submit" name="X" value="X" style="display: inline-block; margin: 0; padding: 0; border: none; background: none; color: red; font-size: bold; font-family: inherit;">
+
+                                </form>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+{% include '5.footer.html' %}
+{% endblock content %}

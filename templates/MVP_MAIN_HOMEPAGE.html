@@ -1,0 +1,164 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}User Home Page{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container" >
+    <div class="row min-vh-100">
+        <div class="col-md-12 d-flex justify-content-center align-items-center mx-auto">
+            <div class="p-1 border">
+                <!-- versioning -->
+                <table>
+                    <tr>
+                        <th colspan="4" class="text-center">
+                            <b>MVP Baseline Home Page</b>
+                            <p>Apps created in this MVP</p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <small><p>Build: {{ BUILD_DESCRIPTION }}</p></small>
+                        </td> 
+                        <td><small><p>Build Version: {{ BUILD_VERSION }}</p></small></td>
+                        
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="{% url 'kanban_home' %}">Kanban</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Scrum</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Agile@Scale</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">FlowChart</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="">Blog</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Planner</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Todo List</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Project Mgmt</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>                        
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            <a href="">Design Thinking</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Mapping SW</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Prioritization Models</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Whiteboard</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="">Chat System</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Book Writing SW</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Simple Spreadsheet</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Basic Finance SW</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="">Tutorials</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Tech News</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">SocialNetwork</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Productivity</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="">Website</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Commerce</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Linkus</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <a href="">Self-Help</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>                        
+                    </tr>
+
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <a href="/main/">Main</a>
+                        </td>
+                    </tr>
+                   <!-- Footer -->
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <small>Open-Source Software. Private Alpha/Beta Testing. Privacy: No cookies/info collected.</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <small>&copy; 2017-2023.</small>
+                        </td>
+                    </tr>
+                </table>
+               
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+{% else%}
+  {% include 'GUEST_USER.html' %}
+{% endif %}
+
+{% endblock content %}

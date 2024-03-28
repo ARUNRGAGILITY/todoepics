@@ -1,0 +1,71 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Delete {{value_type}} Buffer Column{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    <div class="row mx-0 my-1">
+        <div class="col-md-12 mx-0 d-flex justify-content-start" style="background-color: lightblue;">
+        <a href="{% url 'home' %}">Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'kanban_home' %}">Kanban Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'list_values' value_type %}">{{value_type}}s List</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'value_homepage' value_type object.id %}">{{object}} Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'boards_home' value_type object.id %}">{{object}}'s Kanban Boards</a>        
+        &nbsp;/&nbsp;
+        <b>{{item}} &nbsp;</b>   Kanban Board     
+        </div>
+      </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-start align-items-center">
+            <table class="table ">
+                <tr>
+                    <td width="5%"><b>{{value_type}}:</b></td><td width="20%">
+                        <a class="" href="{% url 'value_homepage' value_type object.id %}">
+                            {{object}}</a>                    </td>
+                    <td width="5%"><b>Board:</b></td><td width="20%">{{item}}</td>
+                    <td width="50%">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <a href="{% url 'kanban_board' value_type object.id item.id %}">
+                                Go To Board</a>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;
+                           <a href="{% url 'edit_item' value_type object.id item.id %}">
+                            Edit Board</a>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;
+                            <a href="{% url 'delete_item' value_type object.id item.id %}">
+                                Delete Board</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-center align-items-center ">
+                <b class="h4 border-bottom">Delete Kanban Buffer/Column</b>
+            </div>
+        </div>
+        <form action="" method='POST' class='form'>
+    <div class="row">        
+        <div class="col-md-12 d-flex justify-content-center align-items-center">
+            
+                {% csrf_token %}
+                <div class="form__group">
+                <p>Do you want to delete this Buffer/Column  <b>{{column}} :: {{buffer_column.title}}</b> ?</p>
+                </div>
+                <div class="for__group">
+                
+                </div>
+                
+        </div>        
+    </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center align-items-center">
+            <input type="submit" value='Confirm Delete' class='btn btn-danger'>
+        </div>
+    </div>
+</form>
+</div>
+{% endblock content %}

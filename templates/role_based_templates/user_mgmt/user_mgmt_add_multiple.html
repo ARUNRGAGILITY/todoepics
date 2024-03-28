@@ -1,0 +1,29 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}User Mgmt Creat Users (batch){% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    {% include 'role_based_templates/user_mgmt/__user_mgmt_menu.html' %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Add Multiple users</h2>
+            <h4>Enter Multiple Users in comma separated format</h4>
+            <form action="" method="POST">
+                {% csrf_token %}
+                EnterMultiple Users: <b>firstname,lastname,username,email,password,'["group1", "group2", "group3"]'</b>
+                
+                <br>
+                <input type="submit" value="Add Multiple Users">
+                <br>
+                <textarea name="add_multiple_users_csv" id="" cols="100" rows="10"></textarea>
+                <br>
+                <input type="submit" value="Add Multiple Users">
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+

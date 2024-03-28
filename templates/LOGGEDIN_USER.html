@@ -1,0 +1,14 @@
+<div class="container-fluid p-0 m-0">
+  <main>   
+    {% if user.is_authenticated %}
+      {% include '1.toplevel.html' %}
+      {% include '2.navbar.html' %}
+      {% include '3.breadcrumbs.html' %}
+      {% include '4.content.html' %}
+      {% include '5.footer.html' %}
+    {% else%}
+      &nbsp;
+    {% endif %}      
+  </main>
+</div>
+</div>

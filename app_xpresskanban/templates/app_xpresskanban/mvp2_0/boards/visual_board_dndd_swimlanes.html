@@ -1,0 +1,1213 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{value_type}}::{{item}} Board</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="http://code.jquery.com/resources/demos/style.css">
+  <style>
+     #sortable_backlog {
+        border: 1px solid #eee;
+        min-height: 120px; /* this is main height of the droppable zone */
+        min-width: 100%;
+        list-style-type: none;
+        margin: 0;
+        padding: 5px 0 0 0;
+        float: left;
+        margin-right: 10px;
+        font-size: 10px;
+        max-height: 500px;
+        overflow-y: scroll;
+      }
+      #sortable_backlog li {
+        margin: 0 5px 5px 5px;
+        padding: 5px;
+        font-size: 11px;
+        height: 40px;
+        width: 120px;
+      }
+  {% if board_columns %}
+    {% for column in board_columns %}
+      #sortable_{{column.id}} {
+        border: 1px solid #eee;
+        min-height: 120px; /* this is main height of the droppable zone */
+
+        min-width: 100%; /* aims to provide full width of the */
+        list-style-type: none;
+        margin: 0;
+        padding: 5px 0 0 0;
+        float: left;
+        margin-right: 10px;
+        font-size: 10px;
+      }
+      #sortable_{{column.id}} li {
+        margin: 0 5px 5px 5px;
+        padding: 5px;
+        font-size: 11px;
+        height: 40px;
+        width: 120px;
+      }
+    {% endfor %}
+  {% endif %}
+  .droppable {
+    background-color: red;
+
+  }
+
+  /* TRYING FOR THE SWIMLANES */
+  /* Apply styles to elements with the .sortable-list class */
+.sortable-list {
+  border: 1px solid #eee;
+  min-height: 120px; /* This is the main height of the droppable zone */
+  min-width: 100%; /* Aims to provide full width */
+  list-style-type: none;
+  margin: 0;
+  padding: 5px 0 0 0;
+  float: left;
+  margin-right: 10px;
+  font-size: 10px;
+}
+
+/* Apply styles to <li> elements within elements with the .sortable-list class */
+.sortable-list li {
+  margin: 0 5px 5px 5px;
+  padding: 5px;
+  font-size: 11px;
+  height: 40px;
+  width: 120px;
+}
+.label_display {
+    position: absolute; /* Position absolutely within the relative parent */
+    top: 55px;
+    bottom: 10px; /* 10px from the bottom */
+    left: -10px; /* 10px from the left */
+}
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- {% if board_columns %}
+  {% for column in board_columns %}
+     
+  {% endfor %}
+  {% endif %} -->
+  <style>
+    .excel_table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .excel_table1 {
+      border-collapse: collapse;
+    }
+    .excel_th, .excel_td {
+      border: 1px solid black;
+      padding: 1px;
+      text-align: left;
+      font-size: 10pt;
+    }
+  
+    .excel_th {
+      background-color: #f2f2f2;
+    }
+    .align_right {
+      text-align: end;
+    }
+    .align_center {
+      text-align: center;
+    }
+    .align_left {
+      text-align: start;
+    }
+    .excel_tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .scrollable-div {
+            width: 300px; /* Set the width of the div */
+            height: 700px; /* Set the height of the div */
+            overflow: auto; /* Enable scrolling when content overflows */
+            border: 1px solid #ccc; /* Optional border style */
+            padding: 10px; /* Optional padding */
+        }
+
+  /** Porting the UI changes **/
+  .blocked {
+    border: 2px dotted red;
+    animation: blink 1s infinite; /* Apply the animation */
+  }
+  .post_it_card {
+    position: relative;
+    min-height: 70px;
+    margin: 1px;
+    padding: 4px;
+    background-color: rgb(241, 241, 133);
+    color: black;
+    font-size: 12px;
+    font-weight: bold;
+   }
+   
+.post_it_card:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-width: 8px 8px 0 0;
+  border-style: solid;
+  border-color: #e7f117 #fff;
+}
+/* adding */
+
+@keyframes blink {
+  0%, 100% {
+    border: 2px solid transparent; /* Set the border style */
+  }
+  50% {
+    border: 6px solid red; /* Set the border style */
+  }
+}
+#zoomableDiv {
+  transform-origin: top left;
+}
+.blink-border {
+  animation: blink 1s infinite; /* Apply the animation */
+}
+.sl_no {
+  text-align: end;
+}
+.card_title {
+  padding-left: 10px;
+}
+
+.vertical_text_show {
+    /* Set the background color to red */
+    /* Set the color of the text to white */
+    color: white;
+
+    /* Display the text vertically */
+    writing-mode: vertical-rl;
+
+    /* Rotate the text by 180 degrees to make it upside down */
+    transform: rotate(180deg);
+
+    /* Adjust the height of the td to match the content */
+    height: auto;
+
+    /* Optionally, set padding to control spacing between text and td boundaries */
+    margin: 5px;
+   /* Ensure the div occupies the full td */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-right-radius: 10px; /* Adjust the radius as needed */
+  border-bottom-right-radius: 10px; /* Adjust the radius as needed */
+}
+
+/* */
+/* Style for the dropdown button */
+.dropbtn {
+  background-color: yellow;
+  color: #333;
+  padding: 0px;
+  height: 2px;
+  width: 2px;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+}
+.dropdown {
+  position: absolute;
+  top: -10px;
+  left: 110px;
+}
+/* Dropdown container (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 150px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  padding: 8px 10px;
+  text-decoration: none;
+  display: block;
+  color: #333;
+}
+
+/* Change color on hover */
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+/* general drop down position try */
+/* Style for the dropdown button */
+.dropbtn1 {
+  background-color: yellow;
+  color: #333;
+  padding: 0px;
+  height: 2px;
+  width: 2px;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+}
+.dropdown1 {
+  position: relative;
+  top: 0;
+  right: 0;
+  padding-right: 140px;
+}
+/* Dropdown container (hidden by default) */
+.dropdown-content1 {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 150px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+/* Links inside the dropdown */
+.dropdown-content1 a {
+  padding: 8px 10px;
+  text-decoration: none;
+  display: block;
+  color: #333;
+}
+
+/* Change color on hover */
+.dropdown-content1 a:hover {
+  background-color: #f1f1f1;
+}
+/* Add a drop arrow (caret) to the button */
+.dropbtn1::after {
+  content: "\25BC"; /* Unicode character for a down arrow */
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+.card_swimlane_label {
+  position: relative;
+  top: -10px;
+  left: 0;
+  height: 20px;
+  width: 100px;
+  background-color: yellow;
+}
+
+
+  </style>
+</head>
+<body>
+    
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-7">
+      <b>Xpress Kanban</b>
+    </div>
+    <div class="col-md-5 d-flex justify-content-end align-items-center">
+      <div class="dropdown1">
+        <button class="dropbtn1">Menu</button>
+        <div class="dropdown-content1">
+        <a href="/">Home</a>
+        <a href="{% url 'kanban_home' %}">Kanban Home</a>
+        <a href="{% url 'boards_home' value_type object.id %}">Boards Home</a>
+        <hr>
+        <a href="{% url 'table_view' value_type object.id item.id %}">Kanban: Table View</a>
+        <a href="{% url 'kanban_board' value_type object.id item.id %}">Kanban: Click View</a>
+        <a href="{% url 'visual_board_dandd' value_type object.id item.id %}">Kanban: Visual Drag and Drop View</a>
+        <hr>
+        <a href="{% url 'kanban_board_columns' value_type object.id item.id %}">Board's: Columns</a>
+        <a href="{% url 'kanban_swimlanes' value_type object.id item.id %}">Board's: Swimlanes</a>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-start align-items-center">
+        <b> Kanban Board: {{item}}</b>&nbsp;&nbsp;&nbsp;&nbsp;
+        Total: {{grouped_cards_count}} Topic(s)
+       
+        </div>
+    </div>
+    <!-- Design the Layout Kanban board -->
+    <div class="row bg-primary">
+      <div class="col-md-3 bg-warning d-flex justify-content-start align-items-center " style="vertical-align: bottom;">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <input type="text" name="title" id="id_title" size="25"
+          placeholder="Enter a work item here ...">
+          &nbsp;
+          <input type="submit" name="action" value="Add">
+          &nbsp;
+        </form>       
+      </div>
+      <div class="col-md-9 bg-info d-flex justify-content-end align-items-center">
+        <b class="h4 text-white">Board</b>&nbsp;&nbsp; &nbsp;&nbsp; 
+        <button onclick="zoomIn()">Zoom In</button>&nbsp;&nbsp; 
+        <button onclick="location.reload();">Normal</button>&nbsp;&nbsp; 
+        <button onclick="zoomOut()">Zoom Out</button>&nbsp;&nbsp;        
+      </div>     
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        <table class="excel_table1" width="100%">                    
+          <!-- THEADER BEGIN-->
+          <thead>
+            <tr>
+              <th class="excel_th">
+                Backlog Items&nbsp;<font size="1"></font>
+                <span id="current_backlog" style="font-weight: normal;"></span>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="backlog_column">
+            <tr id="-1" class="backlog">
+              <td class="excel_td scrollable-td">
+                  <!--
+                    ******************************
+                    BACKLOG DISPLAY CARDS
+                    ******************************
+                  -->
+                    <ul id="sortable_backlog" class="connectedSortable" style="min-height: 120px; width: 120px;" >
+                      {% for bcard in newtodolist %}  
+                        {% if bcard.column == None %}
+                          <li id="{{bcard.id}}" class="post_it_card backlog" data-swimlane-id="0">
+                            <div style="width: 25px; ">
+                              {{user.username|slice:"2"|upper}}
+                            </div>
+                            <!-- <div id="{{swimlane.id}}" class="card_swimlane_label">
+                              {% if bcard.swimlane == None %} 
+                              <font size="-2"><b>General</b></font>
+                              {% else %}
+                              <font size="-2"> <b>{{bcard.swimlane}}</b></font>                               
+                              {% endif %}
+                            </div> -->
+                            {{bcard.title|slice:"80"}}
+                            {% if bcard.label != '' %}
+                               <div class="label_display">
+                                <img 
+                                src="{% static 'img/icons/' %}{{bcard.label}}_img.png" class="" alt="Kanban" class=""> 
+                               </div>
+                               {% endif %}
+                            <div class="dropdown">
+                              <button class="dropbtn">...</button>
+                              <div class="dropdown-content">
+                                <a href="{% url 'edit_card' value_type object.id item.id bcard.id %}?from=vsl">Blocked</a>
+                                <hr>
+                                <a href="{% url 'edit_card' value_type object.id item.id bcard.id %}?from=vsl">Edit</a>
+                                <a href="{% url 'view_card' value_type object.id item.id bcard.id %}?from=vsl">View</a>
+                                <a href="{% url 'delete_card' value_type object.id item.id bcard.id %}?from=vsl">Delete</a>
+                                <hr>
+                                <a href="{% url 'mark_label' value_type object.id item.id bcard.id %}?from=vsl&label=bug">Mark as Bug</a>
+                                <a href="{% url 'mark_label' value_type object.id item.id bcard.id %}?from=vsl&label=feature">Mark as Feature</a>
+                                <a href="{% url 'mark_label' value_type object.id item.id bcard.id %}?from=vsl&label=cr">Mark as Customer Request</a>
+                                <a href="{% url 'mark_label' value_type object.id item.id bcard.id %}?from=vsl&label=None">Mark as Normal</a>
+                              
+                                <!-- <a href="#">Move Card</a>
+                                <div class="submenu">
+                                  <a href="#">Move to List 1</a>
+                                  <a href="#">Move to List 2</a>                                   
+                                </div> -->
+                                <!-- Add more options as needed -->
+                              </div>
+                            </div>
+                          </li>  
+                        {% endif %}
+                      {% endfor %}                                                   
+                    </ul>                        
+              </td>
+            </tr>
+          </tbody>
+          </table>
+      </div>
+      <div class="col-md-10 d-flex justify-content-start">
+        <div  id="zoomableDiv" class=" d-flex justify-content-start align-items-top">
+          <div class="data_display">
+        <!-- BOARD DISPLAY -->
+       <div class="container-fluid-width">
+        <div class="row">
+          <div class="col-md-12">
+            <table class="excel_table" id="kanban_board_table" width="100%">                    
+              <!-- THEADER BEGIN-->
+              <thead>
+                <!-- Column WIP Limit Row -->
+                <tr>
+                  <td colspan="{{ board_columns|length|add:1 }}" class="excel_th">
+                    <b> Kanban Board: {{item}}</b>
+                  </td>
+                </tr>
+                <tr>                            
+                  <td width="2%" class="excel_td">
+                  </td>  
+                  {% if board_columns %}
+                  {% for column in board_columns %}
+                  <th id="WIPLIMIT_{{ column.id }}" data-columnid="{{column.id}}" 
+                  style="text-align: center;"               
+                    
+                  class="excel_th"   
+                  contenteditable="false"              
+                  >
+                  {% if column.wip_limit > 0 %}
+                  <font size="-1" color="red">
+                    <div class="" id="{{column.id}}_wip">
+                      {{column.wip_limit}}
+                    </div>
+                  </font>
+                  {% else %}               
+                  {% endif %}           
+                  </th>  
+                  {% endfor %}
+                  {% endif %}
+                </tr>
+                 <!-- Column Card Count Row -->
+                 <tr>                            
+                  <td width="2%" class="excel_td"></td>    
+
+                        {% if board_columns %}
+                        {% for column in board_columns %}
+                       
+                        <td id="" data-columnid="{{column.id}}"  class="excel_td"
+                        style="text-align: center;"              
+                                    
+                        >
+                        <div id="{{column.id}}_doing" ></div>
+                        </td>
+                        {% endfor %}
+                      {% endif %}
+                </tr>
+              <!-- the is the COLUMN DISPLAY -->
+              <tr class="main_column_display">
+                  <th width="2%" class="excel_th"></th>           
+                  {% if board_columns %}
+                  {% for column in board_columns %}
+                  <th class="excel_th" style="text-align: center;">
+                      {{column}} 
+                  </th>
+                  {% endfor %}
+                  {% endif %}
+              </tr>   
+              <!-- This is the buffer column display -->
+              <tr class="buffer_column_display buffer_applied">                            
+                <td width="2%" class="excel_td"></td>  
+                {% if board_columns %}
+                      {% for column in board_columns %}
+                          <td width="" class="excel_td" 
+                          
+                          {% if column.cycle_time_column == True %}
+                          style="text-align: center; font-size: 12px; font-weight: bold;
+                          border-bottom: 2px solid purple;"
+                          {% else %}
+                          style="text-align: center; font-size: 12px; font-weight: bold;
+                          border-bottom: 2px solid orange;"
+                          {% endif %}
+                          >   
+                            {{column}}                                     
+                          </td>
+                      {% endfor %}
+                  {% endif %}
+              </tr>                 
+              </thead>
+              <!-- THEADER END-->
+              <tbody>                              
+                 <!-- Data of the table in row and columns -->
+                 <!-- 
+
+                  **************************
+                  BOARD CONTENTS
+                  **************************
+
+                -->
+                {% for swimlane, cards in grouped_cards.items %}  
+                  <tr id="{{swimlane.id}}" class="{{swimlane.title}}" data-buffer-enabled="buffer-applied">
+                    <td width="2%" class="excel_td">  
+                      <div class="vertical_text_show h5"
+                      {% if swimlane.color %}
+                      style="background-color: {{swimlane.color}};"
+                      {% else %}
+                      style="background-color: yellow; color: blue;"
+                      {% endif %}
+                      >
+                        {% if only_none_swimlane == False %}
+                          {% if swimlane == None %} 
+                            &nbsp; &nbsp;&nbsp;  General  &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; 
+                          {% else %}
+                            &nbsp; &nbsp;&nbsp; {{ swimlane }} &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;
+                          {% endif %}
+                        {% endif %}
+                      </div>               
+                    </td>  
+                    {% for column in board_columns %}                          
+                      <td width="" class="excel_td droppable-cell" style="vertical-align: top;">    
+                        <ul class="sortable-list connectedSortable" data-column-id="{{column.id}}"
+                        style="min-height: 120px; width: 120px;">
+                          {% for bcard in cards %}
+                            {% if bcard.column.id == column.id %}
+                              <li id="{{bcard.id}}" class="post_it_card {{bcard.swimlane}} {{bcard.blocked}}" 
+                              data-swimlane-id="{{swimlane.id}}">
+                              <div style="width: 25px;">
+                                {{user.username|slice:"2"|upper}}
+                              </div>
+                              <!-- <div id="{{swimlane.id}}" class="card_swimlane_label">
+                                {% if swimlane == None %} 
+                                <font size="-2"><b>General</b></font>
+                                {% else %}
+                                <font size="-2"> <b>{{bcard.swimlane}}</b></font>                               
+                                {% endif %}
+                              </div> -->
+                               {{bcard.title|slice:"80"}}
+                               <br>
+                               {% if bcard.block_count > 0 %}
+                               {% for i in "x"|rjust:bcard.block_count %}
+                               <img src="{% static 'img/new_icons/blocked_icon.png' %}" alt="icon">
+                                {% endfor %}
+                                {% endif %}
+                               {% if bcard.label != '' %}
+                               <div class="label_display">
+                                <img 
+                                src="{% static 'img/icons/' %}{{bcard.label}}_img.png" class="" alt="Kanban" class=""> 
+                               </div>
+                               {% endif %}
+                              <div class="dropdown">
+                                <button class="dropbtn">...</button>
+                                <div class="dropdown-content">
+                                  {% if bcard.blocked == "" %}
+                                  <a href="{% url 'visual_board_dandd_swimlanes' value_type object.id item.id %}?blocked={{bcard.id}}">Block</a>
+                                  {% else %}
+                                    {% if bcard.blocked == "blocked" %}
+                                    <a href="{% url 'visual_board_dandd_swimlanes' value_type object.id item.id %}?unblocked={{bcard.id}}">Unblock</a>
+                                    {% elif bcard.blocked == "unblocked" %}
+                                    <a href="{% url 'visual_board_dandd_swimlanes' value_type object.id item.id %}?blocked={{bcard.id}}">Block</a>
+                                    {% endif %}
+                                  {% endif %}
+                                  <hr>
+                                  <a href="{% url 'edit_card' value_type object.id item.id bcard.id %}?from=vsl">Edit</a>
+                                  <a href="{% url 'view_card' value_type object.id item.id bcard.id %}?from=vsl">View</a>
+                                  <a href="{% url 'delete_card' value_type object.id item.id bcard.id %}?from=vsl">Delete</a>
+                                  <hr>
+                                  <a href="{% url 'mark_label' value_type object.id item.id bcard.id %}?from=vsl&label=bug">Mark as Bug</a>
+                                  <a href="{% url 'mark_label' value_type object.id item.id bcard.id %}?from=vsl&label=feature">Mark as Feature</a>
+                                  <a href="{% url 'mark_label' value_type object.id item.id bcard.id %}?from=vsl&label=cr">Mark as Customer Request</a>
+                                  <a href="{% url 'mark_label' value_type object.id item.id bcard.id %}?from=vsl&label=None">Mark as Normal</a>
+                                
+                                  <!-- <a href="#">Move Card</a>
+                                  <div class="submenu">
+                                    <a href="#">Move to List 1</a>
+                                    <a href="#">Move to List 2</a>                                   
+                                  </div> -->
+                                  <!-- Add more options as needed -->
+                                </div>
+                              </div>
+                              </li>  
+                            {% endif %}
+                          {% endfor %}                                                   
+                        </ul>                                     
+                      </td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+                  <!-- Policies Row -->
+                  <tr>                            
+                    <td width="2%" class="excel_td"></td>  
+                    {% if board_columns %}
+                          {% for column in board_columns %}
+                              <td width="" class="excel_td">                                       
+                              </td>
+                          {% endfor %}
+                      {% endif %}
+                  </tr>
+                   <!-- Entry/Exit Criteria Row -->
+                   <tr>                            
+                     <td width="2%" class="excel_td"></td>    
+                    {% if board_columns %}
+                          {% for column in board_columns %}
+                              <td width="" class="excel_td">
+                                 
+                              </td>
+                          {% endfor %}
+                      {% endif %}
+                  </tr>
+              </tbody>
+          </table>
+          </div>
+        </div>
+       </div>
+      </div>
+    </div>
+  </div>
+    <!-- Design the Layout Kanban board -->    
+    </div>
+    </div>
+    <!-- these two divs are for zoom and data-display -->
+
+    <!-- CFD data -->
+           {% if cfdDisplay == True %}
+            <!--
+
+                CFD DEMO
+               
+            -->
+            <div>
+            
+          
+            </div>
+            <div style="width: 80%; margin: auto;">
+              <canvas id="cfdChart" width="400" height="200"></canvas>
+          </div>
+      
+            <script>
+              // Sample CFD data for 14 days
+              const cfdData = {{ cfd_data|safe }};
+      
+              // Get the canvas element and create a chart context
+              const cfdCanvas = document.getElementById('cfdChart').getContext('2d');
+              
+
+              // Create an empty array to hold the dataset objects
+              const datasets = [];
+
+              // Get the list of columns dynamically from the first data point
+              const firstDataPoint = cfdData[0];
+              const columns = Object.keys(firstDataPoint).filter(key => key !== 'date'); // Exclude 'date' column
+
+              // Iterate through the columns and create datasets
+              columns.forEach(column => {
+                  datasets.push({
+                      label: column,
+                      data: cfdData.map(dataPoint => dataPoint[column]), // Use the column as the property
+                      borderColor: getRandomColor(), // Replace this with the appropriate color logic
+                      backgroundColor: getRandomColor(0.2), // Replace this with the appropriate color logic
+                      fill: 'origin', // Fill area to 'origin'
+                  });
+              });
+
+              // Create the CFD chart as an area graph
+              const cfdChart = new Chart(cfdCanvas, {
+                  type: 'line',
+                  data: {
+                      labels: cfdData.map(dataPoint => dataPoint.date),
+                      datasets: datasets, // Use the dynamically generated datasets
+                  },
+              });
+
+              // Function to generate random colors
+              function getRandomColor(opacity = 1) {
+                  const letters = '0123456789ABCDEF';
+                  let color = '#';
+                  for (let i = 0; i < 6; i++) {
+                      color += letters[Math.floor(Math.random() * 16)];
+                  }
+                  return color + Math.round(opacity * 255).toString(16);
+              }
+
+
+          </script>
+
+        </div>
+    <!-- CFD Data-->
+    {% endif %}
+</div> 
+
+<script>
+
+  function border_td() {
+
+    let table = $('#kanban_board_table'); // Assuming the table has the ID "kanban_board_table"
+        let rows = table.find('tr.buffer_column_display');
+        let borderIndexes = [];
+        rows.each(function () {
+            let cells = $(this).find('td');
+            let count = 0;
+            let borderApplied = 0; // Track how many borders have been applied
+            
+            cells.each(function (index) {
+                let cellText = $(this).text().trim();
+
+                if (cellText.includes(':')) {
+                    count++;
+                }
+            });
+
+            // Check if the count is greater than or equal to 2
+            if (count >= 2) {
+                cells.each(function (index) {
+                    let cellText = $(this).text().trim();
+
+                    if (cellText.includes(':') && borderApplied < count - 1) {
+                        // Apply border to the current <td>
+                        $(this).css('border-right', '2px dotted grey');
+                        borderApplied++;
+                        borderIndexes.push(index);
+                    }
+                });
+            }
+        });
+        console.log(borderIndexes);
+        // Iterate over tr.buffer_applied rows and apply border to specified <td> elements
+          //let appliedRows = table.find('tr.buffer_applied');
+          let appliedRows = table.find('tr[data-buffer-enabled="buffer-applied"]');
+        appliedRows.each(function () {
+            let cells = $(this).find('td');
+
+            // Apply border-right style to the specified <td> elements
+              borderIndexes.forEach(function (index) {
+                cells.eq(index).css('border-right', '2px dotted grey');
+            });
+        });
+
+  }
+
+  function buffer_column_display_test() {
+        let table = $('#kanban_board_table'); // Assuming the table has the ID "kanban_board_table"
+        let rows = table.find('tr.buffer_column_display');
+
+        rows.each(function () {
+            let cells = $(this).find('td');
+            cells.each(function (index) {
+                let cellText = $(this).text().trim();
+                let count = 0;
+                if (cellText.includes(':')) {
+                    let parts = cellText.split(':');
+                    if (parts.length > 1) {
+                        $(this).text(parts[1].trim());
+                    }
+                    count++;
+                    
+                    //  // Add right dotted border to <td> elements containing ":" in the entire column
+                    //   table.find('tr').each(function () {
+                    //     let td = $(this).find('td').eq(index);
+                    //     td.css('border-right', '3px dotted blue');
+                    // });
+                }else {
+                  $(this).text("");
+                }
+                // Check if the count is greater than or equal to 2
+                if (count >= 2) {
+                    // Apply border to the first n-1 <td> elements
+                    for (let i = 0; i < count - 1; i++) {
+                        cells.eq(i).css('border-right', '12px dotted red');
+                    }
+                }
+            });
+        });
+  }
+  function buffer_column_display() {
+    let table = $('#kanban_board_table'); // Assuming the table has the ID "kanban_board_table"
+        let rows = table.find('tr.buffer_column_display');
+
+        rows.each(function () {
+            let cells = $(this).find('td');
+            cells.each(function () {
+                let cellText = $(this).text().trim();
+
+                if (cellText.includes(':')) {
+                    let parts = cellText.split(':');
+                    if (parts.length > 1) {
+                        $(this).text(parts[1].trim());
+                    } 
+                } else {
+                  $(this).text("");
+                }
+                
+                
+            });
+        });
+  }
+
+  function main_column_display() {
+
+    let table = $('#kanban_board_table');
+        let headers = table.find('th');
+        let colCount = 0;
+        let startCol = null;
+        let combinedText = null;
+
+        headers.each(function (index) {
+            let columnName = $(this).text().trim();
+
+            if (columnName.includes(':')) {
+                if (startCol === null) {
+                    startCol = index;
+                }
+                colCount++;
+                // Extract the text before ":"
+                let parts = columnName.split(':');
+                if (parts.length > 0) {
+                    combinedText = parts[0].trim();
+                }
+            } else if (colCount > 0) {
+                // Combine columns with colspan
+                headers.eq(startCol).attr('colspan', colCount);
+                // Set the combined column name based on the extracted text
+                if (combinedText) {
+                    headers.eq(startCol).text(combinedText);
+                }
+                // Hide the other columns
+                for (let i = startCol + 1; i < startCol + colCount; i++) {
+                    headers.eq(i).hide();
+                }
+                // Reset counters
+                colCount = 0;
+                startCol = null;
+                combinedText = null;
+            }
+        });
+  }
+</script>
+
+<script>
+// ON PAGE LOADED / READY 
+$(document).ready(function() {
+  main_column_display();
+  border_td();
+  buffer_column_display_test();
+  
+  // Update counts and check WIP and Doing for all sortable lists with the class .sortable-list
+$(".sortable-list").each(function() {
+  var listId = $(this).data("column-id"); // Get the ID of the sortable list
+  //var count = $(this).find("li").length; // Count the number of <li> elements in the list
+  var count = $('[data-column-id="' + listId + '"] li:not(.Expedite)').length;
+  $("#" + listId + "_doing").text(count); // Update the count
+      // backlog count on ready
+    var count = $("#sortable_backlog li").length;
+    $("#current_backlog").text(count);
+    
+  // WIP and Doing check
+  var doingCount = parseInt($("#" + listId + "_doing").text(), 10);
+  // ** test1
+    
+  // **test1
+  var wipLimit = parseInt($("#" + listId + "_wip").text(), 10);
+
+  if (doingCount > wipLimit) {
+    $("#WIPLIMIT_" + listId).addClass("blink-border"); // Add a CSS class for styling
+  } else {
+    $("#WIPLIMIT_" + listId).removeClass("blink-border"); // Remove a CSS class for styling
+  }
+});
+
+  // ===================================================== //
+  $("#kanban_board_table tr").each(function() {
+    var maxCardCount = 0;
+
+    $(this).find(".connectedSortable").each(function() {
+      var cardCount = $(this).find("li").length;
+
+      if (cardCount > maxCardCount) {
+        maxCardCount = cardCount;
+      }
+    });
+    cardMinHeight = 80;
+    //$(this).find(".connectedSortable").height(maxCardCount * cardMinHeight);
+    // check
+    calc_height = maxCardCount * cardMinHeight;
+    var tdHeight = $(".droppable-cell").height();
+    $(this).find(".connectedSortable").height(tdHeight+"px");   
+    if (calc_height > tdHeight)  {
+      cardMinHeight = 80;
+      $(this).find(".connectedSortable").height(maxCardCount * cardMinHeight);
+    }
+  });
+  // ===================================================== //
+
+  // ===================================================== //
+  $("#kanban_board_table tr").each(function() {
+    var swimlane_text = $(this).attr('id');
+    $(this).find("swimlane").text(swimlane_text);
+  });
+  // ===================================================== //
+
+
+  // SWIMLANE CHANGES
+  $(".sortable-list").sortable({
+    connectWith: ".connectedSortable",
+    update: function(event, ui) {
+      // VERY VERY IMPORTANT SEQUENCE
+      sendSortableData();
+      
+      // Get the column ID from the data attribute
+      var columnId = $(this).data("column-id");
+      //console.log("========>>>>> "+columnId);
+      // Update the current DOING count for the specific column
+      var count = $("#sortable_" + columnId + " li").length;
+      $("#current_" + columnId + "_doing").text(count);
+    }
+  });
+
+  // END SWIMLANE CHANGES TRY
+
+
+});
+   
+</script>
+
+<script>
+  //
+  // card drop down
+  //
+
+  $(document).ready(function() {
+    // Toggle the dropdown menu when the button is clicked
+    $(".dropbtn").click(function() {
+      $(this).next(".dropdown-content").toggle();
+    });
+  
+    // Hide the dropdown menu when clicking outside of it
+    $(document).click(function(event) {
+      if (!$(event.target).closest(".dropdown").length) {
+        $(".dropdown-content").hide();
+      }
+    });
+  });
+  </script>
+
+
+<script>
+  //
+  // general drop down
+  //
+
+  $(document).ready(function() {
+    // Toggle the dropdown menu when the button is clicked
+    $(".dropbtn1").click(function() {
+      $(this).next(".dropdown-content1").toggle();
+    });
+  
+    // Hide the dropdown menu when clicking outside of it
+    $(document).click(function(event) {
+      if (!$(event.target).closest(".dropdown1").length) {
+        $(".dropdown-content1").hide();
+      }
+    });
+  });
+  </script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+<script>
+
+  // debug
+  // Define a function to collect and log sortable data for a specific list
+  function collectAndLogSortableData(listId) {
+    // Get the ID of the current list
+    var id = "#" + listId;
+
+    // Create an array to store the list data
+    var listData = [];
+    // Iterate through the list items within the current list
+    $(id + " li").each(function() {
+      // Collect the text of each list item and add it to the listData array
+      //listData.push($(this).text());
+      listData.push($(this).attr('id'));
+    });
+
+    // Log the collected data for the current list to the console
+    //console.log("List ID: " + listId);
+    //console.log("List Data: ", listData);
+    return listData;
+  }
+
+  // end debug
+
+ // for the non-backlog columns with generic 
+ // Define a function to collect and log sortable data for a specific list
+function collectAndLogSortableDataCS(listId) {
+  // Use listId as the columnId since they are the same
+  var columnId = listId;
+
+  // Create an array to store the list data (in this case, the data will be an array of objects)
+  var listData = [];
+
+  // Iterate through the list items within the current list
+  $('[data-column-id="' + listId + '"] li').each(function() {
+    // Collect the data from each list item (e.g., id, text)
+    var itemId = $(this).attr('id');
+    //var itemText = $(this).text();  
+    var itemSwimlane = $(this).data('swimlane-id');
+    //console.log("==============> swimlane "+itemSwimlane + " ID "+itemId);
+    if (itemSwimlane == null) {itemSwimlane = 0;}
+    var cData = [itemId, itemSwimlane]
+    // Push the object into the listData array
+    listData.push(cData);
+  });
+
+  // Log the collected data for the current list to the console
+  //console.log("List ID: " + listId);
+  //console.log("Column ID: " + columnId);
+  //console.log("List Data: ", listData);
+  return listData;
+}
+
+
+  $( function() {
+    $( "#sortable_backlog" ).sortable({
+          connectWith: ".connectedSortable",
+          update: function(event, ui) {
+            var count = $("#sortable_backlog li").length;
+            $("#current_backlog").text(count);
+              sendSortableData();
+            }
+        }).disableSelection();
+    // Initialize sortable for all elements with the .sortable-list class
+    $(".sortable-list").sortable({
+      connectWith: ".connectedSortable",
+      update: function(event, ui) {
+
+        
+        // * EXPERIMENT UPDATE THE SWIMLANE DETAILS
+        var parentTr = $(ui.item).closest('tr');
+        var trId = parentTr.attr('id');
+        $(ui.item).data('swimlane-id', trId);
+        // * END EXPERIMENT
+
+        // VERY VERY IMPORTANT SEQUENCE
+        sendSortableData();
+
+        // Update the current DOING count for the specific list
+        var listId = $(this).data("column-id");
+        //var count = $(this).find("li").length;
+        var count = $('[data-column-id="' + listId + '"] li:not(.Expedite)').length;
+        $("#" + listId + "_doing").text(count);
+
+        // WIP and Doing check
+        var doingCount = parseInt($("#" + listId + "_doing").text(), 10);
+        var wipLimit = parseInt($("#" + listId + "_wip").text(), 10);
+
+        if (doingCount > wipLimit) {
+          $("#WIPLIMIT_" + listId).addClass("blink-border"); // Add a CSS class for styling
+        } else {
+          $("#WIPLIMIT_" + listId).removeClass("blink-border"); // Remove a CSS class for styling
+        }
+
+        // Adjust the height of connectedSortable elements within the same row
+        $(this).closest("tr").each(function() {
+          var maxCardCount = 0;
+
+          $(this).find(".connectedSortable").each(function() {
+            var cardCount = $(this).find("li").length;
+
+            if (cardCount > maxCardCount) {
+              maxCardCount = cardCount;
+            }
+          });
+          // cardMinHeight = 80;
+          // $(this).find(".connectedSortable").height(maxCardCount * cardMinHeight);
+          calc_height = maxCardCount * cardMinHeight;
+          var tdHeight = $(".droppable-cell").height();
+          $(this).find(".connectedSortable").height(tdHeight+"px");   
+          if (calc_height > tdHeight)  {
+            cardMinHeight = 80;
+            $(this).find(".connectedSortable").height(maxCardCount * cardMinHeight);
+          }
+        });
+      },
+      // * experiment with event 
+      receive: function(event, ui) {
+        // Get the swimlane ID from the target list
+        var swimlaneId = $(this).data("swimlane-id");
+        // Get the swimlane title from the target list
+        var swimlaneTitle = $(this).closest("tr").attr("class");
+        // Get the swimlane ID from the tr element's id attribute
+        var swimlaneIdFromTr = $(this).closest("tr").attr("id");
+        // Update the card_swimlane_label with the new swimlane information
+        ui.item.find(".card_swimlane_label b").text(swimlaneTitle || "General");
+        // Update the swimlane ID in the card_swimlane_label
+        ui.item.find(".card_swimlane_label").attr("id", swimlaneIdFromTr);
+        // Update the li class with the new swimlane
+        ui.item.removeClass().addClass("post_it_card " + swimlaneTitle);
+      }
+
+      // * end experiment
+    }).disableSelection();
+
+
+     // send ajax update
+    // Function to send the sorted data via AJAX
+    function sendSortableData() {
+          //======================================================
+      // Calling and Collecting data for sending to AJAX
+      var collectedData = [];
+      var listId = "sortable_backlog";
+      var listData = collectAndLogSortableData(listId);      
+      // Push the data into the array
+      collectedData.push({
+        listId: listId,
+        listData: listData
+      });
+      // Iterate through all elements with the .sortable-list class
+      $(".sortable-list").each(function() {
+        var listId = $(this).data("column-id"); // Get the ID of the sortable list
+        //console.log("LIST ID :"+listId);
+        var listData = collectAndLogSortableDataCS(listId);
+        // Push the data into the array
+        collectedData.push({
+          listId: listId,
+          listData: listData
+        });
+      });
+        //TESTING
+        // data = ">>> === TEST THE AJAX DATA === <<<"
+        // Send data via AJAX
+        $.ajax({
+              url: '/kanban/ajaxupdate_visual_board_dndd_swimlanes',
+              type: 'POST',
+              data : {
+                'csrfmiddlewaretoken': "{{ csrf_token }}",
+                'data': JSON.stringify(collectedData),
+                'value_type': '{{value_type}}',
+                'pk': {{object.id}},
+                'board_id': {{item.id}},
+              },
+              dataType: 'json',
+              success: function(data) {
+                //console.log(data);
+              }
+            })
+          }
+
+      // end of ajax request
+  });
+  </script>
+<script>
+  inputBox = document.getElementById("id_title");
+  inputBox.focus();
+  const zoomableDiv = document.getElementById('zoomableDiv');
+  let currentScale = 0.7; // Initial scale
+
+  function zoomIn() {
+    currentScale += 0.1;
+    zoomableDiv.style.transform = `scale(${currentScale})`;
+
+    // Refresh or reinitialize the sortable lists after zooming
+    refreshSortableLists();
+  }
+
+  function zoomOut() {
+    currentScale -= 0.1;
+    if (currentScale < 0.1) {
+      currentScale = 0.1; // Set a minimum scale
+    }
+    zoomableDiv.style.transform = `scale(${currentScale})`;
+
+    // Refresh or reinitialize the sortable lists after zooming
+    refreshSortableLists();
+  }
+
+  // Function to refresh or reinitialize sortable lists after zooming
+  function refreshSortableLists() {
+    // Example: Reinitialize jQuery UI Sortable lists
+    $(".sortable-list").sortable("refresh");
+  }
+</script>
+
+</body>
+</html>

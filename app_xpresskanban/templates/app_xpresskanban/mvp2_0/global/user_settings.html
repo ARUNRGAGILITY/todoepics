@@ -1,0 +1,11 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Global User Settings{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<h1>Global User Settings</h1>
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

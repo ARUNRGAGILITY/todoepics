@@ -4,15 +4,19 @@
 {% block title %}WBS Display{% endblock title %} 
 {% block content %}
 {% if user.is_authenticated %}
-<style>
- 
-</style>
 
 <form action="">
     {% csrf_token %}
 </form>
 <!-- Header -->
-{% include "app_web/_2user/user_loggedin_menu.html" %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col col-md-5">
+            <a href="{% url 'organization_admin_page' organization_id %}">{{organization}}</a>
+        </div>
+        <div class="col col-md-7"></div>
+    </div>
+</div>
 {% if True %}
 
 <!-- 
@@ -21,7 +25,7 @@
 <div class="green_bg text-white py-1">
     <div class="container-fluid-width">
         <div class="row no-gutters">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="left_header" id="left_header1">
                     {% if mapping_wbs != None %}
                     {{mapping_wbs.organization}}
@@ -30,7 +34,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="col-md-9 d-flex justify-content-start">
+            <div class="col-md-8 d-flex justify-content-start">
                 <div class="right_header" id="right_header1">
                     Details
                 </div>
@@ -44,7 +48,7 @@
 <div class="container-fluid content-wrap d-flex flex-column">
     <div class="row flex-grow">        
       <!-- Left Pane -->
-      <div class="col-md-3  d-flex flex-column p-0 m-0">
+      <div class="col-md-4  d-flex flex-column p-0 m-0">
         <div id="jstree_display" class="flex-grow p-0 m-0 ">
           <!-- jstree content -->
           
@@ -54,7 +58,7 @@
         </div>
       </div>      
       <!-- Right Content -->
-      <div class="col-md-9  d-flex flex-column p-0 m-0">
+      <div class="col-md-8  d-flex flex-column p-0 m-0">
         <div id="content" class="flex-grow p-0 m-0">
           <!-- content will be loaded here -->
           

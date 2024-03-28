@@ -40,12 +40,14 @@
                     {% for role in roles %}
                         {% if role.name == "SiteAdmin" %}
                         <b>You are a Site Admin.</b>
-                        <a href="{% url 'site_admin_home' %}">Site Admin</a>
+                        <a href="{% url 'site_admin_home' %}">Site Admin</a><br>
                         {% elif role.name == "OrgAdmin" %}
                         <b>You are Organization Admin.</b>
-                        <a href="{% url 'org_admin_home' %}">Org Admin</a>
+                        <a href="{% url 'org_admin_home' %}">Org Admin</a><br>
                         {% elif role.name == "ProjectAdmin" %}
-                        <b>You are Project Admin.</b>                           
+                        <b>You are Project Admin.</b>       
+                        
+                        <br>
                         {% endif %}
                     {% empty %}
                         <b>No Admin Roles Yet.</b>

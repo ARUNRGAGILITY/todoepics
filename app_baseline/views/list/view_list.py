@@ -986,9 +986,18 @@ def list_js_tree_id(request, list_id):
     print(f">>> === LIST ID {list_id} {object} type: {object.type} === <<<")
     root_object = None
     mapping_wbs = MappingWBS.objects.filter(list_id=object.id).first()
+    organization=None
+    organization_id=None
     if mapping_wbs == None:
         root_object = object.get_root()
         print(f">>> === ROOT ||| {root_object} type: {object.type}=== <<<")
+        list = List.objects.get(id=root_object.id)
+        mapping_wbs = MappingWBS.objects.get(list=list)
+        organization = mapping_wbs.organization.name
+        organization_id = mapping_wbs.organization.id
+    else:
+        organization = mapping_wbs.organization.name
+        organization_id = mapping_wbs.organization.id
     permitted_nodes = get_permitted_nodes_for_user(request, objects)
     objects = permitted_nodes
     objects_count = permitted_nodes.count()
@@ -996,7 +1005,8 @@ def list_js_tree_id(request, list_id):
     logger.debug(f">>> === PN {objects} PNC {objects_count} === <<<")
     context = {'page': 'list_js_tree', 'list_id': list_id, 'object': object, 
                'objects': objects, 'objects_count': objects_count, 
-               'mapping_wbs': mapping_wbs,
+               'mapping_wbs': mapping_wbs, 'organization_id': organization_id,
+               'organization': organization,
                'root_object': root_object,}
     template_url = f"{app_base_ref}/basics/list/list_js_tree_id.html"
     return render(request, template_url, context)

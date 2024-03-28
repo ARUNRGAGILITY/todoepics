@@ -1,0 +1,157 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}View {{value_type}}{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9 d-flex justify-content-start align-items-center">
+            <b>View {{value_type}} Details</b>
+        </div>
+        <div class="col-md-3 d-flex justify-content-end align-items-center">
+            <a href="{% url 'edit_value' value_type object.id %}">Edit {{value_type}}</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'value_homepage' value_type object.id %}">{{value_type}} Homepage</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'list_values' value_type %}">{{value_type}} List</a>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-*">
+            <table class="table is-bordered is-paddingless is-marginless mt-0 mb-0">
+                <tr>
+                    <td>
+                        <b>Organization / Client</b>
+                    </td>
+                    <td>
+                        {{object.organization}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{{value_type}} ID</b>
+                    </td>
+                    <td>
+                        {{object.id}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Name</b>
+                    </td>
+                    <td>
+                        {{object.title}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Description</b>
+                    </td>
+                    <td>
+                        {{object.description}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Type</b>
+                    </td>
+                    <td>
+                        {{object.type}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>State</b>
+                    </td>
+                    <td>
+                        {{object.state}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Priority</b>
+                    </td>
+                    <td>
+                        {{object.priority}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Backlog Template</b>
+                    </td>
+                    <td>
+                        {{object.work_item_type}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Start Date</b>
+                    </td>
+                    <td>
+                        {{object.start_date}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>End Date</b>
+                    </td>
+                    <td>
+                        {{object.end_date}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Note</b>
+                    </td>
+                    <td>
+                        {{object.current_state}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Progress</b>
+                    </td>
+                    <td>
+                        {{object.progress}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Created At</b>
+                    </td>
+                    <td>
+                        {{object.created_at}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Updated At</b>
+                    </td>
+                    <td>
+                        {{object.updated_at}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Completed At</b>
+                    </td>
+                    <td>
+                        {{object.completed_at}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Duration (hours)</b>
+                    </td>
+                    <td>
+                        {{object.duration_in_hours}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% include '5.footer.html' %}
+{% endblock content %}

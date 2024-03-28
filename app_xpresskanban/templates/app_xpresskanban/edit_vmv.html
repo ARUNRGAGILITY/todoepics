@@ -1,0 +1,41 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Edit {{value_type}}{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<form action="" method='POST' class='form'>
+{% csrf_token %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9 d-flex justify-content-start align-items-center">
+            <h6>Edit {{value_type}} Charter Details</h6>
+        </div>
+        <div class="col-md-3 d-flex justify-content-end align-items-center">
+            <a href="{% url 'view_value' value_type object.id %}">View  {{value_type}}</a>&nbsp;&nbsp;
+            <a href="{% url 'list_values' value_type %}"> {{value_type}} List</a>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            {{value_type}} ID: &nbsp;<b>{{object.id}}</b>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            {{form}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            {{form.media}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <input type="submit" name="Edit {{value_type}} Charter">
+        </div>
+    </div>
+</div>
+{% include '5.footer.html' %}
+{% endblock content %}

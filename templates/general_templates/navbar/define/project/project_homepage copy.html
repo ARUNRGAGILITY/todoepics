@@ -1,0 +1,129 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Add Project{% endblock title %} 
+{% block content %}
+{% include '../../../../1.toplevel.html' %}
+{% include '../../../../2.navbar.html' %}
+<div class="container-fluid mx-2 ">
+    <div class="columns">
+        <div class="column is-12 has-text-left has-background-grey-light  ">
+            <p class="has-text-weight-bold mt-2 mb-0">Project Page</p></div>
+    </div>
+    <div class="columns has-background-light">
+        <div class="column is-8">
+            <b>{{project.title}} Project's Homepage</b>    
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Summary</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Visual-Board</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Timeline</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Release</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Issues</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;      
+            <a href="{% url 'navbar_project' %}">Reports</a>
+        </div>
+        <div class="column is-4 has-text-right">
+            <a href="{% url 'navbar_project' %}">
+                List Projects
+            </a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'add_project' %}" class="btn btn-success">Add New Project</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'restore_projects' %}">
+                Restore
+            </a>
+        </div>
+    </div>
+    <form action="" method='POST' class='form'>
+        {% csrf_token %}
+    
+    <div class="columns">
+        <div class="column is-* has-text-left  is-paddingless is-marginless mx-2">
+            <table class="table is-bordered mb-0 mt-0 py-0 is-fullwidth is-hoverable is-striped is-narrow is-hoverable" width="100%">                
+                <tr>
+                    <td>   
+                        Backlog: &nbsp;<input type="text" name="backlog_item" size="60">
+                        &nbsp;
+                        <select name="backlog_item_type" id="">
+                            <option value="">Theme</option>
+                            <option value="">Epic</option>
+                            <option value="">Feature</option>
+                            <option value="">Component</option>
+                            <option value="">UserStory</option>
+                            <option value="">Spike</option>
+                            <option value="">Task</option>
+                            <option value="">Outcome</option>
+                            <option value="">Milestone</option>
+                        </select>&nbsp;
+                        <input type="submit" name="add" value="Add"/>
+                    </td>
+                    <td class="" width="20%">
+                        Primary Information
+                    </td>
+                    <td  width="20%">
+                        Secondary Information
+                    </td>
+                </tr>
+            </table>
+            <table class="table is-bordered mt-0" width="100%">                
+                <tr>
+                    <td>   
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-*">
+            {% if backlogs %}
+                <h2>Backlog List:</h2>
+                <ul>
+                    {% for backlog in backlogs %}
+                        <li>{{ backlog.title }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No Backlogs found for this project.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column is-* has-text-left  is-paddingless is-marginless mx-2">
+            <table class="table is-bordered mb-0 mt-0 py-0" width="100%">                
+                <tr>
+                    <td>   
+                        Backlog: &nbsp;<input type="text" name="backlog_item" size="60">
+                        &nbsp;
+                        <input type="radio" name="Theme" value="theme"/>&nbsp;Theme&nbsp;&nbsp;
+                        <input type="radio" name="Theme" value="theme"/>&nbsp;Epic&nbsp;
+                        <input type="radio" name="Theme" value="theme"/>&nbsp;Feature&nbsp;
+                        <input type="radio" name="Theme" value="theme"/>&nbsp;Component&nbsp;
+                        <input type="radio" name="Theme" value="theme"/>&nbsp;UserStory&nbsp;
+                        <input type="radio" name="Theme" value="theme"/>&nbsp;Spike&nbsp;
+                        <input type="radio" name="Theme" value="theme"/>&nbsp;Task&nbsp;
+                        <input type="radio" name="Theme" value="theme"/>&nbsp;Outcome&nbsp;
+                        <input type="radio" name="Theme" value="theme"/>&nbsp;Milestone&nbsp;
+                        
+                        <input type="submit" name="add" value="Add"/>
+                    </td>
+                  
+                </tr>
+            </table>
+            <table class="table is-bordered mt-0" width="100%">                
+                <tr>
+                    <td>   
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</form>
+</div>
+
+{% include '../../../../5.footer.html' %}
+{% endblock content %}

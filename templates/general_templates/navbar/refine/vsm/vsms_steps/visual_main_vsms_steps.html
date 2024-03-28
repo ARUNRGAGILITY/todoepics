@@ -1,0 +1,276 @@
+{% extends "base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}VSMS Steps Visual{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+{% include '../../../../../1.toplevel.html' %}
+{% include '../../../../../2.navbar.html' %}
+<style>
+    #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+    #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+    #sortable li span { position: absolute; margin-left: -1.3em; }
+    </style>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+$( function() {
+  
+  $(".show_hide_details").click(function (event) {
+        var checkbox_data = $(this).attr('id');
+        var checkbox_this = $(this);
+        if ($(this).prop('checked')==true){ 
+          //alert("show");
+          $('td:nth-child(1),th:nth-child(1)').show();
+            $('td:nth-child(2),th:nth-child(2)').show();
+            $('td:nth-child(3),th:nth-child(3)').show();
+            $('td:nth-child(4),th:nth-child(4)').show();
+            $('td:nth-child(5),th:nth-child(5)').show();
+            $('td:nth-child(6),th:nth-child(6)').show();
+            $('td:nth-child(7),th:nth-child(7)').show();
+            $('td:nth-child(8),th:nth-child(8)').show();
+            $('td:nth-child(9),th:nth-child(9)').show();
+            $('td:nth-child(10),th:nth-child(10)').show();
+            $('td:nth-child(11),th:nth-child(11)').show();
+        } else {
+            $('td:nth-child(1),th:nth-child(1)').show();
+            $('td:nth-child(2),th:nth-child(2)').show();
+            $('td:nth-child(3),th:nth-child(3)').show();
+            $('td:nth-child(4),th:nth-child(4)').show();
+            $('td:nth-child(5),th:nth-child(5)').show();
+            $('td:nth-child(6),th:nth-child(6)').show();
+            $('td:nth-child(7),th:nth-child(7)').hide();
+            $('td:nth-child(8),th:nth-child(8)').hide();
+            $('td:nth-child(9),th:nth-child(9)').hide();
+            $('td:nth-child(10),th:nth-child(10)').hide();
+            $('td:nth-child(11),th:nth-child(11)').show();
+            $('td:nth-child(12),th:nth-child(12)').show();
+            $('td:nth-child(13),th:nth-child(13)').show();
+        }
+  });
+  // sorted list  
+  $( "#sortable" ).sortable({
+      stop: function(event, ui) {
+        var serialOrder = $('#sortable').sortable('serialize');
+        var arrayOrder = $('#sortable').sortable('toArray');
+        $.ajax({
+          url: '/web/sorted_vsms_steps',
+          type: 'POST',
+          data : {
+            'csrfmiddlewaretoken': "{{ csrf_token }}",
+            'sorted_list_data': JSON.stringify(arrayOrder)
+          },
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+          }
+        });
+         $(this).find('tr').each(function(i){
+            $(this).children('td:second').text(i+1);
+        });
+      }
+  });
+  $( "#sortable" ).sortable();
+  $( "#sortable" ).disableSelection();
+});
+</script>
+
+<form action="{% url 'ops_vsms_steps' %}" name="" method="POST">
+{% csrf_token %}
+<div class="container-fluid ">
+    <div class="row mx-0 my-1">
+        <div class="col-md-12 mx-0 d-flex justify-content-start" style="background-color: lightblue;">
+        <b>Value Stream Mapping :: Visual representation</b>  
+        &nbsp;
+        <a href="{% url 'list_nextset_vsms' vsm_parent %}"> {{ main_vsm.title }} </a>
+        </div>
+    </div>
+    <div class="row mx-0 my-1">
+        <div class="col-md-6 d-flex justify-content-start  align-items-center">
+            <b>{{ main_vsm.title }} :: {{main_vsm.workitemtype}} </b> 
+            &nbsp;Steps 
+        </div>
+        <div class="col-md-6 d-flex justify-content-end align-items-center">
+          
+            <a href="{% url 'add_vsms_steps' main_vsm.id %}"> Add Step </a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'main_vsms_steps' vsm_id %}"> List Steps </a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'list_nextset_vsms' vsm_parent %}"> {{ main_vsm.title }} </a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_vsm' %}" class="">List VSM(s)</a>           
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'restore_vsms_steps' %}">
+                Restore
+            </a>
+            &nbsp;&nbsp;
+        </div>
+    </div>
+</form>
+    <div class="container-fluid-width ">
+        <div class="row">            
+            <div class="col-md-9 d-flex justify-content-center">
+                <div class="container-fluid">
+                    {% for row in rows %}
+                    <div class="row">
+                        {% for record in row %}   
+                        {% if forloop.first or forloop.parentlo.plast %}
+                            {% if forloop.counter0 == 0 %}
+                                {% if not forloop.parentloop.first  %}
+                                {% else %}
+                                <div class="col-md-1 d-flex align-items-center justify-content-center">
+                                    
+                                </div>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                        {% if not forloop.parentloop.first  %}
+                            {% if forloop.counter0 == 0 %}
+                            <div class="col-md-1 d-flex align-items-center justify-content-center">
+                                <img width='100px' height='60px' 
+                                src="{% static 'img/right-arrow1.png' %}" class="" alt="" class=""> 
+                            </div>
+                            {% endif %}
+                        {% endif %}            
+                        <div class="col-md-2 div_box my-4">
+                            {{ record }}
+                            <div class="role_box">
+                                {{record.role}}
+                            </div>
+                            <div class="details_box ">
+                                PT:{{record.value_time}}
+                                <br>
+                                LT:{{record.non_value_time}}
+                                <br>
+                                %CA:{{record.percentage_accurate}}
+                            </div>
+                        </div>
+                        {% if not forloop.last %}
+                            <div class="col-md-1 d-flex align-items-center justify-content-center">
+                                <img width='100px' height='60px' 
+                                src="{% static 'img/right-arrow1.png' %}" class="" alt="" class=""> 
+                            </div>
+                        {% endif %}                                
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>        
+            </div>
+            <div class="col-md-3 d-flex justify-content-start">
+                <div class="container-fluid-width">
+                    <div class="row">
+                        <div class="col-md-10 d-flex justify-content-start">
+                            <table class="table table-bordered table-striped">
+                                <tr>
+                                    <td>
+                                        <b>{{vsms_info_obj.vsms}} Value Stream Details</b>
+                                        <br>
+                                        <font size="-1">{{vsms_info_obj.vsms.description}}</font>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Total PT = {{vsms_info_obj.total_value_time}}</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Total LT = {{vsms_info_obj.end_to_end_time}}</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Activity Ratio = {{vsms_info_obj.organization_efficiency}} %</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Rolled %C&A = {{vsms_info_obj.rolled_ca}} %</b>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function checkUncheck(checkBox) {
+        get = document.getElementsByName('product_box');
+        for(var i=0; i<get.length; i++) {
+            get[i].checked = checkBox.checked;
+        }
+    }
+    
+
+    </script>
+{% else%}
+    {% include 'GUEST_USER.html' %}
+{% endif %}
+
+{% endblock content %}
+
+<!--
+    save the table 
+            sample1 
+                <table>
+                    {% for row in rows %}
+                        <tr>
+                            {% for record in row %}
+                                {% if not forloop.first and not forloop.parentloop.last %}
+                                    <td>Connect Arrow</td>
+                                {% endif %}
+                                <td>{{ record }}</td>
+                                {% if not forloop.last %}
+                                    <td>Arrow</td>
+                                {% endif %}                                
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+                working version 1
+                <div class="container-fluid">
+                    {% for row in rows %}
+                    <div class="row">
+                        {% for record in row %}   
+                        {% if forloop.first or forloop.parentlo.plast %}
+                            {% if forloop.counter0 == 0 %}
+                                {% if not forloop.parentloop.first and not forloop.parentloop.last %}
+                                {% else %}
+                                no arrow
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+
+
+                        {% if not forloop.parentloop.first and not forloop.parentloop.last %}
+                            {% if forloop.counter0 == 0 %}
+                            connect arrow
+                            {% endif %}
+                        {% endif %}            
+                        <div class="col-md-2 div_box my-3">
+                            {{ record }}
+                            <div class="details_box">
+                                PT:{{record.value_time}}
+                                <br>
+                                LT:{{record.non_value_time}}
+                                <br>
+                                %CA:{{record.percentage_accurate}}
+                            </div>
+                        </div>
+                        {% if not forloop.last %}
+                            <div class="col-md-1 d-flex align-items-center justify-content-center">
+                                <img width='100px' height='60px' 
+                                src="{% static 'img/right-arrow.svg' %}" class="" alt="" class=""> 
+                            </div>
+                        {% endif %}                                
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>        
+            </div>
+-->

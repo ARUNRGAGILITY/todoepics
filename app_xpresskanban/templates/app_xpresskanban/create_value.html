@@ -1,0 +1,69 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}User Home Page{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    <div class="row my-2">
+        <div class="col-md-12 d-flex justify-content-start">
+            <a href="/">Home</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;  
+            <a href="{% url 'kanban_home' %}">Kanban Home</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;    
+            <a href="{% url 'list_values' 'Organization' %}">Organization</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;            
+            <a href="{% url 'user_mgmt_home'  %}">User/Group Management</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Templates            
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Measure/Metrics
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Kanban Settings
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            User Settings
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% if value_type == 'Team' %}
+            {% include 'app_xpresskanban/_value_team.html' %}
+            {% else %}
+            {% include 'app_xpresskanban/_value_ppssvs.html' %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}
+
+<!--
+
+    <table>
+                <tr>
+                    <th>Create Value with Delivery Models and Kanban System</th>
+                </tr>
+                <tr>
+                    <td>Lead and Manage Projects with Kanban System designed to pull work</td>
+                    <td><a href="" class="btn btn-sm btn-primary text-white">Project</a></td>
+                </tr>
+                <tr>
+                    <td>Deliver value by managing product flow  </td>
+                    <td><a href="" class="btn btn-sm btn-primary text-white">Product</a></td>
+                </tr>                
+                <tr>
+                    <td>Deliver high-quality services via Kanban Systems  </td>
+                    <td><a href="" class="btn btn-sm btn-primary text-white">Service</a></td>
+                </tr>
+                <tr>
+                    <td>Develop and Deliver continuously Solutions that has consumer appreciated, market-fit and fit-for-purpose </td>
+                    <td><a href="" class="btn btn-sm btn-primary text-white">Solution</a></td>
+                </tr>
+                <tr>
+                    <td>Continuously improve Value of the Organization by Value Stream Visualization with Connnected Kanban</td>
+                    <td><a href="" class="btn btn-sm btn-primary text-white">Value-Stream</a></td>
+                </tr>
+            </table>
+-->

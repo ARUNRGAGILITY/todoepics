@@ -1,0 +1,82 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Add Product{% endblock title %} 
+{% block content %}
+{% include '../../../../1.toplevel.html' %}
+{% include '../../../../2.navbar.html' %}
+<div class="container-fluid mx-2 ">
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-start  align-items-center">
+            <b>{{product.title}} VSM's HomePage</b>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 d-flex justify-content-start  align-items-center">
+            <b>Homepage</b>    
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_vsm' %}">Summary</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_vsm' %}">Visual-Board</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_vsm' %}">Timeline</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_vsm' %}">Release</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_vsm' %}">Issues</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;      
+            <a href="{% url 'navbar_vsm' %}">Reports</a>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end align-items-center">            
+            &nbsp;&nbsp;
+            <a href="{% url 'add_vsm' %}" class="">Add New VSM</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_vsm' %}">
+                List VSMs
+            </a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'restore_vsms' %}">
+                Restore
+            </a>
+        </div>
+    </div>
+    <form action="" method='POST' class='form'>
+        {% csrf_token %}   
+
+    </form>
+    <div class="row">
+        <div class="col-md-12 d-flex align-items-center justify-content-center">
+            <b>Organization's Value Stream</b>                
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 d-flex align-items-center justify-content-center">
+            <p>Now, using this Value Stream Concept, you define the organization's value-streams that are different
+                types, like Business Value-Stream, Operational Value-Stream, Delivery Value-Stream, 
+                Team Value-Stream. 
+            </p>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 d-flex align-items-center justify-content-center">
+            <p>You may define a custom type by using the VSM Template / Template definition.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 d-flex align-items-center justify-content-center">
+            <a href="{% url 'list_nextset_vsms' backlog.id %}" class="btn btn-primary">
+                Click here to Start: {{backlog}}</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 d-flex align-items-center justify-content-center">
+            <img width='600px' height='300px' 
+                src="{% static 'img/vsm_intro_image1.png' %}" class="" alt="" class=""> 
+        </div>
+    </div>
+   
+</div>
+
+{% include '../../../../5.footer.html' %}
+{% endblock content %}

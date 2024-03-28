@@ -13,7 +13,7 @@ urlpatterns = [
     # TodoEpics
     path('todoepics/', include('app_todoepics.urls')),
     ## imported xpresskanban
-
+    path('kanban/', include('app_xpresskanban.urls')),
     # markdown
     path('markdownx/', include('markdownx.urls')), 
 ]

@@ -1,0 +1,396 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}{{value_type}}'s Backlog {% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 d-flex justify-content-center align-items-center">
+            <b class="h1">{{value_type|capfirst}} Home Page</b>&nbsp;&nbsp;
+            &nbsp;&nbsp;<a href="{% url 'kanban_home' %}">Kanban Home</a>
+            &nbsp;&nbsp;
+            &nbsp;&nbsp;<a href="/">Home</a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>   
+    <div class="row">
+        <div class="col-md-12">
+            <style>
+                /* ---- RESET/BASIC STYLING ---- */
+            * {
+              padding: 0;
+              margin: 0;
+              box-sizing: border-box;
+              font-family: sans-serif;
+            
+            }
+            
+            
+            
+            
+            /* ---- FORM ---- */
+            #todo-form {
+       
+            }
+            
+            /* ---- BOARD ---- */
+            .lanes {
+              display: flex;
+              align-items: flex-start;
+              justify-content: start;
+              gap: 16px;
+            
+              padding: 24px 32px;
+            
+              height: 100%;
+            }
+            
+            .heading {
+              font-size: 22px;
+              font-weight: bold;
+              margin-bottom: 8px;
+            }
+            
+            .swim-lane {
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
+              overflow-y: scroll;
+              padding: 12px;
+              border-radius: 4px;
+              width: 225px;
+              min-height: 120px;
+              height: 400px;
+              flex-shrink: 0;
+              border: 1px solid black;
+            }
+            
+            .task {
+              background: yellow;
+              color: black;
+              
+              padding: 12px;
+              border-radius: 4px;
+            
+              font-size: 16px;
+              cursor: move;
+            
+              word-wrap: break-word;
+              white-space: normal;
+            }
+            
+            .button {
+              background: yellow;
+              color: black;
+            
+              padding: 4px;
+              border-radius: 2px;
+            
+              font-size: 16px;
+              cursor: move;
+            }
+            
+            .is-dragging {
+              scale: 1.05;
+              background: rgb(50, 50, 50);
+              color: white;
+            }
+            .sticky_notes {
+              margin: 2px;
+              margin-left: 25px;
+              padding: 2px;
+            }
+            
+            .inner-task {
+              position: relative;
+              padding: 2px;
+              bottom: -18px;
+              color: white;
+              background-color: orange;
+            }
+            
+            .post_it1 {
+                width: 100px;
+                height: 100px;
+                background-color: yellow;
+                padding: 10px;
+                cursor: grab;
+              }
+              .post_it2 {
+                width: 100px;
+                height: 100px;
+                background-color: yellow;
+                padding: 10px;
+                cursor: grab;
+              }
+            
+              .post_it3 {
+                width: 100px;
+                height: 100px;
+                background-color: yellow;
+                padding: 10px;
+                cursor: grab;
+              }
+            
+              .post_it4 {
+                width: 100px;
+                height: 100px;
+                background-color: yellow;
+                padding: 10px;
+                cursor: grab;
+              }
+            
+              .post_it5 {
+                width: 100px;
+                height: 100px;
+                background-color: yellow;
+                padding: 10px;
+                cursor: grab;
+              }
+            
+            
+              .t1 {
+                background-color: yellow;
+              }
+              .t2 {
+                background-color: skyblue;
+              }
+              .t3 {
+                background-color: palegoldenrod;
+              }
+              .t4 {
+                background-color: yellowgreen;
+              }
+               </style>
+              </head>
+              <body>
+                <div class="board">
+                 
+                  <div class="sticky_notes">
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6 d-flex justify-content-end align-items-center">
+                                <form id="todo-form">
+                                    <input type="text" size="50" placeholder="New TODO..." id="todo-input" />
+                                    &nbsp;&nbsp;
+                                    <button type="submit">Add</button>
+                                    &nbsp;&nbsp;
+                                    <button type="reset">Clear</button>
+                                  </form>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-start align-items-center">
+                                &nbsp;&nbsp;
+                                <div class="task t1" draggable="false">Office</div>
+                                &nbsp;&nbsp;
+                                <div class="task t2" draggable="false">Personal</div>
+                                &nbsp;&nbsp;
+                                <div class="task t3" draggable="false">Learning</div>
+                                &nbsp;&nbsp;
+                                <div class="task t4" draggable="false">Team</div>
+                            </div>
+                        </div>
+                    </div>                    
+                  </div>
+                  
+                  <div class="lanes">
+                    <div class="swim-lane" id="todo-lane">
+                      <b class="">TODO <span class="task-count">0</span></b>                     
+                    </div>
+            
+                    <div class="swim-lane">
+                      <h3 class="heading">Doing</h3>
+                    </div>
+                    <div class="swim-lane">
+                      <h3 class="heading">Blocked</h3>                      
+                    </div>
+                   
+                    <div class="swim-lane">
+                      <h3 class="heading">Done</h3>   
+                    </div>
+                  </div>
+                </div>
+                <script>
+                // ===============================================================//
+                
+                const form = document.getElementById("todo-form");
+            const input = document.getElementById("todo-input");
+            input.focus();
+            const todoLane = document.getElementById("todo-lane");
+            const taskCountDisplay = document.getElementById('task-count');
+
+            // Function to update the task count
+            function updateTaskCount() {
+            const taskCount = swimLane.querySelectorAll('.task').length;
+            taskCountDisplay.textContent = taskCount;
+            }
+
+
+            // Define the function to handle the cloning and event listeners
+            // Define the function to handle the cloning, event listeners, and contentEditable
+            function setupDraggableAndEditableElement(element) {
+              element.addEventListener('mousedown', (e) => {
+                const clone = element.cloneNode(true);
+            
+                clone.style.cursor = 'grabbing';
+                clone.textContent = input.value;
+                input.value = '';
+            
+                // adding the next level details
+                // Create a new inner div element
+                const innerDiv = document.createElement("div");
+                innerDiv.setAttribute("contenteditable", "false");
+                innerDiv.classList.add("inner-task"); // You can add a class for styling if needed
+                innerDiv.innerText = ""; // Set the inner content of the inner div
+            
+                // Create an anchor link
+                const anchorLink = document.createElement("a");
+                anchorLink.href = "https://www.example.com"; // Replace with your desired URL
+                anchorLink.textContent = "View Details"; // Text for the link
+            
+                // Append the anchor link to the inner div
+                innerDiv.appendChild(anchorLink);
+            
+                // Append the inner div to the newTask div
+                clone.appendChild(innerDiv);
+            
+                updateTaskCount();
+            
+            
+                clone.classList.add("task");
+                clone.setAttribute("draggable", "true");
+            
+                clone.addEventListener("dragstart", () => {
+                  clone.classList.add("is-dragging");
+                });
+            
+                clone.addEventListener("dragend", () => {
+                  clone.classList.remove("is-dragging");
+                });
+            
+                clone.addEventListener("dblclick", () => {
+                  clone.contentEditable = true;
+                  clone.focus();
+                });
+            
+                clone.addEventListener("blur", () => {
+                  clone.contentEditable = false;
+                });
+            
+                todoLane.appendChild(clone);
+              });
+            }
+            
+            // Select and set up each element with a different class
+            const elements = document.querySelectorAll('.t1, .t2, .t3, .t4'); // Add more class selectors as needed
+            
+            
+            elements.forEach((element) => {
+              setupDraggableAndEditableElement(element);
+            });
+            
+            
+            form.addEventListener("submit", (e) => {
+              e.preventDefault();
+              const value = input.value;
+              if (!value) return;
+            
+              const newTask = document.createElement("div");
+              newTask.classList.add("task");
+              newTask.setAttribute("draggable", "true");
+              newTask.setAttribute("contenteditable", "true");
+              newTask.innerText = value;
+              input.focus();
+              // Create a new inner div element
+            const innerDiv = document.createElement("div");
+            innerDiv.setAttribute("contenteditable", "false");
+            innerDiv.classList.add("inner-task"); // You can add a class for styling if needed
+            innerDiv.innerText = ""; // Set the inner content of the inner div
+            
+            // Create an anchor link
+            const anchorLink = document.createElement("a");
+            anchorLink.href = "https://www.example.com"; // Replace with your desired URL
+            anchorLink.textContent = "Click me"; // Text for the link
+            
+            // Append the anchor link to the inner div
+            innerDiv.appendChild(anchorLink);
+            
+            // Append the inner div to the newTask div
+            newTask.appendChild(innerDiv);
+            input.focus();
+            
+            
+              newTask.addEventListener("dragstart", () => {
+                newTask.classList.add("is-dragging");
+              });
+            
+              newTask.addEventListener("dragend", () => {
+                newTask.classList.remove("is-dragging");
+              });
+            
+              todoLane.appendChild(newTask);
+            
+              input.value = "";
+              input.focus();
+            });
+                </script>
+                <script>
+                  const draggables = document.querySelectorAll(".task");
+            const droppables = document.querySelectorAll(".swim-lane");
+            
+            draggables.forEach((task) => {
+              task.addEventListener("dragstart", () => {
+                task.classList.add("is-dragging");
+              });
+              task.addEventListener("dragend", () => {
+                task.classList.remove("is-dragging");
+              });
+            });
+            
+            droppables.forEach((zone) => {
+              zone.addEventListener("dragover", (e) => {
+                e.preventDefault();
+            
+                const bottomTask = insertAboveTask(zone, e.clientY);
+                const curTask = document.querySelector(".is-dragging");
+            
+                if (!bottomTask) {
+                  zone.appendChild(curTask);
+                } else {
+                  zone.insertBefore(curTask, bottomTask);
+                }
+              });
+            });
+            
+            const insertAboveTask = (zone, mouseY) => {
+              const els = zone.querySelectorAll(".task:not(.is-dragging)");
+            
+              let closestTask = null;
+              let closestOffset = Number.NEGATIVE_INFINITY;
+            
+              els.forEach((task) => {
+                const { top } = task.getBoundingClientRect();
+            
+                const offset = mouseY - top;
+            
+                if (offset < 0 && offset > closestOffset) {
+                  closestOffset = offset;
+                  closestTask = task;
+                }
+              });
+            
+              return closestTask;
+            };
+            
+            
+            
+                </script>
+        </div>
+    </div>
+</div>
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

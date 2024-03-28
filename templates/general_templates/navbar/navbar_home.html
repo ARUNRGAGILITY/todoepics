@@ -1,0 +1,57 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Dev Home{% endblock title %} 
+{% block content %}
+{% include '../../1.toplevel.html' %}
+{% include '../../2.navbar.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 bg-primary d-flex justify-content-center mb-2">
+            <b class="text-white">Home</b>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 bg-light d-flex justify-content-center">
+            <p class="has-text-weight-bold  ">
+                Software for Agilists, Organization Leaders &amp; Managers.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center">
+            <img height="400" width="800"
+              src="{% static 'img/PPSS_image1.png' %}" class="" alt="" class="">       
+           </div>         
+    </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center">
+            <p>Achieve Agility by embracing change and adopting agile ways-of-working.</p>
+        
+        </div>
+    </div>
+</div>
+{% include '5.footer.html' %}
+{% endblock content %}
+<!-- 
+
+         <br>
+            Agile SSRT is an Open-Source Software/Solution/Product/Service/Project Initiative to support
+                Organization's Transformation initiatives.
+                You can utilize this web application as a stand-alone installation on your computer, office network free.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center">
+            Main Features of this Agile Software are:
+            <ul class="ul_list">
+             <li>Individual Todo List (ITL)</li>
+             <li>Team Collaboration Software (TCS)</li>
+             <li>Project/Product/Service/Solution Management Software (PMS)</li>
+             <li>Agile@Scale Framework (ATF)</li>
+             <li>Measurement, Metrics, Assessment, Knowledge Base</li>
+             <li>Learning &amp; Training Portal</li>
+            </ul>
+        </div>
+    </div>
+          
+-->

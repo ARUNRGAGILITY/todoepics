@@ -1,0 +1,25 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Learn Agile{% endblock title %} 
+{% block content %}
+{% include '../../../1.toplevel.html' %}
+{% include '../../../2.navbar.html' %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>{{page}}</h1>
+            <p>Agile is a mindset, based on values and principles 
+                and implemented via practices which reflects Iterative/Flow, 
+                Incremental value delivery and adaptive approach to learn from short 
+                feedback cycles.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <img width='800' height='450' 
+          src="{% static 'img/agile_image1.png' %}" class="" alt="" class="">     
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

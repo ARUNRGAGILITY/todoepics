@@ -1,0 +1,22 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}{{value_type}} Bulk Ops View{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <a href="{% url 'table_view' value_type object.id item.id %}">Board :: Table View</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <h5>Bulk Operations on {{value_type}} :: {{item.title}} (s)</h5>
+            {% for id in selected_project_ids %}
+                <b>{{value_type}} ID: {{id}}</b><br>
+            {% endfor %}
+            <p>has been {{bulk_ops}}.</p>
+        </div>
+    </div>
+</div>
+{% endblock content %}

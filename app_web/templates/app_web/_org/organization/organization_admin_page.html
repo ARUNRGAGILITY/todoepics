@@ -82,6 +82,27 @@
                 </div>
             </div>
         </div>
+       
+       
+    </div>
+    <div class="row">
+        <div class="col col-md-3">
+            <div class="box1">
+                <div class="header1">
+                    Members
+                </div>
+                <div class="body1">
+                    <img src="{% static 'img/new_icons/person.png' %}" alt="">
+                    <br>
+                    <a href="{% url 'organization_wbs_page' organization.id %}">
+                        Members
+                    </a>
+                </div>
+                <div class="footer1">
+                    Create Members for your organization.
+                </div>
+            </div>
+        </div>
         <div class="col col-md-3">
             <div class="box1">
                 <div class="header1">
@@ -102,25 +123,6 @@
         <div class="col col-md-3">
             <div class="box1">
                 <div class="header1">
-                    Members
-                </div>
-                <div class="body1">
-                    <img src="{% static 'img/new_icons/person.png' %}" alt="">
-                    <br>
-                    <a href="{% url 'organization_wbs_page' organization.id %}">
-                        Members
-                    </a>
-                </div>
-                <div class="footer1">
-                    Create Members for your organization.
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col col-md-3">
-            <div class="box1">
-                <div class="header1">
                     Groups
                 </div>
                 <div class="body1">
@@ -136,6 +138,15 @@
             </div>
         </div>
         <div class="col col-md-3">
+           
+        </div>
+    </div>
+
+    <!-- row -->
+    <div class="row">
+
+        <div class="col col-md-3">
+
             <div class="box1">
                 <div class="header1">
                     Delivery Structure
@@ -152,6 +163,71 @@
                 </div>
             </div>
         </div>
+
+        <div class="col col-md-3">
+
+            <div class="box1">
+                <div class="header1">
+                    Workflow Structure
+                </div>
+                <div class="body1">
+                    <img src="{% static 'img/new_icons/flowchart.png' %}" alt="">
+                    <br>
+                    <a href="{% url 'type_home'  %}">
+                        Workflow Structure
+                    </a>
+                </div>
+                <div class="footer1">
+                    Create Workflow Structure for your organization.
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="col col-md-3">
+
+            <div class="box1">
+                <div class="header1">
+                    Timeline Structure
+                </div>
+                <div class="body1">
+                    <img src="{% static 'img/new_icons/flowchart.png' %}" alt="">
+                    <br>
+                    <a href="{% url 'type_home'  %}">
+                        Timeline Structure
+                    </a>
+                </div>
+                <div class="footer1">
+                    Create Timeline Structure for your organization.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col col-md-3">
+
+            <div class="box1">
+                <div class="header1">
+                    Release Structure
+                </div>
+                <div class="body1">
+                    <img src="{% static 'img/new_icons/flowchart.png' %}" alt="">
+                    <br>
+                    <a href="{% url 'type_home'  %}">
+                        Release Structure
+                    </a>
+                </div>
+                <div class="footer1">
+                    Create Release Structure for your organization.
+                </div>
+            </div>
+        </div>
+
+      
+        
+        
+       
     </div>
 
 

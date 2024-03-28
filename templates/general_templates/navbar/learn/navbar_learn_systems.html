@@ -1,0 +1,14 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Learn Systems{% endblock title %} 
+{% block content %}
+{% include '../../../1.toplevel.html' %}
+{% include '../../../2.navbar.html' %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>{{page}}</h1>
+        </div>
+    </div>
+</div>
+{% endblock content %}

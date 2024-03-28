@@ -1,0 +1,306 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}User Home Page{% endblock title %} 
+{% block content %}
+<style>
+    .vc {
+        vertical-align: center;
+    }
+    .vt {
+        vertical-align: top;
+    }
+</style>
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    <div class="row my-2">
+        <div class="col-md-12 d-flex justify-content-start">
+            <a href="/">Home</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;  
+            <a href="{% url 'kanban_home' %}">Kanban Home</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;    
+            <a href="{% url 'list_values' 'Organization' %}">Organization</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;            
+            <a href="{% url 'user_group_mgmt_home'  %}">User/Group Management</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Templates            
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Measure/Metrics
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Kanban Settings
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            User Settings
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered" style="border: 4px solid lightgrey;">
+                <tr >
+                    <th colspan="3">
+                        <b class="h5">Welcome to Kanban Home page, here you can practice and implement Kanban.</b>
+                        <br>
+                       <b class="h6" style="font-size: 12px;"> A three step process to guide you in 
+                        creating Kanban Systems for Delivering Value quicker and improve holistically.</b>
+                    </th>
+                </tr>
+                <tr style="font-size: 14px;">
+                    <td class="bg-primary text-white">
+                        <b>Step1: Setting the Business Context</b>
+                    </td>
+                    <td class="bg-info text-white">
+                        <b>Step2: Establising the Delivery Model for Value Delivery</b>
+                    </td>
+                    <td class="bg-success text-white">
+                        <b>Step3:  Create/Configure Kanban System and apply Kanban Practices</b>
+                    </td>
+                </tr>                
+                <tr style="font-size: 14px;">
+                    <td class="vt">
+                        <b>Create/Choose an Organization or Client:</b>
+                    </td>
+                    <td class="vt">
+                        <b>Create or Choose an existing Delivery Model:</b>
+                    </td>
+                    <td class="vt">
+                        <b>Configure the Delivery Model as per Kanban Practices:</b>
+                    </td>
+                </tr>
+                <tr style="font-size: 12px;">
+                   <th class="vt" width="30%">
+                    <a href="{% url 'add_object' 'Organization' %}" class="btn btn-sm btn-primary">Create Organization/Client</a><br><br>
+                    <a href="{% url 'list_values' 'Organization' %}" class="btn btn-sm btn-primary">List Organization/Client</a><br>
+                   </th>
+                   <th class="vt"  width="30%">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Project</td>
+                            <td>
+                                <a href="{% url 'add_object' 'Project' %}" class="btn btn-sm btn-primary">
+                                    Create Project
+                                </a>
+                            </td>
+                            <td><a href="{% url 'list_values' 'Project' %}" class="btn btn-sm btn-primary">
+                                List Projects
+                            </a></td>
+                        </tr>
+                        <tr>
+                            <td>Product</td>
+                            <td>
+                                <a href="{% url 'add_object' 'Product' %}" class="btn btn-sm btn-primary">
+                                    Create Product
+                                </a>
+                            </td>
+                            <td><a href="{% url 'list_values' 'Product' %}" class="btn btn-sm btn-primary">
+                                List Products
+                            </a></td>
+                        </tr>
+                        <tr>
+                            <td>Service</td>
+                            <td>
+                                <a href="{% url 'add_object' 'Service' %}" class="btn btn-sm btn-primary">
+                                    Create Service
+                                </a>
+                            </td>
+                            <td><a href="{% url 'list_values' 'Service' %}" class="btn btn-sm btn-primary">
+                                List Service
+                            </a></td>
+                        </tr>
+                        <tr>
+                            <td>Solution</td>
+                            <td>
+                                <a href="{% url 'add_object' 'Solution' %}" class="btn btn-sm btn-primary">
+                                    Create Solution
+                                </a>
+                            </td>
+                            <td><a href="{% url 'list_values' 'Solution' %}" class="btn btn-sm btn-primary">
+                                List Solutions
+                            </a></td>
+                        </tr>
+                        <tr>
+                            <td>ValueStream</td>
+                            <td>
+                                <a href="{% url 'add_object' 'ValueStream' %}" class="btn btn-sm btn-primary">
+                                    Create ValueStream
+                                </a>
+                            </td>
+                            <td><a href="{% url 'list_values' 'ValueStream' %}" class="btn btn-sm btn-primary">
+                                List ValueStreams
+                            </a></td>
+                        </tr>
+                        <tr>
+                            <td>Team</td>
+                            <td>
+                                <a href="{% url 'add_object' 'Team' %}" class="btn btn-sm btn-primary">
+                                    Create Team
+                                </a>
+                            </td>
+                            <td><a href="{% url 'list_values' 'Team' %}" class="btn btn-sm btn-primary">
+                                List Teams
+                            </a></td>
+                        </tr>
+                    </table>
+                   </th>
+                   <th class="vt"  width="40%">
+                    
+                    <ul>
+                        <li>
+                            Create Kanban Board
+                        </li>
+                        <li>
+                            Configure Columns (Steps / Workflow / Flow of Value)
+                        </li>
+                        <li>
+                            Configure the Work-in-Progress / Capacity Limits
+                        </li>
+                        <li>
+                            Configure Swimlanes / Classes-of-Service
+                        </li>
+                        <li>
+                            Visualize the Flow and click to move card
+                        </li>
+                        <li>
+                            Use the Table view to modify, delete cards
+                        </li>
+                    </ul>
+                    <img width="80%" height="80%"
+                    src="{% static 'img/lean/kanban_logotype2.png' %}" class="" alt="Kanban" class="">
+                
+                   </th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!--
+    <div class="row">        
+        <div class="col-md-12">          
+            <table class="table table-bordered">
+                <tr>
+                    <th colspan="5">
+                        Welcome to Kanban Home page, here you can practice and implement Kanban.
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="1">Value</th>
+                    <th colspan="1">Delivery Model</th>
+                    <th>Description</th>
+                    <th>Create New</th>
+                    <th>List Existing</th>
+                </tr>
+                <tr class="" style="justify-content: center;">
+                    <td>
+                        <img
+                        src="{% static 'img/icons/projectic.png' %}" class="" alt="Kanban" class="">
+                    </td>
+                    <td class="vc">
+                        <b>Project</b>
+                    </td>
+                    <td>
+                        Lead and Manage in real-time Projects 
+                    </td>
+                    <td>
+                        <a href="{% url 'add_object' 'Project' %}" 
+                        class="btn btn-sm btn-primary text-white">Create Project</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'list_values' 'Project' %}" 
+                        class="btn btn-sm btn-primary text-white">List Projects</a>
+                    </td>
+                </tr>
+
+
+                <tr class="" style="justify-content: center;">
+                    <td>
+                        <img
+                        src="{% static 'img/icons/productic.png' %}" class="" alt="Kanban" class="">
+                    </td>
+                    <td class="vc">
+                        <b>Product</b>
+                    </td>
+                    <td class="vc">
+                        Deliver value by managing product flow  
+                    </td>
+                    <td class="vc">
+                        <a href="{% url 'add_object' 'Product' %}" 
+                        class="btn btn-sm btn-primary text-white">Create Product</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'list_values' 'Product' %}" 
+                        class="btn btn-sm btn-primary text-white">List Products</a>
+                    </td>
+                </tr>
+
+
+                <tr class="" style="justify-content: center;">                    
+                    <td>
+                        <img
+                        src="{% static 'img/icons/serviceic.png' %}" class="" alt="Kanban" class="">
+                    </td>
+                    <td class="vc">
+                        <b>Service</b>
+                    </td>
+                    <td class="vc">
+                        Deliver high-quality services via Kanban Systems  
+                    </td>
+                    <td>
+                        <a href="{% url 'add_object' 'Service' %}" 
+                        class="btn btn-sm btn-primary text-white">Create Service</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'list_values' 'Service' %}" 
+                        class="btn btn-sm btn-primary text-white">List Services</a>
+                    </td>
+                </tr>
+
+
+                <tr class="" style="justify-content: center;">                    
+                    <td>
+                        <img
+                        src="{% static 'img/icons/solutionic.png' %}" class="" alt="Kanban" class="">
+                    </td>
+                    <td class="vc">
+                        <b>Solution</b>
+                    </td>
+                    <td class="vc">
+                        Develop and Deliver continuously Solutions that has consumer appreciated, market-fit and fit-for-purpose 
+                    </td>
+                    <td>
+                        <a href="{% url 'add_object' 'Solution' %}" 
+                        class="btn btn-sm btn-primary text-white">Create Solution</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'list_values' 'Solution' %}" 
+                        class="btn btn-sm btn-primary text-white">List Solutions</a>
+                    </td>
+                </tr>
+
+
+                <tr class="" style="justify-content: center;">                    
+                    <td>
+                        <img
+                        src="{% static 'img/icons/valuestreamic.png' %}" class="" alt="Kanban" class="">
+                    </td>
+                    <td class="vc">
+                        <b>ValueStream</b>
+                    </td>
+                    <td class="vc">
+                        Continuously improve Value of the Organization by Value Stream Visualization with Connnected Kanban 
+                    </td>
+                    <td>
+                        <a href="{% url 'add_object' 'ValueStream' %}" 
+                        class="btn btn-sm btn-primary text-white">Create ValueStream</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'list_values' 'ValueStream' %}" 
+                        class="btn btn-sm btn-primary text-white">List ValueStreams</a>
+                    </td>
+                </tr>
+            </table>        
+        </div>
+    </div>
+    -->
+</div>
+{% include '5.footer.html' %}
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}View Product{% endblock title %} 
+{% block content %}
+{% include '../../../../1.toplevel.html' %}
+{% include '../../../../2.navbar.html' %}
+
+<div class="container-fluid mx-2 is-paddingless is-marginless">
+    <div class="columns is-h50">
+        <div class="column has-text-left is-9">
+            <b>View VSM Details</b>
+        </div>
+        <div class="column is-3 has-text-right">
+            <a href="{% url 'edit_vsm' product.id %}">Edit VSM</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp
+            <a href="{% url 'navbar_vsm' %}">VSM List</a>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>VSM ID</b>
+        </div>
+        <div class="column  is-7">
+            {{product.id}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>VSM Name</b>
+        </div>
+        <div class="column  is-7">
+            {{product.title}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>VSM Description</b>
+        </div>
+        <div class="column  is-7">
+            {{product.description}}
+        </div>
+    </div>
+   
+ 
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Created At</b>
+        </div>
+        <div class="column  is-7">
+            {{product.created_at}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Updated At</b>
+        </div>
+        <div class="column  is-7">
+            {{product.updated_at}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Completed At</b>
+        </div>
+        <div class="column  is-7">
+            {{product.completed_at}}
+        </div>
+    </div>
+   
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Backlog Template</b>
+        </div>
+        <div class="column  is-7">
+            {{product.work_item_type}}
+        </div>
+    </div>
+</div>
+{% include '../../../../5.footer.html' %}
+{% endblock content %}

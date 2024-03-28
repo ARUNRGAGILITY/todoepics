@@ -1,0 +1,37 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Edit VSM{% endblock title %} 
+{% block content %}
+{% include '../../../../1.toplevel.html' %}
+{% include '../../../../2.navbar.html' %}
+<form action="" method='POST' class='form'>
+{% csrf_token %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <h6>Edit VSM Details</h6>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'view_vsm' product.id %}">View VSM</a>&nbsp;&nbsp;
+            <a href="{% url 'navbar_vsm' %}">VSM List</a>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            VSM ID: &nbsp;<b>{{product.id}}</b>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            {{form.as_p}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <input type="submit" name="Edit VSM">
+        </div>
+    </div>
+</div>
+{% include '../../../../5.footer.html' %}
+{% endblock content %}

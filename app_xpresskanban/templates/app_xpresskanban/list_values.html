@@ -1,0 +1,295 @@
+{% extends "base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Projects{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}
+{% include '1.mvp_header.html' %}
+<style>
+    #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+    #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+    #sortable li span { position: absolute; margin-left: -1.3em; }
+    </style>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+$( function() {
+  // on load hide the datetime details and show when checkbox selected
+  $('td:nth-child(1),th:nth-child(1)').show();
+  $('td:nth-child(2),th:nth-child(2)').show();
+  $('td:nth-child(3),th:nth-child(3)').show();
+  $('td:nth-child(4),th:nth-child(4)').show();
+  $('td:nth-child(5),th:nth-child(5)').show();
+  $('td:nth-child(6),th:nth-child(6)').hide();
+  $('td:nth-child(7),th:nth-child(7)').hide();
+  $('td:nth-child(8),th:nth-child(8)').hide();
+  $('td:nth-child(9),th:nth-child(9)').hide();
+  $('td:nth-child(10),th:nth-child(10)').hide();
+  $('td:nth-child(11),th:nth-child(11)').hide();
+  $('td:nth-child(12),th:nth-child(12)').hide();
+  $('td:nth-child(13),th:nth-child(13)').hide();
+  $('td:nth-child(14),th:nth-child(14)').show();
+
+  $(".show_hide_details").click(function (event) {
+        var checkbox_data = $(this).attr('id');
+        var checkbox_this = $(this);
+        if ($(this).prop('checked')==true){ 
+          //alert("show");
+            $('td:nth-child(1),th:nth-child(1)').show();
+            $('td:nth-child(2),th:nth-child(2)').show();
+            $('td:nth-child(3),th:nth-child(3)').show();
+            $('td:nth-child(4),th:nth-child(4)').show();
+            $('td:nth-child(5),th:nth-child(5)').show();
+            $('td:nth-child(5),th:nth-child(5)').show();
+            $('td:nth-child(6),th:nth-child(6)').show();
+            $('td:nth-child(7),th:nth-child(7)').show();
+            $('td:nth-child(8),th:nth-child(8)').show();
+            $('td:nth-child(9),th:nth-child(9)').show();
+            $('td:nth-child(10),th:nth-child(10)').show();
+            $('td:nth-child(11),th:nth-child(11)').show();
+            $('td:nth-child(12),th:nth-child(12)').show();
+            $('td:nth-child(13),th:nth-child(13)').show();
+            $('td:nth-child(14),th:nth-child(14)').show();
+        } else {
+            $('td:nth-child(1),th:nth-child(1)').show();
+            $('td:nth-child(2),th:nth-child(2)').show();
+            $('td:nth-child(3),th:nth-child(3)').show();
+            $('td:nth-child(4),th:nth-child(4)').show();
+            $('td:nth-child(5),th:nth-child(5)').show();
+            $('td:nth-child(5),th:nth-child(5)').hide();
+            $('td:nth-child(6),th:nth-child(6)').show();
+            $('td:nth-child(7),th:nth-child(7)').hide();
+            $('td:nth-child(8),th:nth-child(8)').hide();
+            $('td:nth-child(9),th:nth-child(9)').hide();
+            $('td:nth-child(10),th:nth-child(10)').hide();
+            $('td:nth-child(11),th:nth-child(11)').hide();
+            $('td:nth-child(12),th:nth-child(12)').hide();
+            $('td:nth-child(13),th:nth-child(13)').hide();
+            $('td:nth-child(14),th:nth-child(14)').show();
+        }
+  });
+
+
+
+  // sorted list
+  
+   $(".excel_table").find("tbody").sortable({
+    items: "> tr",
+    appendTo: "parent",
+    cancel: "[contenteditable]",
+    update: function(event, ui) {
+        var serialOrder = $('#sortable').sortable('serialize');
+        var arrayOrder = $('#sortable').sortable('toArray');
+        $.ajax({
+          url: '/kanban/sorted/{{value_type}}',
+          type: 'POST',
+          data : {
+            'csrfmiddlewaretoken': "{{ csrf_token }}",
+            'sorted_list_data': JSON.stringify(arrayOrder)
+          },
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+          }
+        });
+          // reiterate the serial no
+      const table = document.getElementById("outline");
+      const rowsWithTDs = table.querySelectorAll("tr td:nth-child(3)");
+
+      rowsWithTDs.forEach((cell, index) => {
+          cell.textContent = "" + (index + 1);
+      });
+      }
+  });
+  $( "#sortable" ).sortable();
+  $( "#sortable" ).disableSelection();
+});
+</script>
+
+<form action="{% url 'ops_value' value_type %}" name="" method="POST">
+{% csrf_token %}
+<div class="container-fluid ">
+  <div class="row mx-0 my-1">
+      <div class="col-md-12 mx-0 d-flex justify-content-start" style="background-color: lightblue;">
+      <a href="{% url 'home' %}">Home</a>
+      &nbsp;/&nbsp;
+      <a href="{% url 'kanban_home' %}">Kanban Home</a>
+      &nbsp;/&nbsp;
+      <b>{{value_type}} Page</b>    
+      </div>
+  </div>
+  <div class="row mx-0 my-1">
+      <div class="col-md-6 d-flex justify-content-start align-items-center">
+          <b>{{value_type}} List</b>
+          &nbsp;&nbsp;           
+          <input type="checkbox" name='show_hide' class='show_hide_details'>
+          &nbsp;&nbsp;<font size='-2'>Show Details</font>
+      </div>
+      <div class="col-md-6 d-flex justify-content-end align-items-center">
+          <b>Display:</b>&nbsp;&nbsp;
+          <select name="pagination" id="paginationselect">
+              <option value="none">-Select-</option>
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="all">All</option>
+          </select>
+          &nbsp;&nbsp;
+          <b>Bulk:</b>&nbsp;&nbsp;
+          <select name="bulk_project_ops" id="bulk_project_ops" onchange="this.form.submit()">
+              <option value="none">-Select-</option>
+              <option value="bulk_delete">Delete</option>
+              <option value="bulk_done">Done</option>
+          </select>
+          &nbsp;&nbsp;
+          <a href="{% url 'add_object' value_type %}" class="btn btn-success">Add New {{value_type}}</a>
+          &nbsp;&nbsp;
+          <a href="{% url 'restore_values' value_type %}">
+              Restore
+          </a>
+          &nbsp;&nbsp;
+      </div>
+  </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table  id="outline" class="table is-bordered excel_table" bgcolor="lightgreen">
+                <tr>
+                    <th>
+                      &nbsp;&#9776;
+                    </th>
+                    <th>
+                        <input type="checkbox" name="select_all" id="select_all" onclick='checkUncheck(this)'>
+                    </th>
+                    <th>#</th>
+                    <!--  <th>ID</th> -->
+                    <th>{{value_type}} Name</th>
+                    <th>Description</th>
+                    
+                    <th>Type</th>
+                    <th>Priority</th>
+                    <th>State</th>
+                    <th>Start Date</th>
+
+                    <th>End Date</th>
+                    <th>Progress</th>
+                    <th>Done</th>
+                    <th>Note</th>  
+
+                    <th>Action</th>
+                    <th>Settings</th>
+                </tr>
+                <tbody id="sortable">
+                {% for todo in paginated_items %}
+                <tr id="{{todo.id}}_{{ forloop.counter }}" class="ui-state-default" style='background-color: white;'>
+                    <td>
+                      &nbsp;&#9776;
+                    </td>
+                    <td contenteditable="false">
+                        <input type="checkbox" name="project_box" id="selected_project_ids" value="{{todo.id}}">
+                    </td>
+                    <td contenteditable="false">
+                      {% if paginated_items.start_index %}
+                      {{ paginated_items.start_index|add:forloop.counter0 }}
+                      {% else %}
+                      {{ forloop.counter }}
+                      {% endif %}
+                    </td>
+                    <!-- <td>{{todo.id}}</td> -->
+                    <td contenteditable="false">{{todo.title}}</td>
+                    <td contenteditable="false">{{todo.description}}</td>
+                    
+                    <td contenteditable="false">{{todo.type}}</td>
+                    <td contenteditable="false">{{todo.priority}}</td>
+                    <td contenteditable="false">{{todo.state}}</td>
+                    <td contenteditable="false">{{todo.start_date}}</td>
+                    <td contenteditable="false">{{todo.end_date}}</td>
+                    <td contenteditable="false">{{todo.progress}}</td>
+                    <td contenteditable="false">{{todo.done}}</td>
+                    <td contenteditable="false">{{todo.current_state}}</td>                    
+                    <td contenteditable="false">
+                        <a href="{% url 'value_homepage' value_type todo.id %}">Home Page</a>&nbsp;
+                        <a href="{% url 'view_value' value_type todo.id %}">View</a>&nbsp;
+                        <a href="{% url 'edit_value' value_type todo.id %}">Edit</a>&nbsp;
+                        <a href="{% url 'delete_value' value_type todo.id %}">Delete</a>&nbsp;
+                        <a href="{% url 'copy_value' value_type todo.id %}">Copy</a>&nbsp;                       
+                    </td>
+
+                    <td contenteditable="false">
+                      <a href="{% url 'value_settings' value_type todo.id %}">Settings</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>                
+            </table>
+        </div>
+    </div>
+</div>
+</form>
+<!-- Display the pagination links -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-center py-2">
+            <div class="pagination">
+                <span class="step-links">
+                  {% if paginated_items.has_previous %}
+                    <a href="?page=1&pagination={{pagination}}">&laquo; first</a>
+                    <a href="?page={{ paginated_items.previous_page_number }}&pagination={{pagination}}">previous</a>
+                  {% endif %}
+                
+                  {% if pagination_on %} 
+                  <span class="current">
+                    Page {{ paginated_items.number }} of {{ paginated_items.paginator.num_pages }}.
+                  </span>
+                  {% endif %}
+              
+                  {% if paginated_items.has_next %}
+                    <a href="?page={{ paginated_items.next_page_number }}&pagination={{pagination}}">next</a>
+                    <a href="?page={{ paginated_items.paginator.num_pages }}&pagination={{pagination}}">last &raquo;</a>
+                  {% endif %}
+                </span>
+              </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function checkUncheck(checkBox) {
+    get = document.getElementsByName('project_box');
+    for(var i=0; i<get.length; i++) {
+        get[i].checked = checkBox.checked;
+    }
+}
+// pagination select
+document.addEventListener("DOMContentLoaded", function () {
+  const redirectSelect = document.getElementById("paginationselect");
+  redirectSelect.addEventListener("change", function () {
+    const selectedValue = redirectSelect.value;
+    
+    // Redirect the user based on the selected value
+    if (selectedValue === "5") {
+      window.location.href = "{% url 'list_values' value_type %}?page=1&pagination=5";
+    } else if (selectedValue === "10") {
+      window.location.href = "{% url 'list_values' value_type %}?page=1&pagination=10";
+    } else if (selectedValue === "15") {
+      window.location.href = "{% url 'list_values' value_type %}?page=1&pagination=15";
+    } else if (selectedValue === "25") {
+      window.location.href = "{% url 'list_values' value_type  %}?page=1&pagination=25";
+    } else if (selectedValue === "50") {
+      window.location.href = "{% url 'list_values' value_type %}?page=1&pagination=50";
+    } else if (selectedValue === "100") {
+      window.location.href = "{% url 'list_values' value_type %}?page=1&pagination=100";
+    } else if (selectedValue === "all") {
+      window.location.href = "{% url 'list_values' value_type %}?page=1&pagination=all";
+    } 
+    // Add more conditions for other options as needed
+  });
+});
+</script>
+{% else%}
+  {% include 'GUEST_USER.html' %}
+{% endif %}
+{% include '5.footer.html' %}
+{% endblock content %}

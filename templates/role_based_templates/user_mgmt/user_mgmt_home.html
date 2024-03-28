@@ -1,0 +1,28 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}User/Group Mgmt Home Page{% endblock title %} 
+{% block content %}
+<style>
+    .vc {
+        vertical-align: center;
+    }
+    .vt {
+        vertical-align: top;
+    }
+</style>
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container-fluid-width">   
+    {% include 'role_based_templates/user_mgmt/__user_mgmt_menu.html' %}
+    </div>  
+    <div class="row">
+        <div class="col-md-12">
+            
+        </div>
+    </div>
+</div>
+{% include '5.footer.html' %}
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

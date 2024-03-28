@@ -1,0 +1,53 @@
+{% extends "base.html" %} 
+{% load static %}
+{% load markdown_extras %}
+{% block title %}Teach Kanban{% endblock title %} 
+{% block content %}
+<style>
+    .vc {
+        vertical-align: center;
+    }
+    .vt {
+        vertical-align: top;
+    }
+</style>
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    <div class="row my-2">
+        <div class="col-md-12 d-flex justify-content-start">
+            <a href="/">Home</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;  
+            <a href="{% url 'kanban_home' %}">Kanban Home</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;    
+            <a href="{% url 'list_values' 'Organization' %}">Organization</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;            
+            <a href="{% url 'user_group_mgmt_home'  %}">User/Group Management</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Templates            
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Measure/Metrics
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            Kanban Settings
+            &nbsp;&nbsp;|&nbsp;&nbsp; 
+            User Settings
+        </div>
+    </div>
+    <!-- START CONTENT -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="markdown">
+                {% if md_var == None %}                
+                {% else %}
+                {{ md_var|markdown|safe }}
+                {% endif %}
+            </div>
+        </div>
+    </div>  
+    <!-- CLOSE CONTENT -->
+</div>
+{% include '5.footer.html' %}
+{% else%}
+{% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

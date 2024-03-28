@@ -1,0 +1,141 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}View Product{% endblock title %} 
+{% block content %}
+{% include '../../../../1.toplevel.html' %}
+{% include '../../../../2.navbar.html' %}
+
+<div class="container-fluid mx-2 is-paddingless is-marginless">
+    <div class="columns is-h50">
+        <div class="column has-text-left is-9">
+            <b>View Product Details</b>
+        </div>
+        <div class="column is-3 has-text-right">
+            <a href="{% url 'edit_product' product.id %}">Edit Product</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp
+            <a href="{% url 'navbar_product' %}">Product List</a>
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Product ID</b>
+        </div>
+        <div class="column  is-7">
+            {{product.id}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Product Name</b>
+        </div>
+        <div class="column  is-7">
+            {{product.title}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Product Description</b>
+        </div>
+        <div class="column  is-7">
+            {{product.description}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Product Type</b>
+        </div>
+        <div class="column  is-7">
+            {{product.product_type}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Product Priority</b>
+        </div>
+        <div class="column  is-7">
+            {{product.product_priority}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Product State</b>
+        </div>
+        <div class="column  is-7">
+            {{product.product_state}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Product Start Date</b>
+        </div>
+        <div class="column  is-7">
+            {{product.start_date}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Product End Date</b>
+        </div>
+        <div class="column  is-7">
+            {{product.end_date}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Progress</b>
+        </div>
+        <div class="column  is-7">
+            {{product.progress}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Note</b>
+        </div>
+        <div class="column  is-7">
+            {{product.current_state}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Created At</b>
+        </div>
+        <div class="column  is-7">
+            {{product.created_at}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Updated At</b>
+        </div>
+        <div class="column  is-7">
+            {{product.updated_at}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Completed At</b>
+        </div>
+        <div class="column  is-7">
+            {{product.completed_at}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Duration (hours)</b>
+        </div>
+        <div class="column  is-7">
+            {{product.duration_in_hours}}
+        </div>
+    </div>
+    <div class="columns">
+        <div class="column  is-3 has-text-left">
+            <b>Backlog Template</b>
+        </div>
+        <div class="column  is-7">
+            {{product.work_item_type}}
+        </div>
+    </div>
+</div>
+{% include '../../../../5.footer.html' %}
+{% endblock content %}

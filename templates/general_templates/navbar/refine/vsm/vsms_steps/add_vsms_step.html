@@ -1,0 +1,100 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Add VSMS Step{% endblock title %} 
+{% block content %}
+{% include '../../../../../1.toplevel.html' %}
+{% include '../../../../../2.navbar.html' %}
+
+
+<form action="" method='POST' class='form'>
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        {{form.errors}}
+      </div>
+    {% endif %}
+    {% csrf_token %}
+      
+    <div class="container-fluid mx-2 ">
+        <div class="row mb-0">
+            <div class="col-md-6 d-flex justify-content-start align-items-center">
+                <span class="icon-text">
+                    <span class="icon" >
+                        <img width="60px" height="60px" 
+                        src="{% static 'img/plan1.svg' %}" 
+                        class="" alt="" style="max-height: 40px;">  
+                    </span>                   
+                    &nbsp;
+                    <b>Value Stream Mapping :: Add Step</b>
+                </span>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end align-items-center">  
+                <a href="{% url 'main_vsms_steps' main_vsm.id %}">List Steps</a>
+                &nbsp;&nbsp;|&nbsp;&nbsp;              
+                <a href="{% url 'navbar_vsm' %}">List VSM(s)</a>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="{% url 'restore_projects' %}">Restore</a>
+                &nbsp;&nbsp;
+            </div>
+        </div>
+        <div class="row py-1">
+            <div class="column is-12 has-background-grey-light">
+                <b>Add Value Stream Step Details</b>              
+            </div>
+            
+        <div class="row py-1">
+            <div class="col-md-1 d-flex justify-content-start align-items-center">
+                {{ form.title.label_tag }} 
+            </div>
+            <div class="col-md-11 d-flex justify-content-start align-items-cente">
+                <input type="text" name="title" size="40" value="">
+            </div>
+        </div>      
+        <div class="row py-1">
+            <div class="col-md-1 d-flex justify-content-start align-items-center">
+                {{ form.description.label_tag }}
+            </div>
+            <div class="col-md-11 d-flex justify-content-start align-items-center">
+                <textarea name="description" id="description" cols="43" rows="6"></textarea>
+            </div>
+        </div>       
+        <div class="row py-1">
+            <div class="col-md-1 d-flex justify-content-start align-items-center">
+                {{ form.role.label_tag }} 
+            </div>
+            <div class="col-md-11 d-flex justify-content-start align-items-cente">
+                <input type="text" name="role" size="40" value="">
+            </div>
+        </div>      
+        <div class="row py-1">
+            <div class="col-md-1 d-flex justify-content-start align-items-center">
+               Value Added Time:
+            </div>
+            <div class="col-md-11 d-flex justify-content-start align-items-center">
+                <input type="number" name="value_time" value="0.0" step="1" id="id_value_time">
+            </div>
+        </div>      
+        <div class="row py-1">
+            <div class="col-md-1 d-flex justify-content-start align-items-center">
+               Non-Value Added Time:
+            </div>
+            <div class="col-md-11 d-flex justify-content-start align-items-center">
+                <input type="number" name="non_value_time" value="0.0" step="1" id="id_non_value_time">
+            </div>
+        </div> 
+        <div class="row py-1">
+            <div class="col-md-1 d-flex justify-content-start align-items-center">
+               % Complete &amp; Accurate (CA):
+            </div>
+            <div class="col-md-11 d-flex justify-content-start align-items-center">
+                <input type="number" name="percentage_accurate" value="0.0" step="0.01" id="id_percentage_accurate">
+            </div>
+        </div>  </div>
+       
+        <div class="row py-1">
+            <div class="col-md-12 d-flex justify-content-start align-items-center">
+                <input type='submit' value='Add VSM Step'/>
+            </div>
+        </div>
+    </div>    
+</form>
+{% endblock content %}

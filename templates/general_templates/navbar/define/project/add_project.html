@@ -1,0 +1,94 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Add Project{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+
+
+<form action="" method='POST' class='form'>
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        {{form.errors}}
+      </div>
+    {% endif %}
+    {% csrf_token %}
+      
+    <div class="container-fluid mx-2 ">
+        <div class="row mb-0">
+            <div class="col-md-6 d-flex justify-content-start align-items-center">
+                <span class="icon-text">
+                    <span class="icon" >
+                        <img width="60px" height="60px" 
+                        src="{% static 'img/plan1.svg' %}" 
+                        class="" alt="" style="max-height: 40px;">  
+                    </span>                   
+                    &nbsp;
+                    <b>Project</b>
+                </span>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end align-items-center">                
+                <a href="{% url 'kanban_home' %}">List Projects</a>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="{% url 'kanban_home' %}">Restore</a>
+                &nbsp;&nbsp;
+            </div>
+        </div>
+        <div class="row py-1">
+            <div class="column is-12 has-background-grey-light">
+                <b>Add Project Details</b>              
+            </div>
+            
+        </div>
+        <div class="row py-1">
+            <div class="col-md-1 d-flex justify-content-start align-items-center">
+                {{ form.title.label_tag }} 
+            </div>
+            <div class="col-md-11 d-flex justify-content-start align-items-cente">
+                <input type="text" name="title" size="40" value="">
+            </div>
+        </div>      
+        <div class="row py-1">
+            <div class="col-md-1 d-flex justify-content-start align-items-center">
+                {{ form.description.label_tag }}
+            </div>
+            <div class="col-md-11 d-flex justify-content-start align-items-center">
+                <textarea name="description" id="description" cols="43" rows="6"></textarea>
+            </div>
+        </div>
+        <div class="row py-1">
+            <div class="col-md-1 d-flex justify-content-start align-items-center">
+                Project
+            </div>
+            <div class="col-md-11 d-flex justify-content-start align-items-center">
+                Type:  &nbsp;&nbsp;{{ form.type }}
+                &nbsp;&nbsp;Priority:  &nbsp;&nbsp;{{ form.priority }}
+                &nbsp;&nbsp;State:  &nbsp;&nbsp;{{ form.state }}
+            </div>
+        </div>
+        
+        <div class="row py-1">
+            <div class="col-md-1 d-flex justify-content-start align-items-center">
+                Duration: 
+            </div>
+            <div class="col-md-11 d-flex justify-content-start align-items-center">
+                Start Date: &nbsp;&nbsp;{{ form.start_date }} &nbsp;&nbsp; End Date:  &nbsp;&nbsp; {{ form.end_date }}
+            </div>
+        </div> 
+        <div class="row py-1">
+            <div class="col-md-1 d-flex justify-content-start align-items-center">
+                Backlog Template: 
+            </div>
+            <div class="col-md-11 d-flex justify-content-start align-items-center">
+                {{form.work_item_type}}
+            </div>
+        </div>      
+        <div class="row py-1">
+            <div class="col-md-12 d-flex justify-content-start align-items-center">
+                <input type='submit' value='Add Project'/>
+            </div>
+        </div>
+    </div>
+       
+    
+</form>
+{% endblock content %}

@@ -1,0 +1,44 @@
+<div class="row my-2">
+    <div class="col-md-12 d-flex justify-content-start">
+        <a href="/">Home</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;  
+        <a href="{% url 'kanban_home' %}">Kanban Home</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;    
+        <a href="{% url 'list_values' 'Organization' %}">Organization</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;            
+        <a href="{% url 'user_group_mgmt_home'  %}">User/Group Management</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp; 
+        Templates            
+        &nbsp;&nbsp;|&nbsp;&nbsp; 
+        Measure/Metrics
+        &nbsp;&nbsp;|&nbsp;&nbsp; 
+        Kanban Settings
+        &nbsp;&nbsp;|&nbsp;&nbsp; 
+        User Settings
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+    <b><a href="{% url 'group_mgmt_home' %}">Group Mgmt</a></b>&nbsp;&nbsp;|&nbsp;
+    <b>User Mgmt :: &nbsp;&nbsp;</b>
+    {% if active_tab == 'add_user' %}
+    <b>Add User</b> &nbsp;&nbsp;|&nbsp;&nbsp;
+    {% else %}
+    <a href="{% url 'user_mgmt_create' %}">Add User</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    {% endif %}
+
+    {% if active_tab == 'add_multiple_users' %}
+    <b>Add Multiple Users</b> &nbsp;&nbsp;|&nbsp;&nbsp;
+    {% else %}
+    <a href="{% url 'user_mgmt_create_multiple' %}">Add Multiple Users</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    {% endif %}     
+
+    {% if active_tab == 'user_mgmt_list' %}
+    <b>List Users</b> &nbsp;&nbsp;
+    {% else %}
+    <a href="{% url 'user_mgmt_list' %}">List Users</a>
+    {% endif %} 
+    </div>
+</div>

@@ -1,0 +1,22 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Dev Project{% endblock title %} 
+{% block content %}
+{% include '../../../1.toplevel.html' %}
+{% include '../../../2.navbar.html' %}
+<div class="container-fluid-width">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Project</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <ul class="ul">
+                <li>one</li>
+                <li>two</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock content %}

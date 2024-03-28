@@ -1,0 +1,83 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Edit VSMS Steps{% endblock title %} 
+{% block content %}
+{% include '1.toplevel.html' %}
+{% include '2.navbar.html' %}
+<form action="" method='POST' class='form'>
+{% csrf_token %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <h6>Edit VSMS Steps Details</h6>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'view_vsms_steps' object.id %}">View VSMS Steps</a>&nbsp;&nbsp;
+            <a href="{% url 'main_vsms_steps' vsm_id %}">View VSMS Steps</a>&nbsp;&nbsp;
+            <a href="{% url 'navbar_vsm' %}">VSM List</a>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            VSMS Steps ID: &nbsp;<b>{{object.id}}</b>
+        </div>
+    </div>
+    <div class="row py-1">
+        <div class="col-md-1 d-flex justify-content-start align-items-center">
+            {{ form.title.label_tag }} 
+        </div>
+        <div class="col-md-11 d-flex justify-content-start align-items-cente">
+            {{form.title}}
+        </div>
+    </div>      
+    <div class="row py-1">
+        <div class="col-md-1 d-flex justify-content-start align-items-center">
+            {{ form.description.label_tag }}
+        </div>
+        <div class="col-md-11 d-flex justify-content-start align-items-center">
+            <textarea name="{{ form.description.name }}" rows="5" cols="50">{{ form.description.value }}</textarea>
+        </div>
+    </div>       
+    <div class="row py-1">
+        <div class="col-md-1 d-flex justify-content-start align-items-center">
+            {{ form.role.label_tag }} 
+        </div>
+        <div class="col-md-11 d-flex justify-content-start align-items-cente">
+            {{form.role}}
+        </div>
+    </div>      
+    <div class="row py-1">
+        <div class="col-md-1 d-flex justify-content-start align-items-center">
+           Value Added Time:
+        </div>
+        <div class="col-md-11 d-flex justify-content-start align-items-center">
+           {{form.value_time}}
+        </div>
+    </div>      
+    <div class="row py-1">
+        <div class="col-md-1 d-flex justify-content-start align-items-center">
+           Non-Value Added Time:
+        </div>
+        <div class="col-md-11 d-flex justify-content-start align-items-center">
+            {{form.non_value_time}}
+        </div>
+    </div> 
+    <div class="row py-1">
+        <div class="col-md-1 d-flex justify-content-start align-items-center">
+           % Complete &amp; Accurate (CA):
+        </div>
+        <div class="col-md-11 d-flex justify-content-start align-items-center">
+            {{form.percentage_accurate}}
+        </div>
+    </div> 
+    
+    <div class="row">
+        <div class="col-md-9">
+            <input type="submit" name="Edit VSMS Steps">
+        </div>
+    </div>
+</div>
+</form>
+{% include '5.footer.html' %}
+{% endblock content %}

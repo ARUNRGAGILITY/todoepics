@@ -1,0 +1,169 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Group Mgmt List{% endblock title %} 
+{% block content %}
+
+<div class="container-fluid">
+    {% include '1.mvp_header.html' %}  
+
+    <div class="container-fluid-width">      
+        {% include 'role_based_templates/group_mgmt/__group_mgmt_menu.html' %}
+      <div class="row">
+        <div class="col-md-6">
+          <form method="POST" action="{% url 'group_mgmt_list' %}">
+            {%csrf_token %}         
+            <b>Group Mgmt :: Listing Groups</b>                  
+            <input id="search_box" type="text" name="q" placeholder="Search by groupname" value="{{ query }}">
+            <button type="submit">Search</button>        
+        </form>  
+        </div>
+        <div class="col-md-6">
+          <form action="{% url 'ops_group_mgmt' %}" name="" method="POST">
+            {% csrf_token %}          
+                <b>Display:</b>&nbsp;&nbsp;
+                <select name="pagination" id="paginationselect">
+                    <option value="none">-Select-</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="all">All</option>
+                </select>
+                &nbsp;&nbsp;
+                <b>Bulk:</b>&nbsp;&nbsp;
+                <select name="bulk_obj_ops" id="bulk_obj_ops" onchange="this.form.submit()">
+                    <option value="none">-Select-</option>
+                    <option value="bulk_delete">Delete</option>
+                </select>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="{% url 'restore_deleted_groups' %}">
+                    Restore
+                </a>
+                
+        </div>
+      </div>
+
+
+    
+    <div class="row">
+        <div class="col-md-12">           
+  <form action="">
+  <table class="table">
+    <thead>
+      <tr>
+        <th width="2%">#</th>
+        <th width="2%">
+          <input type="checkbox" name="select_all" id="select_all" onclick="checkUncheck(this)">
+        </th>
+        <th>Group</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for obj in paginated_items %}
+        <tr>
+          <td width="2%" align="right" class="">
+            {% if paginated_items.start_index %}
+            {{ paginated_items.start_index|add:forloop.counter0 }}
+            {% else %}
+            {{ forloop.counter }}
+            {% endif %}
+          </td>   
+          <td width="2%">
+            <input type="checkbox" name="obj_box" id="selected_object_ids" value="{{obj.pk}}">
+          </td>
+          <td><a href="{% url 'group_mgmt_detail' obj.pk %}">{{ obj.name }}</a></td>      
+          <td>
+            <a href="{% url 'group_mgmt_list_users' obj.pk %}">List Users</a>&nbsp;&nbsp;&nbsp;
+            <a href="{% url 'group_mgmt_update' obj.pk %}">Edit</a>&nbsp;&nbsp;&nbsp;
+            <a href="{% url 'group_mgmt_delete' obj.pk %}">Delete</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="4">No groups found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</form>
+        </div>
+    </div>
+</div>
+
+<!-- Pagination -->
+<!-- Display the pagination links -->
+<div class="container">
+  <div class="row">
+      <div class="col-md-12 d-flex justify-content-center py-2">
+          <div class="pagination">
+              <span class="step-links">
+                {% if paginated_items.has_previous %}
+                  <a href="?page=1&pagination={{pagination}}">&laquo; first</a>
+                  <a href="?page={{ paginated_items.previous_page_number }}&pagination={{pagination}}">previous</a>
+                {% endif %}
+              
+                {% if pagination_on %} 
+                <span class="current">
+                  Page {{ paginated_items.number }} of {{ paginated_items.paginator.num_pages }}.
+                </span>
+                {% endif %}
+            
+                {% if paginated_items.has_next %}
+                  <a href="?page={{ paginated_items.next_page_number }}&pagination={{pagination}}">next</a>
+                  <a href="?page={{ paginated_items.paginator.num_pages }}&pagination={{pagination}}">last &raquo;</a>
+                {% endif %}
+              </span>
+            </div>
+      </div>
+  </div>
+</div>
+
+
+
+<script>
+// ======================================================== //
+// select all box
+function checkUncheck(checkBox) {
+    get = document.getElementsByName('obj_box');
+    for(var i=0; i<get.length; i++) {
+        get[i].checked = checkBox.checked;
+    }
+}
+
+// search box
+// ======================================================== //
+search_box = document.getElementById("search_box");
+search_box.focus();
+
+// ======================================================== //
+// pagination select
+document.addEventListener("DOMContentLoaded", function () {
+  const redirectSelect = document.getElementById("paginationselect");
+  redirectSelect.addEventListener("change", function () {
+    const selectedValue = redirectSelect.value;
+    
+    // Redirect the user based on the selected value
+    if (selectedValue === "5") {
+      window.location.href = "{% url 'group_mgmt_list' %}?page=1&pagination=5";
+    } else if (selectedValue === "10") {
+      window.location.href = "{% url 'group_mgmt_list' %}?page=1&pagination=10";
+    } else if (selectedValue === "15") {
+      window.location.href = "{% url 'group_mgmt_list' %}?page=1&pagination=15";
+    } else if (selectedValue === "25") {
+      window.location.href = "{% url 'group_mgmt_list' %}?page=1&pagination=25";
+    } else if (selectedValue === "50") {
+      window.location.href = "{% url 'group_mgmt_list' %}?page=1&pagination=50";
+    } else if (selectedValue === "100") {
+      window.location.href = "{% url 'group_mgmt_list' %}?page=1&pagination=100";
+    } else if (selectedValue === "all") {
+      window.location.href = "{% url 'group_mgmt_list' %}?page=1&pagination=all";
+    } 
+    // Add more conditions for other options as needed
+  });
+});
+</script>
+{% endblock content %}
+

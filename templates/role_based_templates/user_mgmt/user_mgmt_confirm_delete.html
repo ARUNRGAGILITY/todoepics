@@ -1,0 +1,28 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}User Mgmt Home Page{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">   
+    {% include 'role_based_templates/user_mgmt/__user_mgmt_menu.html' %}
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Confirm the User Deletion {{delete_user.username}}</h4>
+            <p>Are you sure you want to delete this user?</p>
+            <ul>
+            <li>Username: {{ delete_user.username }}</li>
+            <li>Email: {{ delete_user.email }}</li>
+            <!-- add other user fields as needed -->
+            </ul>
+            <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" name="confirm" value="Confirm">
+            <a href="{% url 'user_mgmt_list' %}">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

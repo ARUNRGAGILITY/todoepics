@@ -1,0 +1,112 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}User Home Page{% endblock title %} 
+{% block content %}
+{% if user.is_authenticated %}  
+{% include '1.mvp_header.html' %}
+<div class="container" >
+    <div class="row my-2">
+        <div class="col-md-12 d-flex justify-content-start">
+           &nbsp;
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-12 d-flex justify-content-center align-items-center ">
+            <div class="p-1 ">
+             <H3></H3>
+               <table class="table table-bordered">
+                <tr style="border-bottom: 4px solid lightgrey;">
+                    <th colspan="1">
+                        <img width="80%" height="80%" 
+                        src="{% static 'img/lean/kanban_logotype4.png' %}" class="" alt="Kanban" class=""> 
+                     
+                    </th>
+                    <th colspan="3" class="bg-primary" style="align-items: center;">  
+                        <br>                      
+                       &nbsp;&nbsp;<b class="h1 text-white ">
+                        Welcome to Xpress Kanban 
+                        </b>
+                        <br>
+                        &nbsp;&nbsp; &nbsp;<b class="h5 text-white">
+                         An Open-Source Initiative from DevAgileAgility
+                       </b>
+                    </th>
+                </tr>
+                <tr>
+                    <th> 
+                        <br>
+                        <img
+                        src="{% static 'img/lean/learn_kanbanic.png' %}" class="" alt="Kanban" class="">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<b>Learn</b>
+                    </th>
+                    <th>                        
+                        <br>
+                        <img 
+                        src="{% static 'img/lean/practice_kanbanic.png' %}" class="" alt="Kanban" class="">
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<b>Practice</b>
+                    </th>
+                    <th>                        
+                        <br>
+                        <img 
+                        src="{% static 'img/lean/implement_kanbanic.png' %}" class="" alt="Kanban" class="">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<b>Implement</b>
+                    </th>
+                    <th>                        
+                        <br>
+                        <img 
+                        src="{% static 'img/lean/share_kanbanic.png' %}" class="" alt="Kanban" class="">
+                      
+                        &nbsp;&nbsp;&nbsp;&nbsp;<b>Teach</b>
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        Learn about Kanban's What, Why and How?
+                    </td>
+                    <td>
+                        Apply your learnings in Practice with this Open-Source Software
+                    </td>
+                    <td>
+                        Implement Your own Kanban System with this software, see the options
+                    </td>
+                    <td>
+                        Help others learn about Kanban, as a community
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: end;"> <a href="{% url 'learn_kanban' %}" class="btn btn-sm btn-primary">
+                        Learn Kanban</a>
+                        &nbsp;&nbsp;
+                    </td>
+                    <td style="text-align: end;">
+                        <a href="{% url 'kanban_home' %}" class="btn btn-sm btn-primary">
+                            Practice Kanban                            
+                        </a>
+                        &nbsp;&nbsp;
+                    </td>
+                    <td style="text-align: end;">
+                        <a href="{% url 'implement_kanban' %}" class="btn btn-sm btn-primary">
+                            Implement Kanban
+                        </a>
+                        &nbsp;&nbsp;
+                    </td>
+                    <td style="text-align: end;">
+                        <a href="{% url 'teach_kanban' %}" class="btn btn-sm btn-primary">
+                            Teach Kanban
+                        </a>
+                        &nbsp;&nbsp;
+                    </td>
+                </tr>
+                
+               </table>
+             
+            </div>
+        </div>
+    </div>    
+</div>
+{% include '5.footer.html' %}
+{% else%}
+  {% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

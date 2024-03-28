@@ -1,0 +1,36 @@
+<div class="row my-2">
+    <div class="col-md-12 d-flex justify-content-start">
+        <a href="/">Home</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;  
+        <a href="{% url 'kanban_home' %}">Kanban Home</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;    
+        <a href="{% url 'list_values' 'Organization' %}">Organization</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;            
+        <a href="{% url 'user_group_mgmt_home'  %}">User/Group Management</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp; 
+        Templates            
+        &nbsp;&nbsp;|&nbsp;&nbsp; 
+        Measure/Metrics
+        &nbsp;&nbsp;|&nbsp;&nbsp; 
+        Kanban Settings
+        &nbsp;&nbsp;|&nbsp;&nbsp; 
+        User Settings
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+    <b><a href="{% url 'user_mgmt_home' %}">User Mgmt</a></b>&nbsp;&nbsp;|&nbsp;
+    <b>Group Mgmt :: &nbsp;&nbsp;</b>
+    &raquo;
+    {% if active_tab == 'add_group' %}
+    <b>Add Group</b> &nbsp;&nbsp;|&nbsp;&nbsp;
+    {% else %}
+    <a href="{% url 'group_mgmt_create' %}">Add Group</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    {% endif %}
+    {% if active_tab == 'list_groups' %}
+    <b>List Groups</b> &nbsp;&nbsp;
+    {% else %}
+    <a href="{% url 'group_mgmt_list' %}">List Groups</a>
+    {% endif %} 
+    </div>
+</div>

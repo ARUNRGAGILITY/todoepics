@@ -1,0 +1,172 @@
+{% extends "base.html" %} 
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Swimlanes{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+{% if user.is_authenticated %}
+  <style>
+  #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  #sortable li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+$( function() {
+  id_title = document.getElementById('id_title');
+  id_title.focus();
+
+  var sortableList = $('#sortable');
+  $(".kanban_board_table").find("tbody").sortable({
+            items: "> tr",
+            appendTo: "parent",
+            cancel: "[contenteditable]",
+            update: function(event, ui) {
+        var serialOrder = $('#sortable').sortable('serialize');
+        var arrayOrder = $('#sortable').sortable('toArray');
+        //alert(arrayOrder);
+        $.ajax({
+          url: '/kanban/sorted_swimlanes/{{value_type}}/{{object.id}}/{{item.id}}',
+          type: 'POST',
+          data : {
+            'csrfmiddlewaretoken': "{{ csrf_token }}",
+            'sorted_list_data': JSON.stringify(arrayOrder)
+          },
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+          }
+        });
+         $(this).find('tr').each(function(i){
+            $(this).children('td:first').text(i+1);
+        });
+      }
+
+  });
+  $( "#sortable" ).sortable();
+  $( "#sortable" ).disableSelection();
+} );
+</script>
+
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row mx-0 my-1">
+        <div class="col-md-12 mx-0 d-flex justify-content-start" style="background-color: lightblue;">
+        <a href="{% url 'home' %}">Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'kanban_home' %}">Kanban Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'list_values' value_type %}">{{value_type}}s List</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'value_homepage' value_type object.id %}">{{object}} Home</a>
+        &nbsp;/&nbsp;
+        <a href="{% url 'boards_home' value_type object.id %}">{{object}}'s Kanban Boards</a>        
+        &nbsp;/&nbsp;
+        <b>{{item}} &nbsp;</b>   Kanban Board  Swimlanes   
+        </div>
+      </div>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-start align-items-center">
+            <table class="table ">
+                <tr>
+                    <td width="5%"><b>{{value_type}}:</b></td><td width="20%">{{object}}</td>
+                    <td width="5%"><b>Board:</b></td><td width="20%">{{item}}</td>
+                    <td width="50%">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <a href="{% url 'kanban_board' value_type object.id item.id %}">
+                                Go To Board</a>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;
+                           <a href="{% url 'edit_item' value_type object.id item.id %}">
+                            Edit Board Details</a>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;
+                            <a href="{% url 'delete_item' value_type object.id item.id %}">
+                                Delete Board</a>
+                            &nbsp;&nbsp; | &nbsp;&nbsp; 
+                            <a href="{% url 'kanban_board_columns' value_type object.id item.id %}">Columns</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>       
+    </div>
+
+</div>
+  <div class="container-fluid py-1">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="container-fluid-width ">
+          <div class="row">
+            <div class="col-md-10 d-flex justify-content-start">
+              <form method='POST' action=''>
+                {% if form.errors %}
+                  <div class="alert alert-danger">
+                    {{form.errors}}
+                  </div>
+                {% endif %}
+                {% csrf_token %}
+                <b>Swimlane Name:</b>&nbsp;&nbsp; 
+                <input type="text" name="title" id="id_title" size="20">&nbsp;&nbsp;    
+                 <b>Description:</b>&nbsp;&nbsp; 
+                 <input type="text" name="description" id="id_description" size="40">   &nbsp;&nbsp;                  
+                  {{form.color}} &nbsp;&nbsp;    
+                <input type='submit' name='submit' value='Add Swimlane'/>
+              </form>
+            </div>
+            <div class="col-md-2 d-flex justify-content-end">
+              Total: {{newtodolist_count}} Lane(s)
+              &nbsp;
+              <div id="saved"></div>
+            </div>
+          </div>
+        </div>
+       
+          <form name="todoform" method="POST" action="">
+          <table  id="outline" class="table table-bordered kanban_board_table" border="1" >
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">&nbsp;&#9776;</th>
+                        <th style="text-align: end;">#</th>
+                        <th>Swimlane Name</th>
+                        <th>Description</th>    
+                        <th>Color</th>                  
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id='sortable'>
+                  {% for todo in newtodolist %}
+                  <tr id="{{todo.id}}_{{ forloop.counter }}" class="ui-state-default" style='background-color: white;'>
+                    <td width="2%" style="text-align: center;">&nbsp;&#9776;</td>   
+                    <td width="2%" style="text-align: end;">{{ forloop.counter }}</td>                     
+                 
+                  <td contenteditable="false" width="20%">
+                   <b> {{ todo.title }}</b>
+                  </td>
+                  <td width="30%">
+                  {{todo.description}}
+                  </td>       
+                  <td width="3%">
+                    {{todo.color}}
+                    </td>             
+                   <td width="15%" contenteditable="false">
+                        <a href="{% url 'edit_swimlane' value_type object.id item.id todo.id %}">Edit</a>
+                        &nbsp;&nbsp;  &nbsp;&nbsp; 
+                        <a href="{% url 'delete_swimlane' value_type object.id item.id todo.id %}">Delete</a>
+                   </td>
+                 
+                </tr>
+                  {% endfor %}
+                </tbody>
+          </table>
+          </form>
+      </div>
+    </div>
+  </div>
+ 
+  {% include '5.footer.html' %}
+{% else%}
+  {% include 'GUEST_USER.html' %}
+{% endif %}
+{% endblock content %}

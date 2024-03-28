@@ -1,0 +1,110 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}{{value_type}} :: {{object.title|slice:"15"}} Settings{% endblock title %} 
+{% block content %}
+{% include '1.mvp_header.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-7 d-flex justify-content-start align-items-center">
+            <b>{{value_type}} {{object.id}} {{object.title}} Settings</b>
+        </div>
+        <div class="col-md-5 d-flex justify-content-end align-items-center">
+            <a href="{% url 'edit_value' value_type object.id %}">Edit {{value_type}}</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'value_homepage' value_type object.id %}">{{value_type}} Homepage</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'list_values' value_type %}">{{value_type}} List</a>
+        </div>
+    </div>
+    <!-- testing -->
+    <div class="row">
+        <div class="col-md-12">
+            {{object.organization}} {{value_type}} ID {{object.id}} {{object.title}}  {{object.description}}
+        </div>
+    </div>       
+
+    <!-- Heading -->
+
+
+    <!-- settings tab -->
+    <div class="row">
+        <div class="col-md-12">
+            {% if active_tab == 'members' %}
+            <b>Add/Modify {{value_type}} Members</b>
+            {% else %}
+            <a href=""><b>Add/Modify {{value_type}} Members</b></a>
+            {% endif %}
+            
+            {% if active_tab == 'groups' %}
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <b>Add/Modify {{value_type}} Groups</b>
+            {% else %}
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href=""><b>Add/Modify {{value_type}} Groups</b></a>
+            {% endif %}
+            
+            {% if active_tab == 'configure' %}
+            &nbsp;&nbsp;|&nbsp;&nbsp;           
+            <b>Configure Project</b>
+            {% else %}
+            &nbsp;&nbsp;|&nbsp;&nbsp;           
+            <a href=""><b>Configure Project</b></a>
+            {% endif %}
+            
+        </div>
+    </div>
+    <!-- form to add members -->
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <hr>
+                <h5>Enter the Membership Details to grant access:</h5>
+                <hr>
+                <b>Add Member</b>
+                <input type="text" size="50" name="member_name" value="" id="id_member">
+                <br>
+                or <br>
+                <b>Add Group</b>
+                <input type="text" size="50" name="group_name" value="" id="id_group">
+                <br><br>
+                 &nbsp;&nbsp;
+                <input type="radio" name="eva_selected" value="view_selected" id="id_view" checked>
+                &nbsp;&nbsp;View Membership:
+                 &nbsp;&nbsp;
+                <input type="radio" name="eva_selected" value="edit_selected" id="id_view">
+                &nbsp;&nbsp;Edit Membership:
+                &nbsp;&nbsp;
+                <input type="radio" name="eva_selected" value="admin_selected" id="id_view">
+                &nbsp;&nbsp;Admin Membership: 
+                <br>
+                <br>
+                <input type="submit" name="Add Membership">
+            </div>
+            <div class="col-md-6">
+                <hr>
+                <h5>Existing Members:</h5>
+                <hr>
+                <h6>Existing Viewers:</h6>
+                {{value_type}} Viewers
+                <br>
+                {{object.viewers.all}}
+                <h6>Existing Editors:</h6>
+                {{value_type}} Editors
+                <br>
+                {{object.editors.all}}
+                <h6>Existing Admins:</h6>
+                {{value_type}} Admins
+                <br>
+                {{object.admins.all}}
+            </div>
+            </div>
+            </div>
+        </div>
+    </form>
+    <!-- end form-->
+
+    <!-- footer -->
+</div>
+{% include '5.footer.html' %}
+{% endblock content %}

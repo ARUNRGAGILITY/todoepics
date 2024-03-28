@@ -1,0 +1,36 @@
+<!-- templates/board_permission_denied.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Board Level :: Permissions Required</title>
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+            <!-- Your content goes here -->
+            <div>
+                <h1>Board Level :: Permissions Required</h1>
+                <h2>{{message}}</h2>
+                <p>Sorry, Unable to proceed further due to Board level permissions that are required.
+                    Please contact your Administrator.
+                </p>
+                <button onclick="goBack()">Go Back</button>
+
+                <script>
+                    function goBack() {
+                        window.history.back();
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

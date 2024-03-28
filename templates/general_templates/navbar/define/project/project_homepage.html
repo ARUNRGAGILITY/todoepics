@@ -1,0 +1,67 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}Project Home Page{% endblock title %} 
+{% block content %}
+{% include '../../../../1.toplevel.html' %}
+{% include '../../../../2.navbar.html' %}
+<div class="container-fluid mx-2 ">
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-start  align-items-center">
+            <b>{{project.title}} Project's HomePage</b>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 d-flex justify-content-start  align-items-center">
+            <b>Homepage</b>    
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Summary</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Visual-Board</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Timeline</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Release</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">Issues</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;      
+            <a href="{% url 'navbar_project' %}">Reports</a>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end align-items-center">            
+            &nbsp;&nbsp;
+            <a href="{% url 'add_project' %}" class="btn btn-success">Add New Project</a>
+            &nbsp;&nbsp;
+            <a href="{% url 'navbar_project' %}">
+                List Projects
+            </a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{% url 'restore_projects' %}">
+                Restore
+            </a>
+        </div>
+    </div>
+    <form action="" method='POST' class='form'>
+        {% csrf_token %}   
+
+    </form>
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{% url 'list_newtodolistitems' backlog.id %}">{{backlog}}</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Backlog Details</h4>
+        </div>
+        <div class="col-md-4">
+            <h4>Summary</h4>
+            <p>Vision, Mission, Value Statement</p>
+            <b>Roadmap</b>
+        </div>
+        <div class="col-md-4">
+            <h4>Team</h4>
+        </div>
+    </div>
+</div>
+
+{% include '../../../../5.footer.html' %}
+{% endblock content %}
